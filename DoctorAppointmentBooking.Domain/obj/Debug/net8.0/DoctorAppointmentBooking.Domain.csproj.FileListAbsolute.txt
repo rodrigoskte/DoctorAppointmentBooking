@@ -1,0 +1,12 @@
+C:\Git\DoctorAppointmentBooking\DoctorAppointmentBooking.Domain\bin\Debug\net8.0\DoctorAppointmentBooking.Domain.deps.json
+C:\Git\DoctorAppointmentBooking\DoctorAppointmentBooking.Domain\bin\Debug\net8.0\DoctorAppointmentBooking.Domain.dll
+C:\Git\DoctorAppointmentBooking\DoctorAppointmentBooking.Domain\bin\Debug\net8.0\DoctorAppointmentBooking.Domain.pdb
+C:\Git\DoctorAppointmentBooking\DoctorAppointmentBooking.Domain\obj\Debug\net8.0\DoctorAppointmentBooking.Domain.GeneratedMSBuildEditorConfig.editorconfig
+C:\Git\DoctorAppointmentBooking\DoctorAppointmentBooking.Domain\obj\Debug\net8.0\DoctorAppointmentBooking.Domain.AssemblyInfoInputs.cache
+C:\Git\DoctorAppointmentBooking\DoctorAppointmentBooking.Domain\obj\Debug\net8.0\DoctorAppointmentBooking.Domain.AssemblyInfo.cs
+C:\Git\DoctorAppointmentBooking\DoctorAppointmentBooking.Domain\obj\Debug\net8.0\DoctorAppointmentBooking.Domain.csproj.CoreCompileInputs.cache
+C:\Git\DoctorAppointmentBooking\DoctorAppointmentBooking.Domain\obj\Debug\net8.0\DoctorAppointmentBooking.Domain.dll
+C:\Git\DoctorAppointmentBooking\DoctorAppointmentBooking.Domain\obj\Debug\net8.0\refint\DoctorAppointmentBooking.Domain.dll
+C:\Git\DoctorAppointmentBooking\DoctorAppointmentBooking.Domain\obj\Debug\net8.0\DoctorAppointmentBooking.Domain.pdb
+C:\Git\DoctorAppointmentBooking\DoctorAppointmentBooking.Domain\obj\Debug\net8.0\ref\DoctorAppointmentBooking.Domain.dll
+C:\Git\DoctorAppointmentBooking\DoctorAppointmentBooking.Domain\obj\Debug\net8.0\DoctorAppointmentBooking.Domain.csproj.AssemblyReference.cache
