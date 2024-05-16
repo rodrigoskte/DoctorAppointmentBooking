@@ -1,0 +1,17 @@
+C:\Git\DoctorAppointmentBooking\DoctorAppointmentBooking.Infrastructure\bin\Debug\net8.0\DoctorAppointmentBooking.Infrastructure.deps.json
+C:\Git\DoctorAppointmentBooking\DoctorAppointmentBooking.Infrastructure\bin\Debug\net8.0\DoctorAppointmentBooking.Infrastructure.dll
+C:\Git\DoctorAppointmentBooking\DoctorAppointmentBooking.Infrastructure\bin\Debug\net8.0\DoctorAppointmentBooking.Infrastructure.pdb
+C:\Git\DoctorAppointmentBooking\DoctorAppointmentBooking.Infrastructure\obj\Debug\net8.0\DoctorAppointmentBooking.Infrastructure.GeneratedMSBuildEditorConfig.editorconfig
+C:\Git\DoctorAppointmentBooking\DoctorAppointmentBooking.Infrastructure\obj\Debug\net8.0\DoctorAppointmentBooking.Infrastructure.AssemblyInfoInputs.cache
+C:\Git\DoctorAppointmentBooking\DoctorAppointmentBooking.Infrastructure\obj\Debug\net8.0\DoctorAppointmentBooking.Infrastructure.AssemblyInfo.cs
+C:\Git\DoctorAppointmentBooking\DoctorAppointmentBooking.Infrastructure\obj\Debug\net8.0\DoctorAppointmentBooking.Infrastructure.csproj.CoreCompileInputs.cache
+C:\Git\DoctorAppointmentBooking\DoctorAppointmentBooking.Infrastructure\obj\Debug\net8.0\DoctorAppointmentBooking.Infrastructure.dll
+C:\Git\DoctorAppointmentBooking\DoctorAppointmentBooking.Infrastructure\obj\Debug\net8.0\refint\DoctorAppointmentBooking.Infrastructure.dll
+C:\Git\DoctorAppointmentBooking\DoctorAppointmentBooking.Infrastructure\obj\Debug\net8.0\DoctorAppointmentBooking.Infrastructure.pdb
+C:\Git\DoctorAppointmentBooking\DoctorAppointmentBooking.Infrastructure\obj\Debug\net8.0\ref\DoctorAppointmentBooking.Infrastructure.dll
+C:\Git\DoctorAppointmentBooking\DoctorAppointmentBooking.Infrastructure\bin\Debug\net8.0\DoctorAppointmentBooking.Infrastructure.runtimeconfig.json
+C:\Git\DoctorAppointmentBooking\DoctorAppointmentBooking.Infrastructure\bin\Debug\net8.0\DoctorAppointmentBooking.Domain.dll
+C:\Git\DoctorAppointmentBooking\DoctorAppointmentBooking.Infrastructure\bin\Debug\net8.0\DoctorAppointmentBooking.Domain.pdb
+C:\Git\DoctorAppointmentBooking\DoctorAppointmentBooking.Infrastructure\obj\Debug\net8.0\DoctorAppointmentBooking.Infrastructure.csproj.AssemblyReference.cache
+C:\Git\DoctorAppointmentBooking\DoctorAppointmentBooking.Infrastructure\obj\Debug\net8.0\DoctorAp.ADBB71B4.Up2Date
+C:\Git\DoctorAppointmentBooking\DoctorAppointmentBooking.Infrastructure\obj\Debug\net8.0\DoctorAppointmentBooking.Infrastructure.genruntimeconfig.cache
