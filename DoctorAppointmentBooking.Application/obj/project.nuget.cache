@@ -1,0 +1,13 @@
+{
+  "version": 2,
+  "dgSpecHash": "ALTZZWEXMeuWWD2RdYZa5g99EIlZxWycpdzbpolZ6sflqJFp851mvtk4ELBm3vO4JAS2oSuVq9KnGrapJpM/wg==",
+  "success": true,
+  "projectFilePath": "C:\\Git\\DoctorAppointmentBooking\\DoctorAppointmentBooking.Application\\DoctorAppointmentBooking.Application.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\cvp14805\\.nuget\\packages\\fluentvalidation\\11.5.1\\fluentvalidation.11.5.1.nupkg.sha512",
+    "C:\\Users\\cvp14805\\.nuget\\packages\\fluentvalidation.aspnetcore\\11.3.0\\fluentvalidation.aspnetcore.11.3.0.nupkg.sha512",
+    "C:\\Users\\cvp14805\\.nuget\\packages\\fluentvalidation.dependencyinjectionextensions\\11.5.1\\fluentvalidation.dependencyinjectionextensions.11.5.1.nupkg.sha512",
+    "C:\\Users\\cvp14805\\.nuget\\packages\\microsoft.extensions.dependencyinjection.abstractions\\2.1.0\\microsoft.extensions.dependencyinjection.abstractions.2.1.0.nupkg.sha512"
+  ],
+  "logs": []
+}

@@ -1,0 +1,15 @@
+C:\Git\DoctorAppointmentBooking\DoctorAppointmentBooking.Application\bin\Debug\net8.0\DoctorAppointmentBooking.Application.deps.json
+C:\Git\DoctorAppointmentBooking\DoctorAppointmentBooking.Application\bin\Debug\net8.0\DoctorAppointmentBooking.Application.dll
+C:\Git\DoctorAppointmentBooking\DoctorAppointmentBooking.Application\bin\Debug\net8.0\DoctorAppointmentBooking.Application.pdb
+C:\Git\DoctorAppointmentBooking\DoctorAppointmentBooking.Application\obj\Debug\net8.0\DoctorAppointmentBooking.Application.GeneratedMSBuildEditorConfig.editorconfig
+C:\Git\DoctorAppointmentBooking\DoctorAppointmentBooking.Application\obj\Debug\net8.0\DoctorAppointmentBooking.Application.AssemblyInfoInputs.cache
+C:\Git\DoctorAppointmentBooking\DoctorAppointmentBooking.Application\obj\Debug\net8.0\DoctorAppointmentBooking.Application.AssemblyInfo.cs
+C:\Git\DoctorAppointmentBooking\DoctorAppointmentBooking.Application\obj\Debug\net8.0\DoctorAppointmentBooking.Application.csproj.CoreCompileInputs.cache
+C:\Git\DoctorAppointmentBooking\DoctorAppointmentBooking.Application\obj\Debug\net8.0\DoctorAppointmentBooking.Application.dll
+C:\Git\DoctorAppointmentBooking\DoctorAppointmentBooking.Application\obj\Debug\net8.0\refint\DoctorAppointmentBooking.Application.dll
+C:\Git\DoctorAppointmentBooking\DoctorAppointmentBooking.Application\obj\Debug\net8.0\DoctorAppointmentBooking.Application.pdb
+C:\Git\DoctorAppointmentBooking\DoctorAppointmentBooking.Application\obj\Debug\net8.0\ref\DoctorAppointmentBooking.Application.dll
+C:\Git\DoctorAppointmentBooking\DoctorAppointmentBooking.Application\bin\Debug\net8.0\DoctorAppointmentBooking.Domain.dll
+C:\Git\DoctorAppointmentBooking\DoctorAppointmentBooking.Application\bin\Debug\net8.0\DoctorAppointmentBooking.Domain.pdb
+C:\Git\DoctorAppointmentBooking\DoctorAppointmentBooking.Application\obj\Debug\net8.0\DoctorAppointmentBooking.Application.csproj.AssemblyReference.cache
+C:\Git\DoctorAppointmentBooking\DoctorAppointmentBooking.Application\obj\Debug\net8.0\DoctorAp.A1950F47.Up2Date
