@@ -1,3 +1,0 @@
-﻿<Project>
-  <Import Project="..\buildMultiTargeting\MedicalAppointment.Presentation.BlazorApp.props" />
-</Project>
