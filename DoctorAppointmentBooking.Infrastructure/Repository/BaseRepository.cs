@@ -1,11 +1,6 @@
 ﻿using DoctorAppointmentBooking.Domain.Entities;
 using DoctorAppointmentBooking.Domain.Interfaces;
 using DoctorAppointmentBooking.Infrastructure.Context;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DoctorAppointmentBooking.Infrastructure.Repository
 {
