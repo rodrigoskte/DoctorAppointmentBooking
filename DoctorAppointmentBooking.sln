@@ -29,8 +29,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DoctorAppointmentBooking.Ap
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DoctorAppointmentBooking.Infrastructure", "DoctorAppointmentBooking.Infrastructure\DoctorAppointmentBooking.Infrastructure.csproj", "{5A7DDE0E-6B86-4636-8C60-7C56F3BD5E2E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MedicalAppointment.Presentation.BlazorApp", "MedicalAppointment.Presentation.BlazorApp\MedicalAppointment.Presentation.BlazorApp.csproj", "{0CBB0E6C-5524-425E-8991-A83012DE0AB2}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MedicalAppointment.Presentation.API", "MedicalAppointment.Presentation.API\MedicalAppointment.Presentation.API.csproj", "{86CE2543-F21D-47E6-9382-7AA739BA7653}"
 EndProject
 Global
@@ -51,10 +49,6 @@ Global
 		{5A7DDE0E-6B86-4636-8C60-7C56F3BD5E2E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5A7DDE0E-6B86-4636-8C60-7C56F3BD5E2E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5A7DDE0E-6B86-4636-8C60-7C56F3BD5E2E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{0CBB0E6C-5524-425E-8991-A83012DE0AB2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{0CBB0E6C-5524-425E-8991-A83012DE0AB2}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{0CBB0E6C-5524-425E-8991-A83012DE0AB2}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{0CBB0E6C-5524-425E-8991-A83012DE0AB2}.Release|Any CPU.Build.0 = Release|Any CPU
 		{86CE2543-F21D-47E6-9382-7AA739BA7653}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{86CE2543-F21D-47E6-9382-7AA739BA7653}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{86CE2543-F21D-47E6-9382-7AA739BA7653}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -74,7 +68,6 @@ Global
 		{18FA52B3-EF5F-42FC-A9B1-59DB886907CB} = {8A4D388F-E856-4635-A372-817176E9A996}
 		{3353FB34-9D1C-4AC9-8F46-5894C7DC851C} = {39EEBD4B-83CC-4335-9B04-FBC25212FD6A}
 		{5A7DDE0E-6B86-4636-8C60-7C56F3BD5E2E} = {23E5553C-1B1E-42C3-B5E0-3C7719147E62}
-		{0CBB0E6C-5524-425E-8991-A83012DE0AB2} = {BBF33F7B-DFB9-4208-A606-968D8D8049CE}
 		{86CE2543-F21D-47E6-9382-7AA739BA7653} = {BBF33F7B-DFB9-4208-A606-968D8D8049CE}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
