@@ -31,8 +31,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DoctorAppointmentBooking.In
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MedicalAppointment.Presentation.API", "MedicalAppointment.Presentation.API\MedicalAppointment.Presentation.API.csproj", "{86CE2543-F21D-47E6-9382-7AA739BA7653}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MedicalAppointment.Presentation.BlazorServerApp", "MedicalAppointment.Presentation.BlazorServerApp\MedicalAppointment.Presentation.BlazorServerApp.csproj", "{328EEDD5-5E25-4B61-BE12-319366F18E72}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -55,10 +53,6 @@ Global
 		{86CE2543-F21D-47E6-9382-7AA739BA7653}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{86CE2543-F21D-47E6-9382-7AA739BA7653}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{86CE2543-F21D-47E6-9382-7AA739BA7653}.Release|Any CPU.Build.0 = Release|Any CPU
-		{328EEDD5-5E25-4B61-BE12-319366F18E72}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{328EEDD5-5E25-4B61-BE12-319366F18E72}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{328EEDD5-5E25-4B61-BE12-319366F18E72}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{328EEDD5-5E25-4B61-BE12-319366F18E72}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -75,7 +69,6 @@ Global
 		{3353FB34-9D1C-4AC9-8F46-5894C7DC851C} = {39EEBD4B-83CC-4335-9B04-FBC25212FD6A}
 		{5A7DDE0E-6B86-4636-8C60-7C56F3BD5E2E} = {23E5553C-1B1E-42C3-B5E0-3C7719147E62}
 		{86CE2543-F21D-47E6-9382-7AA739BA7653} = {BBF33F7B-DFB9-4208-A606-968D8D8049CE}
-		{328EEDD5-5E25-4B61-BE12-319366F18E72} = {BBF33F7B-DFB9-4208-A606-968D8D8049CE}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {DDCC2010-FBB4-48E7-8523-D8B4B516EE27}
