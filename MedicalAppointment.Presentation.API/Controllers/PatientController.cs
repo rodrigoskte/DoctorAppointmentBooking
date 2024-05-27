@@ -7,27 +7,13 @@ namespace MedicalAppointment.Presentation.API.Controllers
 {
     [ApiController]
     [Route("api/[controller]/")]
-    public class PatientController : ControllerBase
+    public class PatientController : BaseController
     {
         private readonly IBaseService<Patient> _basePatientService;
 
         public PatientController(IBaseService<Patient> baseUserService)
         {
             _basePatientService = baseUserService;
-        }
-
-        private IActionResult Execute(Func<object> func)
-        {
-            try
-            {
-                var result = func();
-
-                return Ok(result);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex);
-            }
         }
 
         [HttpPost]

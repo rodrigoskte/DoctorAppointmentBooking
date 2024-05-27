@@ -1,5 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.Text.Json.Serialization;
+﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 
 namespace DoctorAppointmentBooking.Domain.Entities
 {
@@ -9,21 +9,21 @@ namespace DoctorAppointmentBooking.Domain.Entities
         public bool IsDeleted { get; private set; }
 
         [Required]
-        [JsonPropertyName("Doctor's name")]
+        [Description("Doctor's name")]
         public Doctor Doctor { get; set; }
 
         [Required]
         public int DoctorId { get; set; }
 
         [Required]
-        [JsonPropertyName("Patient's name")]
+        [Description("Patient's name")]
         public Patient Patient { get; set; }
 
         [Required]
         public int PatientId { get; set; }
 
         [Required]
-        [JsonPropertyName("Date time schedule")]
+        [Description("Date time schedule")]
         public DateTime DateTimeSchedule { get; set; }
     }
 }

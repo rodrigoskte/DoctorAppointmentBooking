@@ -17,7 +17,7 @@ namespace DoctorAppointmentBooking.Infrastructure.Mapping
                 .HasColumnName("IsDeleted")
                 .HasColumnType("bit");
 
-            builder.Property(prop => prop.IsDeleted)
+            builder.Property(prop => prop.DateTimeSchedule)
                 .IsRequired()
                 .HasColumnName("DateTimeSchedule")
                 .HasColumnType("datetime");

@@ -10,6 +10,9 @@ namespace DoctorAppointmentBooking.Application.Validators
             RuleFor(c => c.Description)
                     .NotEmpty().WithMessage("Please enter the Specialty Description.")
                     .NotNull().WithMessage("Please enter the Specialty Description.");
+            
+            // Se DoctorSpecialties não deve ser obrigatória
+            RuleFor(s => s.DoctorSpecialties).NotNull().WithMessage("DoctorSpecialties should not be null.");
         }
     }
 }

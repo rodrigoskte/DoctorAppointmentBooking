@@ -15,7 +15,7 @@ namespace DoctorAppointmentBooking.Infrastructure.Mapping
             builder.Property(prop => prop.Description)
                  .HasConversion(prop => prop.ToString(), prop => prop)
                  .IsRequired()
-                 .HasColumnName("Name")
+                 .HasColumnName("Description")
                  .HasColumnType("varchar(100)");
 
             builder.Property(prop => prop.IsDeleted)
