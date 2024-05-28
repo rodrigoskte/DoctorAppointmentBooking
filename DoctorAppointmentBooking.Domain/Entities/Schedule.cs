@@ -1,23 +1,13 @@
 ﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace DoctorAppointmentBooking.Domain.Entities
 {
     public class Schedule : BaseEntity
     {
         [Required]
-        public bool IsDeleted { get; private set; }
-
-        [Required]
-        [Description("Doctor's name")]
-        public Doctor Doctor { get; set; }
-
-        [Required]
         public int DoctorId { get; set; }
-
-        [Required]
-        [Description("Patient's name")]
-        public Patient Patient { get; set; }
 
         [Required]
         public int PatientId { get; set; }
@@ -25,5 +15,13 @@ namespace DoctorAppointmentBooking.Domain.Entities
         [Required]
         [Description("Date time schedule")]
         public DateTime DateTimeSchedule { get; set; }
+        
+        [Description("Patient's name")]
+        [JsonIgnore]
+        public Patient Patient { get; private set; }
+        
+        [Description("Doctor's name")]
+        [JsonIgnore]
+        public Doctor Doctor { get; private set; }
     }
 }

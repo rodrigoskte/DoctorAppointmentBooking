@@ -7,11 +7,9 @@ namespace DoctorAppointmentBooking.Domain.Entities
     {
         [Required]
         [Description("Patient's name")]
-        public string Name { get; private set; }
+        public string Name { get; set; }
         [Description("Patient's email")]
-        public string Email { get; private set; }
-        public bool IsDeleted { get; private set; }
-
-        public IList<Schedule> Schedules { get; private set; }
+        public string Email { get; set; }
+        public IList<Schedule> Schedules { get; private set; } = new List<Schedule>();
     }
 }

@@ -29,8 +29,13 @@ namespace DoctorAppointmentBooking.Infrastructure.Repository
 
         public void Delete(int id)
         {
-            _dbContext.Set<TEntity>().Remove(Select(id));
-            _dbContext.SaveChanges();
+            var entity = Select(id);
+            if (entity != null)
+            {
+                entity.IsDeleted = true;
+                _dbContext.Set<TEntity>().Update(entity);
+                _dbContext.SaveChanges();
+            }
         }
 
         public IList<TEntity> Select() =>

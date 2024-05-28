@@ -1,6 +1,5 @@
 ﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
-using System.Text.Json.Serialization;
 
 namespace DoctorAppointmentBooking.Domain.Entities
 {
@@ -8,18 +7,16 @@ namespace DoctorAppointmentBooking.Domain.Entities
     {
         [Required]
         [Description("Doctor's name")]        
-        public string Name { get; private set; }
+        public string Name { get; set; }
 
         [Description("Doctor's CRM code")]
-        public string Code { get; private set; }
-
-        [Required]
-        public bool IsDeleted { get; private set; }
+        public string Code { get; set; }
 
         [Required]
         [Description("Doctor's specialty")]
-        public IList<DoctorSpecialty> DoctorSpecialties { get; private set; }
+        public IList<DoctorSpecialty> DoctorSpecialties { get; set; }
 
-        public IList<Schedule> Schedules { get; private set; }
+        [Description("Doctor's schedule")]
+        public IList<Schedule> Schedules { get; private set; } = new List<Schedule>();
     }
 }

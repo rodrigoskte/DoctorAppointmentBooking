@@ -7,11 +7,11 @@ namespace DoctorAppointmentBooking.Application.Validators
     {
         public ScheduleValidator()
         {
-            RuleFor(c => c.Doctor)
+            RuleFor(c => c.DoctorId)
                     .NotEmpty().WithMessage("Please enter the Doctor.")
                     .NotNull().WithMessage("Please enter the Doctor.");
 
-            RuleFor(c => c.Patient)
+            RuleFor(c => c.PatientId)
                     .NotEmpty().WithMessage("Please enter the Patient.")
                     .NotNull().WithMessage("Please enter the Patient.");
 

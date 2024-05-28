@@ -1,4 +1,5 @@
-﻿using DoctorAppointmentBooking.Application.Validators;
+﻿using DoctorAppointmentBooking.Application.DTOs;
+using DoctorAppointmentBooking.Application.Validators;
 using DoctorAppointmentBooking.Domain.Entities;
 using DoctorAppointmentBooking.Domain.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -18,22 +19,42 @@ namespace MedicalAppointment.Presentation.API.Controllers
 
         [HttpPost]
         [Route("v1/patient")]
-        public IActionResult Create([FromBody] Patient patient)
+        public IActionResult Create([FromBody] PatientDto patientDto)
         {
-            if(patient == null)
+            if(patientDto == null)
                 return NotFound();
 
-            return Execute(() => _basePatientService.Add<PatientValidator>(patient).Id);
+            return Execute(() =>
+            {
+                var specialty = new Patient
+                {
+                    Name = patientDto.Name,
+                    Email = patientDto.Email,
+                    IsDeleted = patientDto.IsDeleted
+                };
+                _basePatientService.Add<PatientValidator>(specialty);
+                return Ok(patientDto);
+            });
         }
 
         [HttpPut]
         [Route("v1/patient")]
-        public IActionResult Update([FromBody] Patient patient)
+        public IActionResult Update([FromBody] PatientDto patientDto)
         {
-            if (patient == null)
+            if (patientDto == null)
                 return NotFound();
 
-            return Execute(() => _basePatientService.Update<PatientValidator>(patient));
+            return Execute(() =>
+            {
+                var specialty = new Patient
+                {
+                    Name = patientDto.Name,
+                    Email = patientDto.Email,
+                    IsDeleted = patientDto.IsDeleted
+                };
+                _basePatientService.Add<PatientValidator>(specialty);
+                return Ok(patientDto);
+            });
         }
 
         [HttpDelete]

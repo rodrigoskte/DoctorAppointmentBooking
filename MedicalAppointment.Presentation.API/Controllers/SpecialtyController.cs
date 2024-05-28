@@ -1,4 +1,5 @@
-﻿using DoctorAppointmentBooking.Application.Validators;
+﻿using DoctorAppointmentBooking.Application.DTOs;
+using DoctorAppointmentBooking.Application.Validators;
 using DoctorAppointmentBooking.Domain.Entities;
 using DoctorAppointmentBooking.Domain.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -18,12 +19,21 @@ public class SpecialtyController : BaseController
     
     [HttpPost]
     [Route("v1/specialty")]
-    public IActionResult Create([FromBody] Specialty specialty)
+    public IActionResult Create([FromBody] SpecialtyDto specialtyDto)
     {
-        if(specialty == null)
+        if(specialtyDto == null)
             return NotFound();
 
-        return Execute(() => _baseSpecialtyService.Add<SpecialtyValidator>(specialty).Id);
+        return Execute(() =>
+        {
+            var specialty = new Specialty
+            {
+                Description = specialtyDto.Description,
+                IsDeleted = specialtyDto.IsDeleted
+            };
+            _baseSpecialtyService.Add<SpecialtyValidator>(specialty);
+            return Ok(specialtyDto);
+        });
     }
     
     [HttpGet]
@@ -41,5 +51,40 @@ public class SpecialtyController : BaseController
             return NotFound();
 
         return Execute(() => _baseSpecialtyService.GetById(id));
+    }
+    
+    [HttpPut]
+    [Route("v1/specialty")]
+    public IActionResult Update([FromBody] SpecialtyDto specialtyDto)
+    {
+        if (specialtyDto == null)
+            return NotFound();
+
+        return Execute(() =>
+        {
+            var specialty = new Specialty
+            {
+                Description = specialtyDto.Description,
+                IsDeleted = specialtyDto.IsDeleted
+            };
+            _baseSpecialtyService.Update<SpecialtyValidator>(specialty);
+            return Ok(specialtyDto);
+        });
+    }
+
+    [HttpDelete]
+    [Route("v1/specialty/{id}")]
+    public IActionResult Delete(int id)
+    {
+        if (id == 0)
+            return NotFound();
+
+        Execute(() =>
+        {
+            _baseSpecialtyService.Delete(id);
+            return true;
+        });
+
+        return new NoContentResult();
     }
 }

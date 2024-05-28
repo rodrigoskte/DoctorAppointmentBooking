@@ -1,4 +1,5 @@
-﻿using DoctorAppointmentBooking.Domain.Entities;
+﻿using DoctorAppointmentBooking.Application.DTOs;
+using DoctorAppointmentBooking.Domain.Entities;
 using FluentValidation;
 
 namespace DoctorAppointmentBooking.Application.Validators

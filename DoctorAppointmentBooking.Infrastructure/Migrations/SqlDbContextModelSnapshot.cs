@@ -33,8 +33,7 @@ namespace DoctorAppointmentBooking.Infrastructure.Migrations
                     b.Property<string>("Code")
                         .IsRequired()
                         .HasColumnType("varchar(10)")
-                        .HasColumnName("Code")
-                        .HasAnnotation("Relational:JsonPropertyName", "Doctor's CRM code");
+                        .HasColumnName("Code");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit")
@@ -43,14 +42,11 @@ namespace DoctorAppointmentBooking.Infrastructure.Migrations
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("varchar(100)")
-                        .HasColumnName("Name")
-                        .HasAnnotation("Relational:JsonPropertyName", "Doctor's name");
+                        .HasColumnName("Name");
 
                     b.HasKey("Id");
 
                     b.ToTable("Doctor", (string)null);
-
-                    b.HasAnnotation("Relational:JsonPropertyName", "Doctor's name");
                 });
 
             modelBuilder.Entity("DoctorAppointmentBooking.Domain.Entities.DoctorSpecialty", b =>
@@ -69,8 +65,6 @@ namespace DoctorAppointmentBooking.Infrastructure.Migrations
                     b.HasIndex("SpecialtyId");
 
                     b.ToTable("DoctorSpecialty", (string)null);
-
-                    b.HasAnnotation("Relational:JsonPropertyName", "Doctor's specialty");
                 });
 
             modelBuilder.Entity("DoctorAppointmentBooking.Domain.Entities.Patient", b =>
@@ -84,8 +78,7 @@ namespace DoctorAppointmentBooking.Infrastructure.Migrations
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasColumnType("varchar(100)")
-                        .HasColumnName("Email")
-                        .HasAnnotation("Relational:JsonPropertyName", "Patient's email");
+                        .HasColumnName("Email");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit")
@@ -94,14 +87,11 @@ namespace DoctorAppointmentBooking.Infrastructure.Migrations
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("varchar(100)")
-                        .HasColumnName("Name")
-                        .HasAnnotation("Relational:JsonPropertyName", "Patient's name");
+                        .HasColumnName("Name");
 
                     b.HasKey("Id");
 
                     b.ToTable("Patient", (string)null);
-
-                    b.HasAnnotation("Relational:JsonPropertyName", "Patient's name");
                 });
 
             modelBuilder.Entity("DoctorAppointmentBooking.Domain.Entities.Schedule", b =>
@@ -114,8 +104,7 @@ namespace DoctorAppointmentBooking.Infrastructure.Migrations
 
                     b.Property<DateTime>("DateTimeSchedule")
                         .HasColumnType("datetime")
-                        .HasColumnName("DateTimeSchedule")
-                        .HasAnnotation("Relational:JsonPropertyName", "Date time schedule");
+                        .HasColumnName("DateTimeSchedule");
 
                     b.Property<int>("DoctorId")
                         .HasColumnType("int");
@@ -147,8 +136,7 @@ namespace DoctorAppointmentBooking.Infrastructure.Migrations
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("varchar(100)")
-                        .HasColumnName("Description")
-                        .HasAnnotation("Relational:JsonPropertyName", "Specialty's description");
+                        .HasColumnName("Description");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit")
