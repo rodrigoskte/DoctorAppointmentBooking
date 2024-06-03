@@ -17,9 +17,15 @@ public class DoctorDto
     public string Code { get; set; }
 
     [Description("Status")] 
+    [JsonIgnore]
     public bool IsDeleted { get; set; } = false;
     
-    [Required]
     [Description("Doctor's specialty")]
+    [JsonIgnore]
     public IList<DoctorSpecialtyDto> DoctorSpecialties { get; set; } = new List<DoctorSpecialtyDto>();
+    
+    public DoctorDto()
+    {
+        IsDeleted = false;
+    }
 }

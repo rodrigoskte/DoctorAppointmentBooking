@@ -14,4 +14,8 @@
     </PackageReference>
   </ItemGroup>
 
+  <ItemGroup>
+    <Compile Remove="Interfaces\SpecialtyService.cs" />
+  </ItemGroup>
+
 </Project>

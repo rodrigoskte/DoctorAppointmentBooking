@@ -21,18 +21,35 @@ public class DoctorController: BaseController
         _doctorService = doctorService;
     }
     
+    [HttpGet]
+    [Route("v1/doctor")]
+    public IActionResult Get()
+    {
+        return Execute(() => _baseDoctorService.Get());
+    }
+    
+    [HttpGet]
+    [Route("v1/doctor/{id:int}")]
+    public IActionResult Get([FromRoute]int id)
+    {
+        if (id <= 0)
+            return NotFound();
+
+        return Execute(() => _baseDoctorService.GetById(id));
+    }
+    
     [HttpPost]
     [Route("v1/doctor")]
     public IActionResult Create([FromBody] DoctorDto doctorDto)
     {
-        if(doctorDto == null)
+        if (doctorDto == null)
             return NotFound();
 
         return Execute(() =>
         {
             var doctor = new Doctor
             {
-                Id = doctorDto.Id, 
+                Id = doctorDto.Id,
                 Name = doctorDto.Name,
                 Code = doctorDto.Code,
                 IsDeleted = doctorDto.IsDeleted,
@@ -42,33 +59,18 @@ public class DoctorController: BaseController
                     DoctorId = doctorDto.Id,
                 }).ToList()
             };
-            _baseDoctorService.Add<DoctorValidator>(doctor);
-            return Ok(doctorDto);
+            _doctorService.AddDoctor(doctor);
+            return doctorDto;
         });
     }
     
-    [HttpGet]
-    [Route("v1/doctor")]
-    public IActionResult Get()
-    {
-        return Execute(() => _doctorService.GetDoctorsWithSpecialties());
-    }
-    
-    [HttpGet]
-    [Route("v1/doctor/{id}")]
-    public IActionResult Get(int id)
-    {
-        if (id == 0)
-            return NotFound();
-
-        return Execute(() => _doctorService.GetDoctorsWithSpecialtiesId(id));
-    }
-    
     [HttpPut]
-    [Route("v1/doctor")]
-    public IActionResult Update([FromBody] DoctorDto doctorDto)
+    [Route("v1/doctor/{id:int}")]
+    public IActionResult Update(
+        [FromRoute]int id,
+        [FromBody] DoctorDto doctorDto)
     {
-        if (doctorDto == null)
+        if (id <= 0 || doctorDto == null)
             return NotFound();
 
         return Execute(() =>
@@ -85,23 +87,21 @@ public class DoctorController: BaseController
                 }).ToList()
             };
             _baseDoctorService.Update<DoctorValidator>(doctor);
-            return Ok(doctorDto);
+            return doctorDto;
         });
     }
 
     [HttpDelete]
-    [Route("v1/doctor/{id}")]
-    public IActionResult Delete(int id)
+    [Route("v1/doctor/{id:int}")]
+    public IActionResult Delete([FromRoute] int id)
     {
-        if (id == 0)
+        if (id <= 0)
             return NotFound();
 
-        Execute(() =>
+        return Execute(() =>
         {
             _baseDoctorService.Delete(id);
             return true;
         });
-
-        return new NoContentResult();
     }
 }

@@ -16,46 +16,27 @@ public class SpecialtyController : BaseController
     {
         _baseSpecialtyService = baseSpecialtyService;
     }
-    
-    [HttpPost]
-    [Route("v1/specialty")]
-    public IActionResult Create([FromBody] SpecialtyDto specialtyDto)
-    {
-        if(specialtyDto == null)
-            return NotFound();
 
-        return Execute(() =>
-        {
-            var specialty = new Specialty
-            {
-                Description = specialtyDto.Description,
-                IsDeleted = specialtyDto.IsDeleted
-            };
-            _baseSpecialtyService.Add<SpecialtyValidator>(specialty);
-            return Ok(specialtyDto);
-        });
-    }
-    
     [HttpGet]
     [Route("v1/specialty")]
     public IActionResult Get()
     {
         return Execute(() => _baseSpecialtyService.Get());
     }
-    
+
     [HttpGet]
-    [Route("v1/specialty/{id}")]
-    public IActionResult Get(int id)
+    [Route("v1/specialty/{id:int}")]
+    public IActionResult Get([FromRoute] int id)
     {
-        if (id == 0)
+        if (id <= 0)
             return NotFound();
 
         return Execute(() => _baseSpecialtyService.GetById(id));
     }
-    
-    [HttpPut]
+
+    [HttpPost]
     [Route("v1/specialty")]
-    public IActionResult Update([FromBody] SpecialtyDto specialtyDto)
+    public IActionResult Create([FromBody] SpecialtyDto specialtyDto)
     {
         if (specialtyDto == null)
             return NotFound();
@@ -67,24 +48,44 @@ public class SpecialtyController : BaseController
                 Description = specialtyDto.Description,
                 IsDeleted = specialtyDto.IsDeleted
             };
+            _baseSpecialtyService.Add<SpecialtyValidator>(specialty);
+            return specialtyDto;
+        });
+    }
+
+    [HttpPut]
+    [Route("v1/specialty/{id:int}")]
+    public IActionResult Update(
+        [FromRoute] int id,
+        [FromBody] SpecialtyDto specialtyDto)
+    {
+        if (id <= 0 || specialtyDto == null)
+            return NotFound();
+
+        return Execute(() =>
+        {
+            var specialty = new Specialty
+            {
+                Id = id,
+                Description = specialtyDto.Description,
+                IsDeleted = specialtyDto.IsDeleted
+            };
             _baseSpecialtyService.Update<SpecialtyValidator>(specialty);
-            return Ok(specialtyDto);
+            return specialtyDto;
         });
     }
 
     [HttpDelete]
-    [Route("v1/specialty/{id}")]
-    public IActionResult Delete(int id)
+    [Route("v1/specialty/{id:int}")]
+    public IActionResult Delete([FromRoute] int id)
     {
-        if (id == 0)
+        if (id <= 0)
             return NotFound();
 
-        Execute(() =>
+        return Execute(() =>
         {
             _baseSpecialtyService.Delete(id);
             return true;
         });
-
-        return new NoContentResult();
     }
 }

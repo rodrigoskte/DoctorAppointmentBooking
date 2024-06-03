@@ -17,6 +17,23 @@ namespace MedicalAppointment.Presentation.API.Controllers
             _basePatientService = baseUserService;
         }
 
+        [HttpGet]
+        [Route("v1/patient")]
+        public IActionResult Get()
+        {
+            return Execute(() => _basePatientService.Get());
+        }
+
+        [HttpGet]
+        [Route("v1/patient/{id:int}")]
+        public IActionResult Get([FromRoute]int id)
+        {
+            if (id <= 0)
+                return NotFound();
+
+            return Execute(() => _basePatientService.GetById(id));
+        }
+        
         [HttpPost]
         [Route("v1/patient")]
         public IActionResult Create([FromBody] PatientDto patientDto)
@@ -33,15 +50,17 @@ namespace MedicalAppointment.Presentation.API.Controllers
                     IsDeleted = patientDto.IsDeleted
                 };
                 _basePatientService.Add<PatientValidator>(specialty);
-                return Ok(patientDto);
+                return patientDto;
             });
         }
 
         [HttpPut]
-        [Route("v1/patient")]
-        public IActionResult Update([FromBody] PatientDto patientDto)
+        [Route("v1/patient/{id:int}")]
+        public IActionResult Update(
+            [FromRoute]int id,
+            [FromBody] PatientDto patientDto)
         {
-            if (patientDto == null)
+            if (id <= 0 || patientDto == null)
                 return NotFound();
 
             return Execute(() =>
@@ -53,42 +72,22 @@ namespace MedicalAppointment.Presentation.API.Controllers
                     IsDeleted = patientDto.IsDeleted
                 };
                 _basePatientService.Add<PatientValidator>(specialty);
-                return Ok(patientDto);
+                return patientDto;
             });
         }
 
         [HttpDelete]
-        [Route("v1/patient/{id}")]
-        public IActionResult Delete(int id)
+        [Route("v1/patient/{id:int}")]
+        public IActionResult Delete([FromRoute]int id)
         {
-            if (id == 0)
+            if (id <= 0)
                 return NotFound();
 
-            Execute(() =>
+            return Execute(() =>
             {
                 _basePatientService.Delete(id);
                 return true;
             });
-
-            return new NoContentResult();
         }
-
-        [HttpGet]
-        [Route("v1/patient")]
-        public IActionResult Get()
-        {
-            return Execute(() => _basePatientService.Get());
-        }
-
-        [HttpGet]
-        [Route("v1/patient/{id}")]
-        public IActionResult Get(int id)
-        {
-            if (id == 0)
-                return NotFound();
-
-            return Execute(() => _basePatientService.GetById(id));
-        }
-
     }
 }

@@ -17,6 +17,23 @@ public class ScheduleController : BaseController
         _baseScheduleService = baseScheduleService;
     }
 
+    [HttpGet]
+    [Route("v1/schedule")]
+    public IActionResult Get()
+    {
+        return Execute(() => _baseScheduleService.Get());
+    }
+
+    [HttpGet]
+    [Route("v1/schedule/{id:int}")]
+    public IActionResult Get([FromRoute]int id)
+    {
+        if (id <= 0)
+            return NotFound();
+
+        return Execute(() => _baseScheduleService.GetById(id));
+    }
+    
     [HttpPost]
     [Route("v1/schedule")]
     public IActionResult Create([FromBody] ScheduleDto scheduleDto)
@@ -34,61 +51,44 @@ public class ScheduleController : BaseController
                 IsDeleted = scheduleDto.IsDeleted
             };
             _baseScheduleService.Add<ScheduleValidator>(specialty);
-            return Ok(scheduleDto);
+            return scheduleDto;
         });
     }
 
     [HttpPut]
-    [Route("v1/schedule")]
-    public IActionResult Update([FromBody] ScheduleDto scheduleDto)
+    [Route("v1/schedule/{id:int}")]
+    public IActionResult Update([FromRoute]int id,
+        [FromBody] ScheduleDto scheduleDto)
     {
-        if (scheduleDto == null)
+        if (id <= 0 || scheduleDto == null)
             return NotFound();
 
         return Execute(() =>
         {
             var specialty = new Schedule
             {
+                Id = id,
                 DoctorId = scheduleDto.DoctorId,
                 PatientId = scheduleDto.PatientId,
                 DateTimeSchedule = scheduleDto.DateTimeSchedule,
                 IsDeleted = scheduleDto.IsDeleted
             };
             _baseScheduleService.Add<ScheduleValidator>(specialty);
-            return Ok(scheduleDto);
+            return scheduleDto;
         });
     }
 
     [HttpDelete]
-    [Route("v1/schedule/{id}")]
-    public IActionResult Delete(int id)
+    [Route("v1/schedule/{id:int}")]
+    public IActionResult Delete([FromRoute]int id)
     {
-        if (id == 0)
+        if (id <= 0)
             return NotFound();
 
-        Execute(() =>
+        return Execute(() =>
         {
             _baseScheduleService.Delete(id);
             return true;
         });
-
-        return new NoContentResult();
-    }
-
-    [HttpGet]
-    [Route("v1/schedule")]
-    public IActionResult Get()
-    {
-        return Execute(() => _baseScheduleService.Get());
-    }
-
-    [HttpGet]
-    [Route("v1/schedule/{id}")]
-    public IActionResult Get(int id)
-    {
-        if (id == 0)
-            return NotFound();
-
-        return Execute(() => _baseScheduleService.GetById(id));
     }
 }

@@ -19,9 +19,10 @@ public class DoctorRepository : BaseRepository<Doctor>, IDoctorRepository
     public IList<Doctor> GetDoctorsWithSpecialties()
     {
         return _dbContext.Doctors
-            .Include(d => d.DoctorSpecialties)
-            .ThenInclude(ds => ds.Specialty)
-            .ToList();
+                         .Where(d => !d.IsDeleted) 
+                         .Include(d => d.DoctorSpecialties)
+                         .ThenInclude(ds => ds.Specialty)
+                         .ToList();
     }
     
     public IList<Doctor> GetDoctorsWithSpecialtiesId(int id)
@@ -31,5 +32,11 @@ public class DoctorRepository : BaseRepository<Doctor>, IDoctorRepository
             .Include(d => d.DoctorSpecialties)
             .ThenInclude(ds => ds.Specialty)
             .ToList();
+    }
+
+    public void AddDoctor(Doctor doctor)
+    {
+        _dbContext.Set<Doctor>().Add(doctor);
+        _dbContext.SaveChanges();
     }
 }

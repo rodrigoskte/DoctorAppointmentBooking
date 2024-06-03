@@ -45,6 +45,8 @@ void ConfigureInjection(WebApplicationBuilder webApplicationBuilder)
     
     webApplicationBuilder.Services.AddScoped<IDoctorRepository, DoctorRepository>();
     webApplicationBuilder.Services.AddScoped<IDoctorService, DoctorService>();
+    webApplicationBuilder.Services.AddScoped<ISpecialtyRepository, SpecialtyRepository>();
+    webApplicationBuilder.Services.AddScoped<ISpecialtyService, SpecialtyService>();
 
 }
 

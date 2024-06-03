@@ -1,4 +1,6 @@
-﻿namespace DoctorAppointmentBooking.Domain.Entities
+﻿using System.Text.Json.Serialization;
+
+namespace DoctorAppointmentBooking.Domain.Entities
 {
     public abstract class BaseEntity
     {
