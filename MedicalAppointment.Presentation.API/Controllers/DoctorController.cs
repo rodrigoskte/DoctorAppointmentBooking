@@ -37,7 +37,7 @@ public class DoctorController: BaseController
         if (id <= 0)
             return NotFound();
 
-        return Execute(() => _doctorService.GetAllDoctorsActiveById(id));
+        return Execute(() => _baseDoctorService.GetById(id));
     }
     
     [HttpGet]
