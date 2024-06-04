@@ -15,10 +15,6 @@ namespace DoctorAppointmentBooking.Application.Validators
             RuleFor(c => c.Code)
                 .NotEmpty().WithMessage("Please enter the CRM.")
                 .NotNull().WithMessage("Please enter the CRM.");
-
-            RuleFor(c => c.DoctorSpecialties)
-                .NotEmpty().WithMessage("Please enter the Specialty.")
-                .NotNull().WithMessage("Please enter the Specialty.");
         }
     }
 }

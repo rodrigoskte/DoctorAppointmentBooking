@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using DoctorAppointmentBooking.Domain.Entities;
 using DoctorAppointmentBooking.Domain.Interfaces;
 using DoctorAppointmentBooking.Infrastructure.Context;
@@ -22,5 +23,15 @@ public class SpecialtyRepository  : BaseRepository<Specialty>, ISpecialtyReposit
     public IList<Doctor> GetSpecialtiesWithDoctorsId(int id)
     {
         throw new System.NotImplementedException();
+    }
+
+    public bool IsSpecialtyExists(Specialty specialty)
+    {
+        return _dbContext.Specialties.Any(e => e.Description == specialty.Description);
+    }
+    
+    public IList<Specialty> GetAllSpecialtyActive()
+    {
+        return _dbContext.Specialties.Where(e => !e.IsDeleted).ToList();
     }
 }

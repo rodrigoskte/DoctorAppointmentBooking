@@ -38,10 +38,20 @@ namespace DoctorAppointmentBooking.Infrastructure.Repository
             }
         }
 
-        public IList<TEntity> Select() =>
-            _dbContext.Set<TEntity>().ToList();
+        public IList<TEntity> Select()
+        {
+            var entity = _dbContext.Set<TEntity>().ToList();
+            if (entity != null)
+                return entity.Where(e => e.IsDeleted == false).ToList();
 
-        public TEntity Select(int id) =>
-            _dbContext.Set<TEntity>().Find(id);
+            return entity;
+        }
+            
+
+        public TEntity Select(int id)
+        {
+            return _dbContext.Set<TEntity>().First(e => e.Id == id && e.IsDeleted == false);
+        }
+            
     }
 }

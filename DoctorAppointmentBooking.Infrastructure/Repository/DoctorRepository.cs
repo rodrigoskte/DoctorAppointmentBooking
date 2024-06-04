@@ -39,4 +39,27 @@ public class DoctorRepository : BaseRepository<Doctor>, IDoctorRepository
         _dbContext.Set<Doctor>().Add(doctor);
         _dbContext.SaveChanges();
     }
+
+    public bool IsDoctorExists(Doctor doctor)
+    {
+        if (_dbContext.Doctors.Any(e => e.Name == doctor.Name))
+            return true;
+        
+        if (_dbContext.Doctors.Any(e => e.Code == doctor.Code))
+            return true;
+
+        return false;
+    }
+
+    public IList<Doctor> GetAllDoctorsActive()
+    {
+        return _dbContext.Doctors.Where(e => !e.IsDeleted).ToList();
+    }
+    
+    public IList<Doctor> GetAllDoctorsActiveById(int doctorId)
+    {
+        return _dbContext.Doctors.Where(e => 
+            !e.IsDeleted && 
+            e.Id == doctorId).ToList();
+    }
 }

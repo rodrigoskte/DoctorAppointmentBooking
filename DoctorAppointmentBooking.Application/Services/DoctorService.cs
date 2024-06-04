@@ -1,5 +1,6 @@
 ﻿using DoctorAppointmentBooking.Application.Constants;
 using DoctorAppointmentBooking.Domain.Entities;
+using DoctorAppointmentBooking.Domain.Exceptions;
 using DoctorAppointmentBooking.Domain.Interfaces;
 
 namespace DoctorAppointmentBooking.Application.Services;
@@ -36,5 +37,23 @@ public class DoctorService : IDoctorService
             throw new ArgumentException(MessageConstants.SpecialtyNotFound);
 
         _doctorRepository.AddDoctor(doctor);
+    }
+
+    public bool Validations(Doctor doctor)
+    {
+        if (_doctorRepository.IsDoctorExists(doctor))
+            throw new DoctorException(doctor);
+
+        return false;
+    }
+
+    public IList<Doctor> GetAllDoctorsActive()
+    {
+        return _doctorRepository.GetAllDoctorsActive();
+    }
+    
+    public IList<Doctor> GetAllDoctorsActiveById(int doctorId)
+    {
+        return _doctorRepository.GetAllDoctorsActiveById(doctorId);
     }
 }

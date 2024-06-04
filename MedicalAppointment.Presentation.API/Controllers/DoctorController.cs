@@ -7,39 +7,47 @@ using Microsoft.AspNetCore.Mvc;
 namespace MedicalAppointment.Presentation.API.Controllers;
 
 [ApiController]
-[Route("api/[controller]/")]
+[Route("api/v1/[controller]/")]
 public class DoctorController: BaseController
 {
     private readonly IBaseService<Doctor> _baseDoctorService;
     private readonly IDoctorService _doctorService;
+    private readonly IScheduleService _scheduleService;
 
     public DoctorController(
         IBaseService<Doctor> baseDoctorService, 
-        IDoctorService doctorService)
+        IDoctorService doctorService,
+        IScheduleService scheduleService)
     {
         _baseDoctorService = baseDoctorService;
         _doctorService = doctorService;
+        _scheduleService = scheduleService;
     }
     
     [HttpGet]
-    [Route("v1/doctor")]
     public IActionResult Get()
     {
-        return Execute(() => _baseDoctorService.Get());
+        return Execute(() => _doctorService.GetAllDoctorsActive());
     }
     
     [HttpGet]
-    [Route("v1/doctor/{id:int}")]
+    [Route("{id:int}")]
     public IActionResult Get([FromRoute]int id)
     {
         if (id <= 0)
             return NotFound();
 
-        return Execute(() => _baseDoctorService.GetById(id));
+        return Execute(() => _doctorService.GetAllDoctorsActiveById(id));
+    }
+    
+    [HttpGet]
+    [Route("GetAllDoctor")]
+    public IActionResult GetAllDoctor()
+    {
+        return Execute(() => _baseDoctorService.Get());
     }
     
     [HttpPost]
-    [Route("v1/doctor")]
     public IActionResult Create([FromBody] DoctorDto doctorDto)
     {
         if (doctorDto == null)
@@ -52,20 +60,18 @@ public class DoctorController: BaseController
                 Id = doctorDto.Id,
                 Name = doctorDto.Name,
                 Code = doctorDto.Code,
-                IsDeleted = doctorDto.IsDeleted,
-                DoctorSpecialties = doctorDto.DoctorSpecialties.Select(ds => new DoctorSpecialty
-                {
-                    SpecialtyId = ds.SpecialtyId,
-                    DoctorId = doctorDto.Id,
-                }).ToList()
+                IsDeleted = doctorDto.IsDeleted
             };
-            _doctorService.AddDoctor(doctor);
+
+            _doctorService.Validations(doctor);
+            
+            _baseDoctorService.Add<DoctorValidator>(doctor);
             return doctorDto;
         });
     }
     
     [HttpPut]
-    [Route("v1/doctor/{id:int}")]
+    [Route("{id:int}")]
     public IActionResult Update(
         [FromRoute]int id,
         [FromBody] DoctorDto doctorDto)
@@ -77,22 +83,20 @@ public class DoctorController: BaseController
         {
             var doctor = new Doctor
             {
-                Id = doctorDto.Id,
+                Id = id,
                 Name = doctorDto.Name,
                 Code = doctorDto.Code,
-                IsDeleted = doctorDto.IsDeleted,
-                DoctorSpecialties = doctorDto.DoctorSpecialties.Select(ds => new DoctorSpecialty
-                {
-                    SpecialtyId = ds.SpecialtyId,
-                }).ToList()
+                IsDeleted = doctorDto.IsDeleted
             };
+            
+            _doctorService.Validations(doctor);
             _baseDoctorService.Update<DoctorValidator>(doctor);
             return doctorDto;
         });
     }
 
     [HttpDelete]
-    [Route("v1/doctor/{id:int}")]
+    [Route("{id:int}")]
     public IActionResult Delete([FromRoute] int id)
     {
         if (id <= 0)
@@ -100,6 +104,8 @@ public class DoctorController: BaseController
 
         return Execute(() =>
         {
+            _scheduleService.IsDoctorActiveSchedule(id);
+            
             _baseDoctorService.Delete(id);
             return true;
         });

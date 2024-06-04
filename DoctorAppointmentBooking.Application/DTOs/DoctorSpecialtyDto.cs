@@ -8,4 +8,8 @@ public class DoctorSpecialtyDto
     [Required]
     [Description("Specialty's id")]  
     public int SpecialtyId { get; set; }
+    
+    [Required]
+    [Description("Doctor's id")]  
+    public int DoctorId { get; set; }
 }

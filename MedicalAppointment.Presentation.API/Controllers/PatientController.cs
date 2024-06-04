@@ -7,25 +7,31 @@ using Microsoft.AspNetCore.Mvc;
 namespace MedicalAppointment.Presentation.API.Controllers
 {
     [ApiController]
-    [Route("api/[controller]/")]
+    [Route("api/v1/[controller]/")]
     public class PatientController : BaseController
     {
         private readonly IBaseService<Patient> _basePatientService;
+        private readonly IPatientService _patientService;
+        private readonly IScheduleService _scheduleService;
 
-        public PatientController(IBaseService<Patient> baseUserService)
+        public PatientController(
+            IBaseService<Patient> baseUserService,
+            IPatientService patientService,
+            IScheduleService scheduleService)
         {
             _basePatientService = baseUserService;
+            _patientService = patientService;
+            _scheduleService = scheduleService;
         }
 
         [HttpGet]
-        [Route("v1/patient")]
         public IActionResult Get()
         {
-            return Execute(() => _basePatientService.Get());
+            return Execute(() => _patientService.GetAllPatientActive());
         }
 
         [HttpGet]
-        [Route("v1/patient/{id:int}")]
+        [Route("{id:int}")]
         public IActionResult Get([FromRoute]int id)
         {
             if (id <= 0)
@@ -34,8 +40,14 @@ namespace MedicalAppointment.Presentation.API.Controllers
             return Execute(() => _basePatientService.GetById(id));
         }
         
+        [HttpGet]
+        [Route("GetAllPatient")]
+        public IActionResult GetAllPatient()
+        {
+            return Execute(() => _basePatientService.Get());
+        }
+        
         [HttpPost]
-        [Route("v1/patient")]
         public IActionResult Create([FromBody] PatientDto patientDto)
         {
             if(patientDto == null)
@@ -43,19 +55,22 @@ namespace MedicalAppointment.Presentation.API.Controllers
 
             return Execute(() =>
             {
-                var specialty = new Patient
+                var patient = new Patient
                 {
                     Name = patientDto.Name,
                     Email = patientDto.Email,
                     IsDeleted = patientDto.IsDeleted
                 };
-                _basePatientService.Add<PatientValidator>(specialty);
+                
+                _patientService.Validations(patient);
+                
+                _basePatientService.Add<PatientValidator>(patient);
                 return patientDto;
             });
         }
 
         [HttpPut]
-        [Route("v1/patient/{id:int}")]
+        [Route("{id:int}")]
         public IActionResult Update(
             [FromRoute]int id,
             [FromBody] PatientDto patientDto)
@@ -65,19 +80,23 @@ namespace MedicalAppointment.Presentation.API.Controllers
 
             return Execute(() =>
             {
-                var specialty = new Patient
+                var patient = new Patient
                 {
+                    Id = id,
                     Name = patientDto.Name,
                     Email = patientDto.Email,
                     IsDeleted = patientDto.IsDeleted
                 };
-                _basePatientService.Add<PatientValidator>(specialty);
+                
+                _patientService.Validations(patient);
+                
+                _basePatientService.Update<PatientValidator>(patient);
                 return patientDto;
             });
         }
 
         [HttpDelete]
-        [Route("v1/patient/{id:int}")]
+        [Route("{id:int}")]
         public IActionResult Delete([FromRoute]int id)
         {
             if (id <= 0)
@@ -85,6 +104,8 @@ namespace MedicalAppointment.Presentation.API.Controllers
 
             return Execute(() =>
             {
+                _scheduleService.IsPatientActiveSchedule(id);
+                
                 _basePatientService.Delete(id);
                 return true;
             });

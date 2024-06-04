@@ -7,25 +7,28 @@ using Microsoft.AspNetCore.Mvc;
 namespace MedicalAppointment.Presentation.API.Controllers;
 
 [ApiController]
-[Route("api/[controller]/")]
+[Route("api/v1/[controller]/")]
 public class SpecialtyController : BaseController
 {
     private readonly IBaseService<Specialty> _baseSpecialtyService;
+    private readonly ISpecialtyService _specialtyService;
 
-    public SpecialtyController(IBaseService<Specialty> baseSpecialtyService)
+    public SpecialtyController(
+        IBaseService<Specialty> baseSpecialtyService,
+        ISpecialtyService specialtyService)
     {
         _baseSpecialtyService = baseSpecialtyService;
+        _specialtyService = specialtyService;
     }
 
     [HttpGet]
-    [Route("v1/specialty")]
     public IActionResult Get()
     {
-        return Execute(() => _baseSpecialtyService.Get());
+        return Execute(() => _specialtyService.GetAllSpecialtyActive());
     }
 
     [HttpGet]
-    [Route("v1/specialty/{id:int}")]
+    [Route("{id:int}")]
     public IActionResult Get([FromRoute] int id)
     {
         if (id <= 0)
@@ -33,9 +36,15 @@ public class SpecialtyController : BaseController
 
         return Execute(() => _baseSpecialtyService.GetById(id));
     }
+    
+    [HttpGet]
+    [Route("GetAllSpecialty")]
+    public IActionResult GetAllSpecialty()
+    {
+        return Execute(() => _baseSpecialtyService.Get());
+    }
 
     [HttpPost]
-    [Route("v1/specialty")]
     public IActionResult Create([FromBody] SpecialtyDto specialtyDto)
     {
         if (specialtyDto == null)
@@ -48,13 +57,16 @@ public class SpecialtyController : BaseController
                 Description = specialtyDto.Description,
                 IsDeleted = specialtyDto.IsDeleted
             };
+            
+            _specialtyService.Validations(specialty);
+            
             _baseSpecialtyService.Add<SpecialtyValidator>(specialty);
             return specialtyDto;
         });
     }
 
     [HttpPut]
-    [Route("v1/specialty/{id:int}")]
+    [Route("{id:int}")]
     public IActionResult Update(
         [FromRoute] int id,
         [FromBody] SpecialtyDto specialtyDto)
@@ -70,13 +82,16 @@ public class SpecialtyController : BaseController
                 Description = specialtyDto.Description,
                 IsDeleted = specialtyDto.IsDeleted
             };
+            
+            _specialtyService.Validations(specialty);
+            
             _baseSpecialtyService.Update<SpecialtyValidator>(specialty);
             return specialtyDto;
         });
     }
 
     [HttpDelete]
-    [Route("v1/specialty/{id:int}")]
+    [Route("{id:int}")]
     public IActionResult Delete([FromRoute] int id)
     {
         if (id <= 0)

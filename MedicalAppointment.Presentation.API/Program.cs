@@ -47,7 +47,12 @@ void ConfigureInjection(WebApplicationBuilder webApplicationBuilder)
     webApplicationBuilder.Services.AddScoped<IDoctorService, DoctorService>();
     webApplicationBuilder.Services.AddScoped<ISpecialtyRepository, SpecialtyRepository>();
     webApplicationBuilder.Services.AddScoped<ISpecialtyService, SpecialtyService>();
-
+    webApplicationBuilder.Services.AddScoped<IDoctorSpecialtyRepository, DoctorSpecialtyRepository>();
+    webApplicationBuilder.Services.AddScoped<IDoctorSpecialtyService, DoctorSpecialtyService>();
+    webApplicationBuilder.Services.AddScoped<IScheduleRepository, ScheduleRepository>();
+    webApplicationBuilder.Services.AddScoped<IScheduleService, ScheduleService>();
+    webApplicationBuilder.Services.AddScoped<IPatientRepository, PatientRepository>();
+    webApplicationBuilder.Services.AddScoped<IPatientService, PatientService>();
 }
 
 void ConfigureDbContext(WebApplicationBuilder builder1)
