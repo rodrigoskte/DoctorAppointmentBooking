@@ -1,0 +1,75 @@
+﻿@page "/specialty"
+@using MedicalAppointment.Presentation.BlazorWebApp.Configuration
+
+<PageTitle>Specialty</PageTitle>
+<h3>Specialty</h3>
+
+@if (_specialties is null)
+{
+    <p>
+        <em>Loading...</em>
+    </p>
+}
+else
+{
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Id</th>
+            <th>Description</th>
+            <th>Deleted</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var specialty in _specialties)
+        {
+            <tr>
+                <td>@specialty.Id</td>
+                <td>@specialty.Description</td>
+                <td>@specialty.IsDeleted</td>
+                <td>
+                    <button class="btn btn-info">EDIT</button>
+                </td>
+                <td>
+                    <button class="btn btn-danger">DELETE</button>
+                </td>
+            </tr>   
+        }
+        </tbody>
+    </table>
+}
+
+<hr>
+    <div class="mb-3">
+        <label class="form-label">Description</label>
+        <input type="text" class="form-control" @bind="_specialty.Id"/>
+    </div>
+    <div class="mb-3">
+        <label class="form-label">IsDeleted</label>
+        <input type="text" class="form-control" @bind="_specialty.IsDeleted"/>
+    </div>
+    <button class="btn btn-primary" @onclick="">IMPUT</button>
+</hr>
+
+@code {
+    private IList<DoctorAppointmentBooking.Domain.Entities.Specialty>? _specialties;
+    private DoctorAppointmentBooking.Domain.Entities.Specialty _specialty = new();
+
+    [Inject] private IRestClient RestClient { get; set; } = default!;
+
+    [Inject] private BaseUrlConfiguration BaseUrlConfig { get; set; } = default!;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            var request = new RestRequest($"{BaseUrlConfig.ApiBase}/v1/Specialty/GetAllSpecialty");
+            var response = await RestClient.GetAsync<ApiResponse<IList<DoctorAppointmentBooking.Domain.Entities.Specialty>>>(request);
+            _specialties = response?.Data;
+        }
+        catch (Exception ex)
+        {
+        }
+    }
+
+}
