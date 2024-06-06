@@ -8,7 +8,8 @@ public class SpecialtyService: ISpecialtyService
 {
     private readonly ISpecialtyRepository _specialtyRepository;
 
-    public SpecialtyService(ISpecialtyRepository specialtyRepository)
+    public SpecialtyService(
+        ISpecialtyRepository specialtyRepository)
     {
         _specialtyRepository = specialtyRepository;
     }

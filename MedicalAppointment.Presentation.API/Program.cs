@@ -6,11 +6,7 @@ using DoctorAppointmentBooking.Infrastructure.Repository;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
-
-// Add services to the container.
-
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 ConfigureDbContext(builder);
@@ -21,6 +17,8 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 app.UseSwagger();
 app.UseSwaggerUI();
+
+ConfigureCors(app);
 
 app.UseHttpsRedirection();
 
@@ -42,7 +40,6 @@ void ConfigureInjection(WebApplicationBuilder webApplicationBuilder)
     webApplicationBuilder.Services.AddScoped<IBaseService<DoctorSpecialty>, BaseService<DoctorSpecialty>>();
     webApplicationBuilder.Services.AddScoped<IBaseRepository<Schedule>, BaseRepository<Schedule>>();
     webApplicationBuilder.Services.AddScoped<IBaseService<Schedule>, BaseService<Schedule>>();
-    
     webApplicationBuilder.Services.AddScoped<IDoctorRepository, DoctorRepository>();
     webApplicationBuilder.Services.AddScoped<IDoctorService, DoctorService>();
     webApplicationBuilder.Services.AddScoped<ISpecialtyRepository, SpecialtyRepository>();
@@ -62,3 +59,14 @@ void ConfigureDbContext(WebApplicationBuilder builder1)
         options.UseSqlServer(builder1.Configuration.GetConnectionString("DefaultSqlConnection_dev"));
     });
 }
+
+void ConfigureCors(WebApplication app)
+{
+    app.UseCors(builder =>
+    {
+        builder.AllowAnyMethod();
+        builder.AllowAnyHeader();
+        builder.AllowAnyOrigin();
+    });
+}
+
