@@ -1,34 +1,41 @@
+using DoctorAppointmentBooking.Application.DTOs;
 using DoctorAppointmentBooking.Application.Services;
 using DoctorAppointmentBooking.Domain.Entities;
 using DoctorAppointmentBooking.Domain.Interfaces;
 using DoctorAppointmentBooking.Infrastructure.Context;
 using DoctorAppointmentBooking.Infrastructure.Repository;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 ConfigureDbContext(builder);
+ConfigureIdentity(builder);
 ConfigureInjection(builder);
+ConfigureJwtSettings(builder);
+ConfigureSwagger(builder);
 
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 app.UseSwagger();
 app.UseSwaggerUI();
-
 ConfigureCors(app);
-
 app.UseHttpsRedirection();
-
+app.UseAuthentication();
 app.UseAuthorization();
-
 app.MapControllers();
+await CreateDefaultRoles(app);
 
 app.Run();
 
-void ConfigureInjection(WebApplicationBuilder webApplicationBuilder)
+static void ConfigureInjection(WebApplicationBuilder webApplicationBuilder)
 {
     webApplicationBuilder.Services.AddScoped<IBaseRepository<Patient>, BaseRepository<Patient>>();
     webApplicationBuilder.Services.AddScoped<IBaseService<Patient>, BaseService<Patient>>();
@@ -52,15 +59,20 @@ void ConfigureInjection(WebApplicationBuilder webApplicationBuilder)
     webApplicationBuilder.Services.AddScoped<IPatientService, PatientService>();
 }
 
-void ConfigureDbContext(WebApplicationBuilder builder1)
+static void ConfigureDbContext(WebApplicationBuilder builder1)
 {
     builder1.Services.AddDbContext<SqlDbContext>(options =>
     {
         options.UseSqlServer(builder1.Configuration.GetConnectionString("DefaultSqlConnection_dev"));
     });
+
+    builder1.Services.AddDbContext<AuthDbContext>(options =>
+    {
+        options.UseSqlServer(builder1.Configuration.GetConnectionString("DefaultAuthSqlConnection"));
+    });
 }
 
-void ConfigureCors(WebApplication app)
+static void ConfigureCors(WebApplication app)
 {
     app.UseCors(builder =>
     {
@@ -70,3 +82,84 @@ void ConfigureCors(WebApplication app)
     });
 }
 
+static void ConfigureIdentity(WebApplicationBuilder builder)
+{
+    builder.Services.AddIdentity<IdentityUser, IdentityRole>()
+        .AddRoles<IdentityRole>()
+        .AddEntityFrameworkStores<AuthDbContext>();
+}
+
+static void ConfigureJwtSettings(WebApplicationBuilder builder)
+{
+    var jwtSettingsSection = builder.Configuration.GetSection("JwtSettings");
+    builder.Services.Configure<JwtSettings>(jwtSettingsSection);
+
+    var jwtSettings = jwtSettingsSection.Get<JwtSettings>();
+    var key = Encoding.ASCII.GetBytes(jwtSettings.Segredo);
+    builder.Services.AddAuthentication(options =>
+    {
+        options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+        options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+    }).AddJwtBearer(options =>
+    {
+        options.RequireHttpsMetadata = true;
+        options.SaveToken = true;
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            IssuerSigningKey = new SymmetricSecurityKey(key),
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidAudience = jwtSettings.Audiencia,
+            ValidIssuer = jwtSettings.Emissor
+        };
+    });
+}
+
+static void ConfigureSwagger(WebApplicationBuilder builder)
+{
+    builder.Services.AddSwaggerGen(c =>
+    {
+        c.SwaggerDoc("v1", new OpenApiInfo { Title = "DoctorAppointmentBooking", Version = "v1" });
+
+        c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme()
+        {
+            Name = "Authorization",
+            Type = SecuritySchemeType.ApiKey,
+            Scheme = "Bearer",
+            BearerFormat = "JWT",
+            In = ParameterLocation.Header,
+            Description = "JWT Authorization header using the Bearer scheme. \r\n\r\n Enter 'Bearer' [space] and then your token in the text input below.\r\n\r\nExample: \"Bearer 1safsfsdfdfd\"",
+        });
+        c.AddSecurityRequirement(new OpenApiSecurityRequirement
+        {
+            {
+                new OpenApiSecurityScheme
+                {
+                    Reference = new OpenApiReference
+                    {
+                        Type = ReferenceType.SecurityScheme,
+                        Id = "Bearer"
+                    }
+                },
+                new string[] {}
+            }
+        });
+    });
+}
+
+static async Task CreateDefaultRoles(WebApplication app)
+{
+    using (var scope = app.Services.CreateScope())
+    {
+        var services = scope.ServiceProvider;
+        var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
+        var roles = new[] { "Admin", "Patient", "Doctor" };
+        foreach (var role in roles)
+        {
+            if (!await roleManager.RoleExistsAsync(role))
+            {
+                await roleManager.CreateAsync(new IdentityRole(role));
+            }
+        }
+    }
+}

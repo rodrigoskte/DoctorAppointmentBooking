@@ -2,10 +2,12 @@
 using DoctorAppointmentBooking.Application.Validators;
 using DoctorAppointmentBooking.Domain.Entities;
 using DoctorAppointmentBooking.Domain.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MedicalAppointment.Presentation.API.Controllers;
 
+[Authorize]
 [ApiController]
 [Route("api/v1/[controller]/")]
 public class DoctorController: BaseController
@@ -13,7 +15,7 @@ public class DoctorController: BaseController
     private readonly IBaseService<Doctor> _baseDoctorService;
     private readonly IDoctorService _doctorService;
     private readonly IScheduleService _scheduleService;
-
+    
     public DoctorController(
         IBaseService<Doctor> baseDoctorService, 
         IDoctorService doctorService,
@@ -23,7 +25,8 @@ public class DoctorController: BaseController
         _doctorService = doctorService;
         _scheduleService = scheduleService;
     }
-    
+
+    [Authorize(Roles = "Admin")]
     [HttpGet]
     public IActionResult Get()
     {
@@ -39,7 +42,8 @@ public class DoctorController: BaseController
 
         return Execute(() => _baseDoctorService.GetById(id));
     }
-    
+
+    [Authorize(Roles = "User")]
     [HttpGet]
     [Route("GetAllDoctor")]
     public IActionResult GetAllDoctor()
