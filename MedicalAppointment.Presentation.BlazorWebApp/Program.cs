@@ -18,6 +18,8 @@ builder.Services.AddAuthorizationCore(config =>
     config.AddPolicy("DoctorOnly", policy => policy.RequireRole("doctor"));
     config.AddPolicy("AdminOnly", policy => policy.RequireRole("admin"));
     config.AddPolicy("PatientOnly", policy => policy.RequireRole("patient"));
+    config.AddPolicy("DoctorOrAdmin", policy => policy.RequireRole("Doctor", "Admin"));
+    config.AddPolicy("PatientOrAdmin", policy => policy.RequireRole("Patient", "Admin"));
 });
 
 ConfigureInjections(builder);

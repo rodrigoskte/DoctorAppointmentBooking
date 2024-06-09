@@ -74,11 +74,9 @@ public class AuthController : ControllerBase
         {
             new Claim(ClaimTypes.Name, user.UserName)
         };
+        
         foreach (var role in roles)
-        {
             claims.Add(new Claim(ClaimTypes.Role, role));
-        }
-
 
         var tokenHandler = new JwtSecurityTokenHandler();
         var key = Encoding.ASCII.GetBytes(_jwtSettings.Segredo);

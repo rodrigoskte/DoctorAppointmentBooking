@@ -2,7 +2,7 @@
 @using DoctorAppointmentBooking.Application.Responses
 @using MedicalAppointment.Presentation.BlazorWebApp.Configuration
 @using Microsoft.AspNetCore.Authorization
-@attribute [Authorize(Roles = "Doctor")]
+@attribute [Authorize(Roles = "Doctor, Admin")]
 
 <PageTitle>Specialty</PageTitle>
 <h3>Specialty</h3>

@@ -1,4 +1,5 @@
-﻿using System.Security.Claims;
+﻿using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 using Blazored.LocalStorage;
 using Microsoft.AspNetCore.Components.Authorization;
 using RestSharp;
@@ -18,8 +19,8 @@ public class CustomAuthStateProvider : AuthenticationStateProvider
 
     public override async Task<AuthenticationState> GetAuthenticationStateAsync()
     {
+        NotifyUserLogout();
         var token = await _localStorage.GetItemAsync<string>("authToken");
-
         var identity = string.IsNullOrEmpty(token) ? new ClaimsIdentity() : new ClaimsIdentity(new[]
         {
             new Claim(ClaimTypes.Name, "User")
@@ -31,13 +32,23 @@ public class CustomAuthStateProvider : AuthenticationStateProvider
 
     public void NotifyUserAuthentication(string token)
     {
-        var identity = new ClaimsIdentity(new[]
+        if (!string.IsNullOrEmpty(token))
         {
-            new Claim(ClaimTypes.Name, "User")
-        }, "apiauth");
-
-        var user = new ClaimsPrincipal(identity);
-        NotifyAuthenticationStateChanged(Task.FromResult(new AuthenticationState(user)));
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var securityToken = tokenHandler.ReadJwtToken(token);
+        
+            var roleClaim = securityToken.Claims.FirstOrDefault(c => c.Type == "role");
+            var role = roleClaim?.Value; // Obter o valor do claim de role
+        
+            var identity = new ClaimsIdentity(new[]
+            {
+                new Claim(ClaimTypes.Name, "User"),
+                new Claim(ClaimTypes.Role, role) // Adicionar o claim de role à identidade
+            }, "apiauth");
+            
+            var user = new ClaimsPrincipal(identity);
+            NotifyAuthenticationStateChanged(Task.FromResult(new AuthenticationState(user)));
+        }
     }
 
     public void NotifyUserLogout()
