@@ -1,5 +1,8 @@
 ﻿@page "/specialty"
+@using DoctorAppointmentBooking.Application.Responses
 @using MedicalAppointment.Presentation.BlazorWebApp.Configuration
+@using Microsoft.AspNetCore.Authorization
+@attribute [Authorize(Roles = "Doctor")]
 
 <PageTitle>Specialty</PageTitle>
 <h3>Specialty</h3>

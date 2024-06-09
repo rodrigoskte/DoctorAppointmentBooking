@@ -1,4 +1,8 @@
 ﻿@page "/"
+@attribute [Authorize] // Protege a página para usuários autenticados
+@inject IRestClient RestClient
+@using MedicalAppointment.Presentation.BlazorWebApp.Configuration
+@using Microsoft.AspNetCore.Authorization
 
 <PageTitle>Home</PageTitle>
 

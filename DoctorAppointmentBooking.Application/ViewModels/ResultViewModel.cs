@@ -2,9 +2,11 @@
 
 public class ResultViewModel<T>
 {
-    public T Data { get; private set; }
-    public List<string> Errors { get; private set; } = new List<string>();
-    public int StatusCode { get; private set; }
+    public T Data { get; set; }
+    public List<string> Errors { get; set; } = new List<string>();
+    public int StatusCode { get; set; }
+
+    public ResultViewModel() { }
 
     public ResultViewModel(T data, int statusCode)
     {

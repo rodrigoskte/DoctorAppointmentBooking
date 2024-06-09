@@ -1,4 +1,8 @@
 ﻿@inherits LayoutComponentBase
+@using Microsoft.AspNetCore.Components.Authorization
+@inject NavigationManager Navigation
+@inject AuthenticationStateProvider AuthenticationStateProvider
+
 <div class="page">
     <div class="sidebar">
         <NavMenu/>
@@ -14,3 +18,28 @@
         </article>
     </main>
 </div>
+
+
+<AuthorizeView>
+    <Authorized>
+        <div class="page">
+            <div class="sidebar">
+                @Body
+            </div>
+        </div>
+    </Authorized>
+    <NotAuthorized>
+        @code {
+            protected override async Task OnInitializedAsync()
+            {
+                var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+                var user = authState.User;
+
+                if (!user.Identity.IsAuthenticated)
+                {
+                    Navigation.NavigateTo("/login");
+                }
+            }
+        }
+    </NotAuthorized>
+</AuthorizeView>
