@@ -1,0 +1,47 @@
+﻿version: '3.8'
+
+services:
+  blazorwasm:
+    image: doctorappointmentbookingblazor
+    ports:
+      - "5000:80"
+    depends_on:
+      - api
+  
+  api:
+    image: doctorappointmentbookingapi
+    ports:
+      - "5001:8080"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__DefaultSqlConnection_dev=Server=sqlserver;Database=db-doctorappointment;User ID=sa;Password=QBk88ka(6>;Trusted_Connection=False;TrustServerCertificate=True;
+      - ConnectionStrings__DefaultAuthSqlConnection=Server=sqlserver_identity;Database=sql-identity;User ID=sa;Password=QBk88ka(6>;Trusted_Connection=False;TrustServerCertificate=True;
+    depends_on:
+      - sqlserver
+      - sqlserver_identity
+
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    container_name: sqlserverdb
+    ports:
+      - "1433:1433"
+    environment:
+      SA_PASSWORD: "QBk88ka(6>"
+      ACCEPT_EULA: "Y"
+    volumes:
+      - sqlserverdata:/var/opt/mssql
+
+  sqlserver_identity:
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    container_name: sqlserver_identity
+    ports:
+      - "1434:1433"
+    environment:
+      SA_PASSWORD: "QBk88ka(6>"
+      ACCEPT_EULA: "Y"
+    volumes:
+      - sqlserveridentitydata:/var/opt/mssql
+
+volumes:
+  sqlserverdata:
+  sqlserveridentitydata:

@@ -16,6 +16,7 @@
 
   <ItemGroup>
     <Compile Remove="Interfaces\SpecialtyService.cs" />
+    <Compile Remove="Entities\ApplicationUser.cs" />
   </ItemGroup>
 
   <ItemGroup>

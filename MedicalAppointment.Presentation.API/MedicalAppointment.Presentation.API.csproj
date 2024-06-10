@@ -11,6 +11,9 @@
   <ItemGroup>
     <Compile Remove="Dtos\**" />
     <Content Remove="Dtos\**" />
+    <Content Include="..\.dockerignore">
+      <Link>.dockerignore</Link>
+    </Content>
     <EmbeddedResource Remove="Dtos\**" />
     <None Remove="Dtos\**" />
   </ItemGroup>

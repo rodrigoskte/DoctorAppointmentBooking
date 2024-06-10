@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿sing Microsoft.AspNetCore.Identity;
 
 namespace DoctorAppointmentBooking.Domain.Entities
 {
