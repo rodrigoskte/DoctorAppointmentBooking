@@ -56,4 +56,9 @@ public class DoctorService : IDoctorService
     {
         return _doctorRepository.GetAllDoctorsActiveById(doctorId);
     }
+
+    public Doctor GetDoctorByUserId(string userId)
+    {
+        return _doctorRepository.GetDoctorByUserId(userId);
+    }
 }

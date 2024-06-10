@@ -21,26 +21,17 @@ namespace DoctorAppointmentBooking.Infrastructure.Mapping
             builder.Property(prop => prop.DateTimeSchedule)
                 .IsRequired()
                 .HasColumnName("DateTimeSchedule")
-                .HasColumnType("datetime");
+                .HasColumnType("datetime2");
 
-            builder
-                .HasOne(x => x.Doctor)
-                .WithMany(x => x.Schedules)
-                .HasForeignKey(x => x.DoctorId);
+            builder.HasOne(x => x.Doctor)
+                .WithMany(d => d.Schedules)
+                .HasForeignKey(x => x.DoctorId)
+                .OnDelete(DeleteBehavior.NoAction);
 
-            builder
-                .HasOne(x => x.Patient)
-                .WithMany(x => x.Schedules)
-                .HasForeignKey(x => x.PatientId);
-
-            builder.HasData(
-                new Schedule {Id = 1, DateTimeSchedule = DateTime.Today.AddDays(10), IsDeleted = false, PatientId = 1, DoctorId = 1},
-                new Schedule {Id = 2, DateTimeSchedule = DateTime.Today.AddDays(20), IsDeleted = false, PatientId = 2, DoctorId = 2},
-                new Schedule {Id = 3, DateTimeSchedule = DateTime.Today.AddDays(12), IsDeleted = false, PatientId = 3, DoctorId = 3},
-                new Schedule {Id = 4, DateTimeSchedule = DateTime.Today.AddDays(11), IsDeleted = false, PatientId = 2, DoctorId = 2},
-                new Schedule {Id = 5, DateTimeSchedule = DateTime.Today.AddDays(4), IsDeleted = false, PatientId = 3, DoctorId = 3},
-                new Schedule {Id = 6, DateTimeSchedule = DateTime.Today.AddDays(6), IsDeleted = false, PatientId = 1, DoctorId = 1}
-                );
+            builder.HasOne(x => x.Patient)
+                .WithMany(p => p.Schedules)
+                .HasForeignKey(x => x.PatientId)
+                .OnDelete(DeleteBehavior.NoAction); 
         }
     }
 }

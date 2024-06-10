@@ -1,0 +1,206 @@
+﻿@page "/patient"
+@attribute [Authorize(Roles = "Patient, Admin")]
+@inject ISnackbar Snackbar
+@inject ILocalStorageService LocalStorage
+
+<PageTitle>Patient</PageTitle>
+<h3>Patient</h3>
+
+@if (_patients is null)
+{
+    <p>
+        <em>Loading...</em>
+    </p>
+}
+else
+{
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Id</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Deleted</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var patient in _patients)
+        {
+            <tr>
+                <td>@patient.Id</td>
+                <td>
+                    <InputText class="form-control" @bind-Value="patient.Name"/>
+                </td>
+                <td>
+                    <InputText class="form-control" @bind-Value="patient.Email"/>
+                </td>
+                <td>
+                    <InputCheckbox @bind-Value="patient.IsDeleted"/>
+                </td>
+                <td>
+                    <button class="btn btn-info" @onclick="() => EditPatient(patient)">EDIT</button>
+                    <button class="btn btn-danger" @onclick="() => DeletePatient(patient.Id)">DELETE</button>
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+}
+
+<hr>
+<div class="mb-3">
+    <label class="form-label">Name</label>
+    <InputText class="form-control" @bind-Value="_patient.Name"/>
+</div>
+<div class="mb-3">
+    <label class="form-label">Email</label>
+    <InputText class="form-control" @bind-Value="_patient.Email"/>
+</div>
+<div class="mb-3">
+    <label class="form-label">IsDeleted</label>
+    <InputCheckbox @bind-Value="_patient.IsDeleted"/>
+</div>
+<button class="btn btn-primary" @onclick="AddOrUpdate">Save</button>
+
+@code {
+    private IList<DoctorAppointmentBooking.Domain.Entities.Patient>? _patients;
+    private DoctorAppointmentBooking.Domain.Entities.Patient _patient = new();
+    [Inject] private IRestClient RestClient { get; set; } = default!;
+    [Inject] private BaseUrlConfiguration BaseUrlConfig { get; set; } = default!;
+    RestRequest request;
+    RestResponse<ResultViewModel<DoctorAppointmentBooking.Domain.Entities.Patient>> response;
+    [Inject] private AuthenticationStateProvider AuthenticationStateProvider { get; set; } = default!;
+    
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadPatient();
+    }
+    
+    private async Task LoadPatient()
+    {
+        try
+        {
+            var request = new RestRequest($"{BaseUrlConfig.ApiBase}/v1/Patient/GetAllPatient");
+            var token = await GetToken();
+            request.AddHeader("Authorization", $"Bearer {token}");
+            
+            var response = await RestClient.ExecuteAsync<ResultViewModel<IList<DoctorAppointmentBooking.Domain.Entities.Patient>>>(request);
+            if (response.StatusCode == HttpStatusCode.OK)
+            {
+                _patients = response?.Data?.Data;
+            }
+            else
+            {
+                if (response.Data?.Errors != null && response.Data.Errors.Any())
+                {
+                    foreach (var error in response.Data?.Errors)
+                    {
+                        Snackbar.Add(error, Severity.Error);
+                    }
+                }
+                else
+                {
+                    Snackbar.Add($"Erro ao processar os Patients: {response.StatusDescription}", Severity.Error);
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add("Exception updating profile: " + ex.Message, Severity.Error);
+        }
+    }
+
+    private async Task<string?> GetToken()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+        var token = await LocalStorage.GetItemAsync<string>("authToken");
+        return token;
+    }
+
+    private async Task AddOrUpdate()
+    {
+        try
+        {
+            if (_patient?.Id == 0)
+            {
+                request = new RestRequest($"{BaseUrlConfig.ApiBase}/v1/Patient/", Method.Post);
+            }
+            else
+            {
+                request = new RestRequest($"{BaseUrlConfig.ApiBase}/v1/Patient/{_patient.Id}", Method.Put);
+            }
+            
+            request.AddJsonBody(_patient);
+            var token = await GetToken();
+            request.AddHeader("Authorization", $"Bearer {token}");
+            response = await RestClient.ExecuteAsync<ResultViewModel<DoctorAppointmentBooking.Domain.Entities.Patient>>(request);
+
+            if (response.StatusCode == HttpStatusCode.OK)
+            {
+                Snackbar.Add("Specialty saved successfully", Severity.Success);
+                await LoadPatient();
+                _patient = new DoctorAppointmentBooking.Domain.Entities.Patient();
+            }
+            else
+            {
+                if (response.Data?.Errors != null && response.Data.Errors.Any())
+                {
+                    foreach (var error in response.Data?.Errors)
+                    {
+                        Snackbar.Add(error, Severity.Error);
+                    }
+                }
+                else
+                {
+                    Snackbar.Add($"Error saving Patient: {response.StatusDescription}", Severity.Error);
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add("Exception saving Patient: " + ex.Message, Severity.Error);
+        }
+    }
+    
+    private async Task EditPatient(DoctorAppointmentBooking.Domain.Entities.Patient patient)
+    {
+        _patient = patient;
+    }
+
+    private async Task DeletePatient(int id)
+    {
+        try
+        {
+            var request = new RestRequest($"{BaseUrlConfig.ApiBase}/v1/Patient/{id}", Method.Delete);
+            var token = await GetToken();
+            request.AddHeader("Authorization", $"Bearer {token}");
+            var response = await RestClient.ExecuteAsync<ResultViewModel<DoctorAppointmentBooking.Domain.Entities.Patient>>(request);
+
+            if (response.StatusCode == HttpStatusCode.OK)
+            {
+                Snackbar.Add("Patient deleted successfully", Severity.Success);
+                await LoadPatient();
+            }
+            else
+            {
+                if (response.Data?.Errors != null && response.Data.Errors.Any())
+                {
+                    foreach (var error in response.Data?.Errors)
+                    {
+                        Snackbar.Add(error, Severity.Error);
+                    }
+                }
+                else
+                {
+                    Snackbar.Add($"Error deleting Patient: {response.StatusDescription}", Severity.Error);
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add("Exception deleting Patient: " + ex.Message, Severity.Error);
+        }
+    }
+}

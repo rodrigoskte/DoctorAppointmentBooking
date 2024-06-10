@@ -10,4 +10,6 @@ public interface IDoctorService
     bool Validations(Doctor doctor);
     IList<Doctor> GetAllDoctorsActive();
     IList<Doctor> GetAllDoctorsActiveById(int doctorId);
+    
+    Doctor GetDoctorByUserId(string userId);
 }

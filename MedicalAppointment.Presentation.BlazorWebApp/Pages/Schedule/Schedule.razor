@@ -1,0 +1,11 @@
+﻿@page "/schedule"
+@attribute [Authorize(Roles = "Doctor, Admin, Patient")]
+@inject ISnackbar Snackbar
+@inject ILocalStorageService LocalStorage
+
+<PageTitle>Schedule</PageTitle>
+<h3>Schedule</h3>
+
+@code {
+    
+}

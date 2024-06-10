@@ -13,8 +13,7 @@ public class PatientDto
     [Description("Patient's email")]
     public string Email { get; set; }
     
-    [JsonIgnore]
-    public bool IsDeleted { get; set; } = false;
+    public bool IsDeleted { get; set; }
     
     public PatientDto()
     {

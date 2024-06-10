@@ -44,6 +44,11 @@ namespace DoctorAppointmentBooking.Infrastructure.Migrations
                         .HasColumnType("varchar(100)")
                         .HasColumnName("Name");
 
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("varchar(100)")
+                        .HasColumnName("UserId");
+
                     b.HasKey("Id");
 
                     b.ToTable("Doctor", (string)null);
@@ -54,42 +59,48 @@ namespace DoctorAppointmentBooking.Infrastructure.Migrations
                             Id = 1,
                             Code = "123",
                             IsDeleted = false,
-                            Name = "Christiano Coccuza"
+                            Name = "Christiano Coccuza",
+                            UserId = ""
                         },
                         new
                         {
                             Id = 2,
                             Code = "456",
                             IsDeleted = false,
-                            Name = "Ida Fortini"
+                            Name = "Ida Fortini",
+                            UserId = ""
                         },
                         new
                         {
                             Id = 3,
                             Code = "789",
                             IsDeleted = false,
-                            Name = "Bárbara Martins"
+                            Name = "Bárbara Martins",
+                            UserId = ""
                         },
                         new
                         {
                             Id = 4,
                             Code = "001",
                             IsDeleted = false,
-                            Name = "Ronu Muole"
+                            Name = "Ronu Muole",
+                            UserId = ""
                         },
                         new
                         {
                             Id = 5,
                             Code = "002",
                             IsDeleted = false,
-                            Name = "Mayfe Puesl"
+                            Name = "Mayfe Puesl",
+                            UserId = ""
                         },
                         new
                         {
                             Id = 6,
                             Code = "003",
                             IsDeleted = true,
-                            Name = "Deko Gapuobri"
+                            Name = "Deko Gapuobri",
+                            UserId = ""
                         });
                 });
 
@@ -178,6 +189,11 @@ namespace DoctorAppointmentBooking.Infrastructure.Migrations
                         .HasColumnType("varchar(100)")
                         .HasColumnName("Name");
 
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("varchar(100)")
+                        .HasColumnName("UserId");
+
                     b.HasKey("Id");
 
                     b.ToTable("Patient", (string)null);
@@ -188,63 +204,72 @@ namespace DoctorAppointmentBooking.Infrastructure.Migrations
                             Id = 1,
                             Email = "r@rrr.com.br",
                             IsDeleted = false,
-                            Name = "Rodrigo Carvalhomaru"
+                            Name = "Rodrigo Carvalhomaru",
+                            UserId = ""
                         },
                         new
                         {
                             Id = 2,
                             Email = "shutzing@enzo.com.br",
                             IsDeleted = false,
-                            Name = "Enzo Shutzing"
+                            Name = "Enzo Shutzing",
+                            UserId = ""
                         },
                         new
                         {
                             Id = 3,
                             Email = "cleber@bluedragon.com.br",
                             IsDeleted = false,
-                            Name = "Cléber Bluedragon"
+                            Name = "Cléber Bluedragon",
+                            UserId = ""
                         },
                         new
                         {
                             Id = 4,
                             Email = "neville@bernard.com.br",
                             IsDeleted = false,
-                            Name = "Neville Bernard"
+                            Name = "Neville Bernard",
+                            UserId = ""
                         },
                         new
                         {
                             Id = 5,
                             Email = "wendell@kessner.com.br",
                             IsDeleted = false,
-                            Name = "Wendell Kessner"
+                            Name = "Wendell Kessner",
+                            UserId = ""
                         },
                         new
                         {
                             Id = 6,
                             Email = "adare@gerbitz.com.br",
                             IsDeleted = false,
-                            Name = "Adare Gerbitz"
+                            Name = "Adare Gerbitz",
+                            UserId = ""
                         },
                         new
                         {
                             Id = 7,
                             Email = "sanders@cameron.com.br",
                             IsDeleted = false,
-                            Name = "Sanders Cameron"
+                            Name = "Sanders Cameron",
+                            UserId = ""
                         },
                         new
                         {
                             Id = 8,
                             Email = "agata@wanner.com.br",
                             IsDeleted = false,
-                            Name = "Agata Wanner"
+                            Name = "Agata Wanner",
+                            UserId = ""
                         },
                         new
                         {
                             Id = 9,
                             Email = "senalda@ramirez.com.br",
                             IsDeleted = false,
-                            Name = "Senalda Ramírez"
+                            Name = "Senalda Ramírez",
+                            UserId = ""
                         });
                 });
 
@@ -257,7 +282,7 @@ namespace DoctorAppointmentBooking.Infrastructure.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("DateTimeSchedule")
-                        .HasColumnType("datetime")
+                        .HasColumnType("datetime2")
                         .HasColumnName("DateTimeSchedule");
 
                     b.Property<int>("DoctorId")
@@ -277,56 +302,6 @@ namespace DoctorAppointmentBooking.Infrastructure.Migrations
                     b.HasIndex("PatientId");
 
                     b.ToTable("Schedule", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            DateTimeSchedule = new DateTime(2024, 6, 18, 0, 0, 0, 0, DateTimeKind.Local),
-                            DoctorId = 1,
-                            IsDeleted = false,
-                            PatientId = 1
-                        },
-                        new
-                        {
-                            Id = 2,
-                            DateTimeSchedule = new DateTime(2024, 6, 28, 0, 0, 0, 0, DateTimeKind.Local),
-                            DoctorId = 2,
-                            IsDeleted = false,
-                            PatientId = 2
-                        },
-                        new
-                        {
-                            Id = 3,
-                            DateTimeSchedule = new DateTime(2024, 6, 20, 0, 0, 0, 0, DateTimeKind.Local),
-                            DoctorId = 3,
-                            IsDeleted = false,
-                            PatientId = 3
-                        },
-                        new
-                        {
-                            Id = 4,
-                            DateTimeSchedule = new DateTime(2024, 6, 19, 0, 0, 0, 0, DateTimeKind.Local),
-                            DoctorId = 2,
-                            IsDeleted = false,
-                            PatientId = 2
-                        },
-                        new
-                        {
-                            Id = 5,
-                            DateTimeSchedule = new DateTime(2024, 6, 12, 0, 0, 0, 0, DateTimeKind.Local),
-                            DoctorId = 3,
-                            IsDeleted = false,
-                            PatientId = 3
-                        },
-                        new
-                        {
-                            Id = 6,
-                            DateTimeSchedule = new DateTime(2024, 6, 14, 0, 0, 0, 0, DateTimeKind.Local),
-                            DoctorId = 1,
-                            IsDeleted = false,
-                            PatientId = 1
-                        });
                 });
 
             modelBuilder.Entity("DoctorAppointmentBooking.Domain.Entities.Specialty", b =>
@@ -419,13 +394,13 @@ namespace DoctorAppointmentBooking.Infrastructure.Migrations
                     b.HasOne("DoctorAppointmentBooking.Domain.Entities.Doctor", "Doctor")
                         .WithMany("Schedules")
                         .HasForeignKey("DoctorId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("DoctorAppointmentBooking.Domain.Entities.Patient", "Patient")
                         .WithMany("Schedules")
                         .HasForeignKey("PatientId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Doctor");

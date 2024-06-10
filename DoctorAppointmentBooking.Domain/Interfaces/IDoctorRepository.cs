@@ -10,4 +10,5 @@ public interface IDoctorRepository : IBaseRepository<Doctor>
     IList<Doctor> GetAllDoctorsActive();
     IList<Doctor> GetAllDoctorsActiveById(int doctorId);
     bool IsDoctorExists(Doctor doctor);
+    Doctor GetDoctorByUserId(string userId);
 }

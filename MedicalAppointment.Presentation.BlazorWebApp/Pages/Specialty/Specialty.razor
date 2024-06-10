@@ -1,8 +1,6 @@
 ﻿@page "/specialty"
-@using DoctorAppointmentBooking.Application.Responses
-@using MedicalAppointment.Presentation.BlazorWebApp.Configuration
-@using Microsoft.AspNetCore.Authorization
 @attribute [Authorize(Roles = "Doctor, Admin")]
+@inject ISnackbar Snackbar
 
 <PageTitle>Specialty</PageTitle>
 <h3>Specialty</h3>
@@ -21,6 +19,7 @@ else
             <th>Id</th>
             <th>Description</th>
             <th>Deleted</th>
+            <th>Actions</th>
         </tr>
         </thead>
         <tbody>
@@ -28,50 +27,155 @@ else
         {
             <tr>
                 <td>@specialty.Id</td>
-                <td>@specialty.Description</td>
-                <td>@specialty.IsDeleted</td>
                 <td>
-                    <button class="btn btn-info">EDIT</button>
+                    <InputText class="form-control" @bind-Value="specialty.Description"/>
                 </td>
                 <td>
-                    <button class="btn btn-danger">DELETE</button>
+                    <InputCheckbox @bind-Value="specialty.IsDeleted"/>
                 </td>
-            </tr>   
+                <td>
+                    <button class="btn btn-info" @onclick="() => EditSpecialty(specialty)">EDIT</button>
+                    <button class="btn btn-danger" @onclick="() => DeleteSpecialty(specialty.Id)">DELETE</button>
+                </td>
+            </tr>
         }
         </tbody>
     </table>
 }
 
 <hr>
-    <div class="mb-3">
-        <label class="form-label">Description</label>
-        <input type="text" class="form-control" @bind="_specialty.Id"/>
-    </div>
-    <div class="mb-3">
-        <label class="form-label">IsDeleted</label>
-        <input type="text" class="form-control" @bind="_specialty.IsDeleted"/>
-    </div>
-@*     <button class="btn btn-primary" @onclick="">IMPUT</button>
-</hr> *@
+<div class="mb-3">
+    <label class="form-label">Description</label>
+    <InputText class="form-control" @bind-Value="_specialty.Description"/>
+</div>
+<div class="mb-3">
+    <label class="form-label">IsDeleted</label>
+    <InputCheckbox @bind-Value="_specialty.IsDeleted"/>
+</div>
+<button class="btn btn-primary" @onclick="AddOrUpdateSpecialty">Save</button>
 
 @code {
     private IList<DoctorAppointmentBooking.Domain.Entities.Specialty>? _specialties;
     private DoctorAppointmentBooking.Domain.Entities.Specialty _specialty = new();
-
     [Inject] private IRestClient RestClient { get; set; } = default!;
-
     [Inject] private BaseUrlConfiguration BaseUrlConfig { get; set; } = default!;
+    RestRequest request;
+    RestResponse<ResultViewModel<Specialty>> response;
 
     protected override async Task OnInitializedAsync()
+    {
+        await LoadSpecialties();
+    }
+
+    private async Task LoadSpecialties()
     {
         try
         {
             var request = new RestRequest($"{BaseUrlConfig.ApiBase}/v1/Specialty/GetAllSpecialty");
-            var response = await RestClient.GetAsync<ApiResponse<IList<DoctorAppointmentBooking.Domain.Entities.Specialty>>>(request);
-            _specialties = response?.Data;
+            var response = await RestClient.ExecuteAsync<ResultViewModel<IList<DoctorAppointmentBooking.Domain.Entities.Specialty>>>(request);
+            if (response.StatusCode == HttpStatusCode.OK)
+            {
+                _specialties = response?.Data?.Data;
+            }
+            else
+            {
+                if (response.Data?.Errors != null && response.Data.Errors.Any())
+                {
+                    foreach (var error in response.Data?.Errors)
+                    {
+                        Snackbar.Add(error, Severity.Error);
+                    }
+                }
+                else
+                {
+                    Snackbar.Add($"Erro ao processar o login: {response.StatusDescription}", Severity.Error);
+                }
+            }
         }
         catch (Exception ex)
         {
+            Snackbar.Add("Exception updating profile: " + ex.Message, Severity.Error);
+        }
+    }
+
+    private async Task AddOrUpdateSpecialty()
+    {
+        try
+        {
+            if (_specialty?.Id == 0)
+            {
+                request = new RestRequest($"{BaseUrlConfig.ApiBase}/v1/Specialty/", Method.Post);
+            }
+            else
+            {
+                request = new RestRequest($"{BaseUrlConfig.ApiBase}/v1/Specialty/{_specialty.Id}", Method.Put);
+            }
+            
+            request.AddJsonBody(_specialty);
+            response = await RestClient.ExecuteAsync<ResultViewModel<Specialty>>(request);
+
+            if (response.StatusCode == HttpStatusCode.OK)
+            {
+                Snackbar.Add("Specialty saved successfully", Severity.Success);
+                await LoadSpecialties();
+                _specialty = new DoctorAppointmentBooking.Domain.Entities.Specialty();
+            }
+            else
+            {
+                if (response.Data?.Errors != null && response.Data.Errors.Any())
+                {
+                    foreach (var error in response.Data?.Errors)
+                    {
+                        Snackbar.Add(error, Severity.Error);
+                    }
+                }
+                else
+                {
+                    Snackbar.Add($"Error saving specialty: {response.StatusDescription}", Severity.Error);
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add("Exception saving specialty: " + ex.Message, Severity.Error);
+        }
+    }
+
+    private async Task EditSpecialty(DoctorAppointmentBooking.Domain.Entities.Specialty specialty)
+    {
+        _specialty = specialty;
+    }
+
+    private async Task DeleteSpecialty(int id)
+    {
+        try
+        {
+            var request = new RestRequest($"{BaseUrlConfig.ApiBase}/v1/Specialty/{id}", Method.Delete);
+            var response = await RestClient.ExecuteAsync<ResultViewModel<Specialty>>(request);
+
+            if (response.StatusCode == HttpStatusCode.OK)
+            {
+                Snackbar.Add("Specialty deleted successfully", Severity.Success);
+                await LoadSpecialties();
+            }
+            else
+            {
+                if (response.Data?.Errors != null && response.Data.Errors.Any())
+                {
+                    foreach (var error in response.Data?.Errors)
+                    {
+                        Snackbar.Add(error, Severity.Error);
+                    }
+                }
+                else
+                {
+                    Snackbar.Add($"Error deleting specialty: {response.StatusDescription}", Severity.Error);
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add("Exception deleting specialty: " + ex.Message, Severity.Error);
         }
     }
 

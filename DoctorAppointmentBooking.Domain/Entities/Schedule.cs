@@ -17,9 +17,9 @@ namespace DoctorAppointmentBooking.Domain.Entities
         public DateTime DateTimeSchedule { get; set; }
         
         [Description("Patient's name")]
-        public Patient Patient { get; private set; }
+        public Patient Patient { get; set; }
         
         [Description("Doctor's name")]
-        public Doctor Doctor { get; private set; }
+        public Doctor Doctor { get; set; }
     }
 }

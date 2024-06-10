@@ -10,6 +10,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
+using MedicalAppointment.Presentation.API.Interface;
+using MedicalAppointment.Presentation.API.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
@@ -57,6 +59,8 @@ static void ConfigureInjection(WebApplicationBuilder webApplicationBuilder)
     webApplicationBuilder.Services.AddScoped<IScheduleService, ScheduleService>();
     webApplicationBuilder.Services.AddScoped<IPatientRepository, PatientRepository>();
     webApplicationBuilder.Services.AddScoped<IPatientService, PatientService>();
+    webApplicationBuilder.Services.AddScoped<IPasswordHasher<IdentityUser>, PasswordHasher<IdentityUser>>();
+    webApplicationBuilder.Services.AddScoped<IAuthService, AuthService>();
 }
 
 static void ConfigureDbContext(WebApplicationBuilder builder1)
@@ -86,7 +90,8 @@ static void ConfigureIdentity(WebApplicationBuilder builder)
 {
     builder.Services.AddIdentity<IdentityUser, IdentityRole>()
         .AddRoles<IdentityRole>()
-        .AddEntityFrameworkStores<AuthDbContext>();
+        .AddEntityFrameworkStores<AuthDbContext>()
+        .AddDefaultTokenProviders();
 }
 
 static void ConfigureJwtSettings(WebApplicationBuilder builder)

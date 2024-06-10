@@ -26,13 +26,14 @@ public class DoctorController: BaseController
         _scheduleService = scheduleService;
     }
 
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin, Doctor, Patient")]
     [HttpGet]
     public IActionResult Get()
     {
         return Execute(() => _doctorService.GetAllDoctorsActive());
     }
     
+    [Authorize(Roles = "Admin, Doctor, Patient")]
     [HttpGet]
     [Route("{id:int}")]
     public IActionResult Get([FromRoute]int id)
@@ -43,7 +44,7 @@ public class DoctorController: BaseController
         return Execute(() => _baseDoctorService.GetById(id));
     }
 
-    [Authorize(Roles = "User")]
+    //[Authorize(Roles = "Admin, Doctor, Patient")]
     [HttpGet]
     [Route("GetAllDoctor")]
     public IActionResult GetAllDoctor()
@@ -51,6 +52,7 @@ public class DoctorController: BaseController
         return Execute(() => _baseDoctorService.Get());
     }
     
+    [Authorize(Roles = "Admin, Doctor, Patient")]
     [HttpPost]
     public IActionResult Create([FromBody] DoctorDto doctorDto)
     {
@@ -64,7 +66,8 @@ public class DoctorController: BaseController
                 Id = doctorDto.Id,
                 Name = doctorDto.Name,
                 Code = doctorDto.Code,
-                IsDeleted = doctorDto.IsDeleted
+                IsDeleted = doctorDto.IsDeleted,
+                UserId = ""
             };
 
             _doctorService.Validations(doctor);
@@ -74,6 +77,7 @@ public class DoctorController: BaseController
         });
     }
     
+    [Authorize(Roles = "Admin, Doctor")]
     [HttpPut]
     [Route("{id:int}")]
     public IActionResult Update(
@@ -82,7 +86,7 @@ public class DoctorController: BaseController
     {
         if (id <= 0 || doctorDto == null)
             return NotFound();
-
+        
         return Execute(() =>
         {
             var doctor = new Doctor
@@ -90,15 +94,16 @@ public class DoctorController: BaseController
                 Id = id,
                 Name = doctorDto.Name,
                 Code = doctorDto.Code,
-                IsDeleted = doctorDto.IsDeleted
+                IsDeleted = doctorDto.IsDeleted,
+                UserId = ""
             };
             
-            _doctorService.Validations(doctor);
             _baseDoctorService.Update<DoctorValidator>(doctor);
             return doctorDto;
         });
     }
 
+    [Authorize(Roles = "Admin, Doctor")]
     [HttpDelete]
     [Route("{id:int}")]
     public IActionResult Delete([FromRoute] int id)

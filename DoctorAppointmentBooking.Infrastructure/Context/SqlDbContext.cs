@@ -1,7 +1,5 @@
 ﻿using DoctorAppointmentBooking.Domain.Entities;
 using DoctorAppointmentBooking.Infrastructure.Mapping;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace DoctorAppointmentBooking.Infrastructure.Context

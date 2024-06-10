@@ -14,5 +14,7 @@ namespace DoctorAppointmentBooking.Domain.Entities
         
         [JsonIgnore]
         public IList<Schedule> Schedules { get; private set; } = new List<Schedule>();
+        
+        public string UserId { get; set; }
     }
 }

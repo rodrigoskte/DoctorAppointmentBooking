@@ -21,6 +21,8 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.5" />
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="8.0.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Identity.Stores" Version="8.0.5" />
+    <PackageReference Include="MudBlazor" Version="6.20.0" />
     <PackageReference Include="RestSharp" Version="111.2.0" />
   </ItemGroup>
 
@@ -32,6 +34,11 @@
 	<None Update="wwwroot/config/appsettings.json">
 		<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	</None>
+  </ItemGroup>
+  
+  <ItemGroup>
+    <Content Remove="Pages\Weather.razor" />
+    <Content Remove="Pages\Counter.razor" />
   </ItemGroup>
 
 </Project>

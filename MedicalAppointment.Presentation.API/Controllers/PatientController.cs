@@ -2,10 +2,12 @@
 using DoctorAppointmentBooking.Application.Validators;
 using DoctorAppointmentBooking.Domain.Entities;
 using DoctorAppointmentBooking.Domain.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MedicalAppointment.Presentation.API.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("api/v1/[controller]/")]
     public class PatientController : BaseController
@@ -24,12 +26,14 @@ namespace MedicalAppointment.Presentation.API.Controllers
             _scheduleService = scheduleService;
         }
 
+        [Authorize(Roles = "Admin, Patient")]
         [HttpGet]
         public IActionResult Get()
         {
             return Execute(() => _patientService.GetAllPatientActive());
         }
 
+        [Authorize(Roles = "Admin, Patient")]
         [HttpGet]
         [Route("{id:int}")]
         public IActionResult Get([FromRoute]int id)
@@ -40,6 +44,7 @@ namespace MedicalAppointment.Presentation.API.Controllers
             return Execute(() => _basePatientService.GetById(id));
         }
         
+        [Authorize(Roles = "Admin, Patient")]
         [HttpGet]
         [Route("GetAllPatient")]
         public IActionResult GetAllPatient()
@@ -47,6 +52,7 @@ namespace MedicalAppointment.Presentation.API.Controllers
             return Execute(() => _basePatientService.Get());
         }
         
+        [Authorize(Roles = "Admin, Patient")]
         [HttpPost]
         public IActionResult Create([FromBody] PatientDto patientDto)
         {
@@ -59,7 +65,8 @@ namespace MedicalAppointment.Presentation.API.Controllers
                 {
                     Name = patientDto.Name,
                     Email = patientDto.Email,
-                    IsDeleted = patientDto.IsDeleted
+                    IsDeleted = patientDto.IsDeleted,
+                    UserId = ""
                 };
                 
                 _patientService.Validations(patient);
@@ -69,6 +76,7 @@ namespace MedicalAppointment.Presentation.API.Controllers
             });
         }
 
+        [Authorize(Roles = "Admin, Patient")]
         [HttpPut]
         [Route("{id:int}")]
         public IActionResult Update(
@@ -85,16 +93,16 @@ namespace MedicalAppointment.Presentation.API.Controllers
                     Id = id,
                     Name = patientDto.Name,
                     Email = patientDto.Email,
-                    IsDeleted = patientDto.IsDeleted
+                    IsDeleted = patientDto.IsDeleted,
+                    UserId = ""
                 };
-                
-                _patientService.Validations(patient);
                 
                 _basePatientService.Update<PatientValidator>(patient);
                 return patientDto;
             });
         }
 
+        [Authorize(Roles = "Admin, Patient")]
         [HttpDelete]
         [Route("{id:int}")]
         public IActionResult Delete([FromRoute]int id)

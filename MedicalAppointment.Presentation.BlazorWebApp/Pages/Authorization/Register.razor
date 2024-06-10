@@ -1,37 +1,56 @@
 ﻿@page "/register"
-@using DoctorAppointmentBooking.Application.DTOs
-@inject HttpClient Http
 @inject NavigationManager Navigation
+@inject ISnackbar Snackbar
 
-<EditForm Model="@registerModel" OnValidSubmit="HandleRegister">
-    <DataAnnotationsValidator />
-    <ValidationSummary />
+<EditForm Model="registerModel" OnValidSubmit="HandleRegister">
+    <DataAnnotationsValidator/>
+    <ValidationSummary/>
 
-    <div>
-        <label>Email:</label>
-        <InputText @bind-Value="registerModel.Email" />
+    <div class="mb-3">
+        <label for="email" class="form-label">Email</label>
+        <InputText id="email" class="form-control" @bind-Value="registerModel.Email"/>
     </div>
-    <div>
-        <label>Password:</label>
-        <InputText @bind-Value="registerModel.Password" type="password" />
+    <div class="mb-3">
+        <label for="password" class="form-label">Password</label>
+        <InputText id="password" type="password" class="form-control" @bind-Value="registerModel.Password"/>
     </div>
-    <button type="submit">Register</button>
+    <div class="mb-3">
+        <label for="role" class="form-label">Role</label>
+        <InputText id="role" type="form-control" class="form-control" @bind-Value="registerModel.Role"/>
+    </div>
+    <button type="submit" class="btn btn-primary">Login</button>
 </EditForm>
 
 @code {
     private RegisterDto registerModel = new RegisterDto();
+    [Inject] private IRestClient RestClient { get; set; } = default!;
+    [Inject] private BaseUrlConfiguration BaseUrlConfig { get; set; } = default!;
 
     private async Task HandleRegister()
     {
-        var response = await Http.PostAsJsonAsync("api/auth/register", registerModel);
+        var request = new RestRequest($"{BaseUrlConfig.ApiBase}/v1/Auth/Register", Method.Post)
+        {
+            RequestFormat = DataFormat.Json
+        };
+        request.AddJsonBody(registerModel);
 
-        if (response.IsSuccessStatusCode)
+        try
         {
-            Navigation.NavigateTo("/login");
+            var response = await RestClient.ExecuteAsync<ApiResponse<string>>(request);
+            if (response.IsSuccessful)
+            {
+                Snackbar.Add("Profile created successfully", Severity.Success);
+                Navigation.NavigateTo("/login");
+            }
+            else
+            {
+                Snackbar.Add("Error creating profile: " + response.ErrorMessage, Severity.Error);
+            }
         }
-        else
+        catch (Exception ex)
         {
-            // Handle error
+            Snackbar.Add("Exception creating profile: " + ex.Message, Severity.Error);
         }
     }
+
 }

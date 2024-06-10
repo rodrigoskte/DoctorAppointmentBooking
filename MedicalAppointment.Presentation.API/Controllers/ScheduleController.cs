@@ -2,23 +2,31 @@
 using DoctorAppointmentBooking.Application.Validators;
 using DoctorAppointmentBooking.Domain.Entities;
 using DoctorAppointmentBooking.Domain.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MedicalAppointment.Presentation.API.Controllers;
 
+[Authorize]
 [ApiController]
 [Route("api/v1/[controller]/")]
 public class ScheduleController : BaseController
 {
     private readonly IBaseService<Schedule> _baseScheduleService;
     private readonly IScheduleService _scheduleService;
+    private readonly IPatientService _patientService;
+    private readonly IDoctorService _doctorService;
 
     public ScheduleController(
         IBaseService<Schedule> baseScheduleService,
-        IScheduleService scheduleService)
+        IScheduleService scheduleService,
+        IPatientService patientService,
+        IDoctorService doctorService)
     {
         _baseScheduleService = baseScheduleService;
         _scheduleService = scheduleService;
+        _patientService = patientService;
+        _doctorService = doctorService;
     }
 
     [HttpGet]
@@ -107,65 +115,81 @@ public class ScheduleController : BaseController
     }
 
     [HttpGet]
-    [Route("GetPatientSchedule/{patientId:int}")]
+    [Route("GetPatientSchedule/{patientId}")]
     public IActionResult GetPatientSchedule(
-        [FromRoute]int patientId)
+        [FromRoute]string patientId)
     {
-        if (patientId <= 0)
+        if (string.IsNullOrEmpty(patientId))
             return NotFound();
 
-        return Execute(() => _scheduleService.GetAllSchedulePatientId(patientId));
+        var patient = _patientService.GetPatientByUserId(patientId);
+        if(patient == null)
+            return NotFound();
+        
+        return Execute(() => _scheduleService.GetAllSchedulePatientId(patient.Id));
     }
     
     [HttpGet]
-    [Route("GetDoctorSchedule/{doctorId:int}")]
+    [Route("GetDoctorSchedule/{doctorId}")]
     public IActionResult GetDoctorSchedule(
-        [FromRoute]int doctorId)
+        [FromRoute]string doctorId)
     {
-        if (doctorId <= 0)
+        if (string.IsNullOrEmpty(doctorId))
             return NotFound();
 
-        return Execute(() => _scheduleService.GetAllScheduleDoctorId(doctorId));
+        var doctor = _doctorService.GetDoctorByUserId(doctorId);
+        if(doctor == null)
+            return NotFound();
+
+        return Execute(() => _scheduleService.GetAllScheduleDoctorId(doctor.Id));
     }
 
     [HttpPut]
-    [Route("CancelSchedulePatient/{patientId:int}")]
+    [Route("CancelSchedulePatient/{patientId}")]
     public IActionResult CancelSchedulePatient(
-        [FromRoute]int patientId)
+        [FromRoute]string patientId)
     {
-        if (patientId <= 0)
+        if (string.IsNullOrEmpty(patientId))
+            return NotFound();
+        
+        var patient = _patientService.GetPatientByUserId(patientId);
+        if(patient == null)
             return NotFound();
         
         return Execute(() =>
         {
             var schedule = new Schedule
             {
-                PatientId = patientId,
+                PatientId = patient.Id,
                 IsDeleted = true
             };
             
-            _scheduleService.CancelSchedulePatient(patientId);
+            _scheduleService.CancelSchedulePatient(patient.Id);
             return patientId;
         });
     }
     
     [HttpPut]
-    [Route("CancelScheduleDoctor/{doctorId:int}")]
+    [Route("CancelScheduleDoctor/{doctorId}")]
     public IActionResult CancelScheduleDoctor(
-        [FromRoute]int doctorId)
+        [FromRoute]string doctorId)
     {
-        if (doctorId <= 0)
+        if (string.IsNullOrEmpty(doctorId))
+            return NotFound();
+        
+        var doctor = _doctorService.GetDoctorByUserId(doctorId);
+        if(doctor == null)
             return NotFound();
         
         return Execute(() =>
         {
             var schedule = new Schedule
             {
-                DoctorId = doctorId,
+                DoctorId = doctor.Id,
                 IsDeleted = true
             };
             
-            _scheduleService.CancelScheduleDoctor(doctorId);
+            _scheduleService.CancelScheduleDoctor(doctor.Id);
             return doctorId;
         });
     }

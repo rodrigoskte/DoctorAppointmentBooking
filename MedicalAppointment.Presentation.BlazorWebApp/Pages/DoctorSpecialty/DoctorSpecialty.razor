@@ -1,0 +1,265 @@
+﻿@page "/doctorspecialty"
+@attribute [Authorize(Roles = "Doctor, Admin")]
+@inject ISnackbar Snackbar
+@inject ILocalStorageService LocalStorage
+
+<PageTitle>Doctor Specialty</PageTitle>
+<h3>Doctor Specialty</h3>
+
+@if (_doctorSpecialties is null || _doctors is null || _specialties is null)
+{
+    <p>
+        <em>Loading...</em>
+    </p>
+}
+else
+{
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Id</th>
+            <th>Doctor</th>
+            <th>Specialty</th>
+            <th>Deleted</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var doctorSpecialty in _doctorSpecialties)
+        {
+            <tr>
+                <td>@doctorSpecialty.Id</td>
+                <td>@doctorSpecialty.Doctor.Name</td>
+                <td>@doctorSpecialty.Specialty.Description</td>
+                <td>
+                    <InputCheckbox @bind-Value="doctorSpecialty.IsDeleted"/>
+                </td>
+                <td>
+                    <button class="btn btn-info" @onclick="() => EditDoctorSpecialty(doctorSpecialty)">EDIT</button>
+                    <button class="btn btn-danger" @onclick="() => DeleteDoctorSpecialty(doctorSpecialty.Id)">DELETE</button>
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+}
+
+<hr>
+<div class="mb-3">
+    <label class="form-label">Doctor</label>
+    <select class="form-control" @bind="_doctorSpecialty.DoctorId">
+        @foreach (var doctor in _doctors)
+        {
+            <option value="@doctor.Id">@doctor.Name</option>
+        }
+    </select>
+</div>
+<div class="mb-3">
+    <label class="form-label">Specialty</label>
+    <select class="form-control" @bind="_doctorSpecialty.SpecialtyId">
+        @foreach (var specialty in _specialties)
+        {
+            <option value="@specialty.Id">@specialty.Description</option>
+        }
+    </select>
+</div>
+<div class="mb-3">
+    <label class="form-label">IsDeleted</label>
+    <InputCheckbox @bind-Value="_doctorSpecialty.IsDeleted"/>
+</div>
+<button class="btn btn-primary" @onclick="AddOrUpdate">Save</button>
+
+@code {
+    private IList<DoctorAppointmentBooking.Domain.Entities.DoctorSpecialty>? _doctorSpecialties;
+    private IList<DoctorAppointmentBooking.Domain.Entities.Doctor>? _doctors;
+    private IList<DoctorAppointmentBooking.Domain.Entities.Specialty>? _specialties;
+    private DoctorAppointmentBooking.Domain.Entities.DoctorSpecialty _doctorSpecialty = new();
+    [Inject] private IRestClient RestClient { get; set; } = default!;
+    [Inject] private BaseUrlConfiguration BaseUrlConfig { get; set; } = default!;
+    RestRequest request;
+    RestResponse<ResultViewModel<DoctorAppointmentBooking.Domain.Entities.DoctorSpecialty>> response;
+    [Inject] private AuthenticationStateProvider AuthenticationStateProvider { get; set; } = default!;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadDoctorSpecialty();
+        await LoadDoctors();
+        await LoadSpecialties();
+    }
+
+    private async Task LoadDoctorSpecialty()
+    {
+        try
+        {
+            var request = new RestRequest($"{BaseUrlConfig.ApiBase}/v1/DoctorSpecialty/GetAllDoctorSpecialty");
+            var token = await GetToken();
+            request.AddHeader("Authorization", $"Bearer {token}");
+
+            var response = await RestClient.ExecuteAsync<ResultViewModel<IList<DoctorAppointmentBooking.Domain.Entities.DoctorSpecialty>>>(request);
+            if (response.StatusCode == HttpStatusCode.OK)
+            {
+                _doctorSpecialties = response?.Data?.Data;
+            }
+            else
+            {
+                if (response.Data?.Errors != null && response.Data.Errors.Any())
+                {
+                    foreach (var error in response.Data?.Errors)
+                    {
+                        Snackbar.Add(error, Severity.Error);
+                    }
+                }
+                else
+                {
+                    Snackbar.Add($"Erro ao processar os DoctorSpecialty: {response.StatusDescription}", Severity.Error);
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add("Exception updating profile: " + ex.Message, Severity.Error);
+        }
+    }
+
+    private async Task LoadDoctors()
+    {
+        try
+        {
+            var request = new RestRequest($"{BaseUrlConfig.ApiBase}/v1/Doctor/GetAllDoctor");
+            var token = await GetToken();
+            request.AddHeader("Authorization", $"Bearer {token}");
+
+            var response = await RestClient.ExecuteAsync<ResultViewModel<IList<DoctorAppointmentBooking.Domain.Entities.Doctor>>>(request);
+            if (response.StatusCode == HttpStatusCode.OK)
+            {
+                _doctors = response?.Data?.Data;
+            }
+            else
+            {
+                Snackbar.Add($"Erro ao carregar médicos: {response.StatusDescription}", Severity.Error);
+            }
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add("Exception loading doctors: " + ex.Message, Severity.Error);
+        }
+    }
+
+    private async Task LoadSpecialties()
+    {
+        try
+        {
+            var request = new RestRequest($"{BaseUrlConfig.ApiBase}/v1/Specialty/GetAllSpecialty");
+            var token = await GetToken();
+            request.AddHeader("Authorization", $"Bearer {token}");
+
+            var response = await RestClient.ExecuteAsync<ResultViewModel<IList<DoctorAppointmentBooking.Domain.Entities.Specialty>>>(request);
+            if (response.StatusCode == HttpStatusCode.OK)
+            {
+                _specialties = response?.Data?.Data;
+            }
+            else
+            {
+                Snackbar.Add($"Erro ao carregar especialidades: {response.StatusDescription}", Severity.Error);
+            }
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add("Exception loading specialties: " + ex.Message, Severity.Error);
+        }
+    }
+
+    private async Task<string?> GetToken()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+        var token = await LocalStorage.GetItemAsync<string>("authToken");
+        return token;
+    }
+
+    private async Task AddOrUpdate()
+    {
+        try
+        {
+            if (_doctorSpecialty?.Id == 0)
+            {
+                request = new RestRequest($"{BaseUrlConfig.ApiBase}/v1/DoctorSpecialty/", Method.Post);
+            }
+            else
+            {
+                request = new RestRequest($"{BaseUrlConfig.ApiBase}/v1/DoctorSpecialty/{_doctorSpecialty.Id}", Method.Put);
+            }
+
+            request.AddJsonBody(_doctorSpecialty);
+            var token = await GetToken();
+            request.AddHeader("Authorization", $"Bearer {token}");
+            response = await RestClient.ExecuteAsync<ResultViewModel<DoctorAppointmentBooking.Domain.Entities.DoctorSpecialty>>(request);
+
+            if (response.StatusCode == HttpStatusCode.OK)
+            {
+                Snackbar.Add("Specialty saved successfully", Severity.Success);
+                await LoadDoctorSpecialty();
+                _doctorSpecialty = new DoctorAppointmentBooking.Domain.Entities.DoctorSpecialty();
+            }
+            else
+            {
+                if (response.Data?.Errors != null && response.Data.Errors.Any())
+                {
+                    foreach (var error in response.Data.Errors)
+                    {
+                        Snackbar.Add(error, Severity.Error);
+                    }
+                }
+                else
+                {
+                    Snackbar.Add($"Error saving DoctorSpecialty: {response.StatusDescription}", Severity.Error);
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add("Exception saving DoctorSpecialty: " + ex.Message, Severity.Error);
+        }
+    }
+
+    private async Task EditDoctorSpecialty(DoctorAppointmentBooking.Domain.Entities.DoctorSpecialty doctorSpecialty)
+    {
+        _doctorSpecialty = doctorSpecialty;
+    }
+
+    private async Task DeleteDoctorSpecialty(int id)
+    {
+        try
+        {
+            var request = new RestRequest($"{BaseUrlConfig.ApiBase}/v1/DoctorSpecialty/{id}", Method.Delete);
+            var token = await GetToken();
+            request.AddHeader("Authorization", $"Bearer {token}");
+            var response = await RestClient.ExecuteAsync<ResultViewModel<DoctorAppointmentBooking.Domain.Entities.DoctorSpecialty>>(request);
+
+            if (response.StatusCode == HttpStatusCode.OK)
+            {
+                Snackbar.Add("DoctorSpecialty deleted successfully", Severity.Success);
+                await LoadDoctorSpecialty();
+            }
+            else
+            {
+                if (response.Data?.Errors != null && response.Data.Errors.Any())
+                {
+                    foreach (var error in response.Data?.Errors)
+                    {
+                        Snackbar.Add(error, Severity.Error);
+                    }
+                }
+                else
+                {
+                    Snackbar.Add($"Error deleting DoctorSpecialty: {response.StatusDescription}", Severity.Error);
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add("Exception deleting DoctorSpecialty: " + ex.Message, Severity.Error);
+        }
+    }
+
+}

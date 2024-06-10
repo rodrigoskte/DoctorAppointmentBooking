@@ -2,10 +2,12 @@
 using DoctorAppointmentBooking.Application.Validators;
 using DoctorAppointmentBooking.Domain.Entities;
 using DoctorAppointmentBooking.Domain.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MedicalAppointment.Presentation.API.Controllers;
 
+[Authorize]
 [ApiController]
 [Route("api/v1/[controller]/")]
 public class SpecialtyController : BaseController
@@ -21,12 +23,14 @@ public class SpecialtyController : BaseController
         _specialtyService = specialtyService;
     }
 
+    [Authorize(Roles = "Admin, Doctor")]
     [HttpGet]
     public IActionResult Get()
     {
         return Execute(() => _specialtyService.GetAllSpecialtyActive());
     }
 
+    [Authorize(Roles = "Admin, Doctor")]
     [HttpGet]
     [Route("{id:int}")]
     public IActionResult Get([FromRoute] int id)
@@ -37,6 +41,7 @@ public class SpecialtyController : BaseController
         return Execute(() => _baseSpecialtyService.GetById(id));
     }
     
+    [Authorize(Roles = "Admin, Doctor")]
     [HttpGet]
     [Route("GetAllSpecialty")]
     public IActionResult GetAllSpecialty()
@@ -44,6 +49,7 @@ public class SpecialtyController : BaseController
         return Execute(() => _baseSpecialtyService.Get());
     }
 
+    [Authorize(Roles = "Admin, Doctor")]
     [HttpPost]
     public IActionResult Create([FromBody] SpecialtyDto specialtyDto)
     {
@@ -65,6 +71,7 @@ public class SpecialtyController : BaseController
         });
     }
 
+    [Authorize(Roles = "Admin, Doctor")]
     [HttpPut]
     [Route("{id:int}")]
     public IActionResult Update(
@@ -83,13 +90,12 @@ public class SpecialtyController : BaseController
                 IsDeleted = specialtyDto.IsDeleted
             };
             
-            _specialtyService.Validations(specialty);
-            
             _baseSpecialtyService.Update<SpecialtyValidator>(specialty);
             return specialtyDto;
         });
     }
 
+    [Authorize(Roles = "Admin, Doctor")]
     [HttpDelete]
     [Route("{id:int}")]
     public IActionResult Delete([FromRoute] int id)

@@ -6,4 +6,6 @@ public interface IPatientRepository
 {
     bool IsPatientExists(Patient patient);
     IList<Patient> GetAllPatientActive();
+
+    Patient GetPatientByUserId(string userId);
 }

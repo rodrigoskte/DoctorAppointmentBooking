@@ -1,31 +1,26 @@
 ﻿@page "/login"
-@using Blazored.LocalStorage
-@using DoctorAppointmentBooking.Application.DTOs
-@using DoctorAppointmentBooking.Application.ViewModels
-@using MedicalAppointment.Presentation.BlazorWebApp.Configuration
-@using MedicalAppointment.Presentation.BlazorWebApp.Provider
-@using Microsoft.AspNetCore.Components.Authorization
 @inject IRestClient RestClient
 @inject BaseUrlConfiguration BaseUrlConfig
 @inject NavigationManager Navigation
 @inject ILocalStorageService LocalStorage
 @inject AuthenticationStateProvider AuthenticationStateProvider
+@inject ISnackbar Snackbar
 
 <PageTitle>Login</PageTitle>
 
 <h3>Login</h3>
 
 <EditForm Model="loginModel" OnValidSubmit="HandleLogin">
-    <DataAnnotationsValidator />
-    <ValidationSummary />
+    <DataAnnotationsValidator/>
+    <ValidationSummary/>
 
     <div class="mb-3">
         <label for="email" class="form-label">Email</label>
-        <InputText id="email" class="form-control" @bind-Value="loginModel.Email" />
+        <InputText id="email" class="form-control" @bind-Value="loginModel.Email"/>
     </div>
     <div class="mb-3">
         <label for="password" class="form-label">Password</label>
-        <InputText id="password" type="password" class="form-control" @bind-Value="loginModel.Password" />
+        <InputText id="password" type="password" class="form-control" @bind-Value="loginModel.Password"/>
     </div>
     <button type="submit" class="btn btn-primary">Login</button>
 </EditForm>
@@ -38,23 +33,41 @@
         try
         {
             var request = new RestRequest($"{BaseUrlConfig.ApiBase}/v1/Auth/login", Method.Post);
-            request.AddJsonBody(loginModel); 
-            var response = await RestClient.PostAsync<ResultViewModel<TokenResponseDto>>(request);
+            request.AddJsonBody(loginModel);
+            var response = await RestClient.ExecuteAsync<ResultViewModel<TokenResponseDto>>(request);
 
-            if (response?.Data != null)
+            if (response.StatusCode == HttpStatusCode.OK)
             {
-                await LocalStorage.SetItemAsync("authToken", response.Data);
-                ((CustomAuthStateProvider)AuthenticationStateProvider).NotifyUserAuthentication(response?.Data.Token);
-                Navigation.NavigateTo("/");
+                if (response.Data?.Data?.Token != null)
+                {
+                    await LocalStorage.SetItemAsync("authToken", response?.Data.Data.Token);
+                    ((CustomAuthStateProvider)AuthenticationStateProvider).NotifyUserAuthentication(response?.Data.Data.Token);
+                    Navigation.NavigateTo("/home");
+                }
+                else
+                {
+                    Snackbar.Add("Erro ao processar o login.", Severity.Error);
+                }
             }
             else
             {
-                Console.WriteLine("Login failed or response is null");
+                if (response.Data?.Errors != null && response.Data.Errors.Any())
+                {
+                    foreach (var error in response.Data?.Errors)
+                    {
+                        Snackbar.Add(error, Severity.Error);
+                    }
+                }
+                else
+                {
+                    Snackbar.Add($"Erro ao processar o login: {response.StatusDescription}", Severity.Error);
+                }
             }
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Login error: {ex.Message}");
+            Snackbar.Add("Exception updating profile: " + ex.Message, Severity.Error);
         }
     }
+
 }

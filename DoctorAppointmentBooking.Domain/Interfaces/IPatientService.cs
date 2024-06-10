@@ -6,4 +6,6 @@ public interface IPatientService
 {
     bool Validations(Patient patient);
     IList<Patient> GetAllPatientActive();
+
+    Patient GetPatientByUserId(string userId);
 }

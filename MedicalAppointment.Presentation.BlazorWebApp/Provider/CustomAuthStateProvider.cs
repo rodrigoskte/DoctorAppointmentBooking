@@ -1,5 +1,6 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Text.Json;
 using Blazored.LocalStorage;
 using Microsoft.AspNetCore.Components.Authorization;
 using RestSharp;
@@ -19,15 +20,54 @@ public class CustomAuthStateProvider : AuthenticationStateProvider
 
     public override async Task<AuthenticationState> GetAuthenticationStateAsync()
     {
-        NotifyUserLogout();
-        var token = await _localStorage.GetItemAsync<string>("authToken");
-        var identity = string.IsNullOrEmpty(token) ? new ClaimsIdentity() : new ClaimsIdentity(new[]
+        try
         {
-            new Claim(ClaimTypes.Name, "User")
-        }, "apiauth");
+            var tokenString = await _localStorage.GetItemAsync<string>("authToken");
 
-        var user = new ClaimsPrincipal(identity);
-        return await Task.FromResult(new AuthenticationState(user));
+            if (!string.IsNullOrEmpty(tokenString))
+            {
+                if (tokenString.Trim().StartsWith("{"))
+                {
+                    var tokenObject = JsonDocument.Parse(tokenString);
+                    if (tokenObject.RootElement.TryGetProperty("Token", out var tokenElement))
+                    {
+                        tokenString = tokenElement.GetString();
+                    }
+                }
+
+                var tokenHandler = new JwtSecurityTokenHandler();
+                if (tokenHandler.CanReadToken(tokenString))
+                {
+                    var securityToken = tokenHandler.ReadJwtToken(tokenString);
+
+                    var nameClaim = securityToken.Claims.FirstOrDefault(c => c.Type == "unique_name");
+                    var uniqueName = nameClaim?.Value; 
+                    
+                    var roleClaim = securityToken.Claims.FirstOrDefault(c => c.Type == "role");
+                    var role = roleClaim?.Value; 
+                    
+                    var idUserClaim = securityToken.Claims.FirstOrDefault(c => c.Type == "nameid");
+                    var idUser = idUserClaim?.Value; 
+
+                    var identity = new ClaimsIdentity(new[]
+                    {
+                        new Claim(ClaimTypes.Name, uniqueName),
+                        new Claim(ClaimTypes.Role, role),
+                        new Claim(ClaimTypes.NameIdentifier, idUser)
+                    }, "apiauth");
+
+                    var user = new ClaimsPrincipal(identity);
+                    return await Task.FromResult(new AuthenticationState(user));
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            throw new Exception($"Authentication error: {ex.Message}");
+        }
+
+        NotifyUserLogout();
+        return new AuthenticationState(new ClaimsPrincipal(new ClaimsIdentity()));
     }
 
     public void NotifyUserAuthentication(string token)
@@ -36,16 +76,16 @@ public class CustomAuthStateProvider : AuthenticationStateProvider
         {
             var tokenHandler = new JwtSecurityTokenHandler();
             var securityToken = tokenHandler.ReadJwtToken(token);
-        
+
             var roleClaim = securityToken.Claims.FirstOrDefault(c => c.Type == "role");
-            var role = roleClaim?.Value; // Obter o valor do claim de role
-        
+            var role = roleClaim?.Value;
+
             var identity = new ClaimsIdentity(new[]
             {
                 new Claim(ClaimTypes.Name, "User"),
-                new Claim(ClaimTypes.Role, role) // Adicionar o claim de role à identidade
+                new Claim(ClaimTypes.Role, role)
             }, "apiauth");
-            
+
             var user = new ClaimsPrincipal(identity);
             NotifyAuthenticationStateChanged(Task.FromResult(new AuthenticationState(user)));
         }

@@ -7,23 +7,15 @@ using MedicalAppointment.Presentation.BlazorWebApp.Provider;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
+using MudBlazor.Services;
 using RestSharp;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");
-
-builder.Services.AddAuthorizationCore(config =>
-{
-    config.AddPolicy("DoctorOnly", policy => policy.RequireRole("doctor"));
-    config.AddPolicy("AdminOnly", policy => policy.RequireRole("admin"));
-    config.AddPolicy("PatientOnly", policy => policy.RequireRole("patient"));
-    config.AddPolicy("DoctorOrAdmin", policy => policy.RequireRole("Doctor", "Admin"));
-    config.AddPolicy("PatientOrAdmin", policy => policy.RequireRole("Patient", "Admin"));
-});
-
+builder.Services.AddMudServices();
+CreatePolicies(builder);
 ConfigureInjections(builder);
-
 await builder.Build().RunAsync();
 
 void ConfigureInjections(WebAssemblyHostBuilder webAssemblyHostBuilder)
@@ -39,4 +31,17 @@ void ConfigureInjections(WebAssemblyHostBuilder webAssemblyHostBuilder)
     webAssemblyHostBuilder.Services.AddOptions();
     webAssemblyHostBuilder.Services.AddAuthorizationCore();
     webAssemblyHostBuilder.Services.AddScoped<AuthenticationStateProvider, CustomAuthStateProvider>();
+}
+
+void CreatePolicies(WebAssemblyHostBuilder builder1)
+{
+    builder1.Services.AddAuthorizationCore(config =>
+    {
+        config.AddPolicy("DoctorOnly", policy => policy.RequireRole("doctor"));
+        config.AddPolicy("AdminOnly", policy => policy.RequireRole("admin"));
+        config.AddPolicy("PatientOnly", policy => policy.RequireRole("patient"));
+        config.AddPolicy("DoctorOrAdmin", policy => policy.RequireRole("Doctor", "Admin"));
+        config.AddPolicy("PatientOrAdmin", policy => policy.RequireRole("Patient", "Admin"));
+        config.AddPolicy("AdminDoctorPatient", policy => policy.RequireRole("Admin", "Doctor", "Patient"));
+    });
 }

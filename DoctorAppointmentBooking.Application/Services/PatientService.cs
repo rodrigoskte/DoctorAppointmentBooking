@@ -26,4 +26,9 @@ public class PatientService : IPatientService
     {
         return _basePatientRepository.GetAllPatientActive();
     }
+
+    public Patient GetPatientByUserId(string userId)
+    {
+        return _basePatientRepository.GetPatientByUserId(userId);
+    }
 }

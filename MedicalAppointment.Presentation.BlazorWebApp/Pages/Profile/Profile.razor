@@ -1,0 +1,89 @@
+﻿@page "/profile"
+@attribute [Authorize(Roles = "Admin, Doctor, Patient")]
+@inject NavigationManager Navigation
+@inject ISnackbar Snackbar
+
+<PageTitle>My Profile</PageTitle>
+<h3>My Profile</h3>
+
+@if (_user is not null)
+{
+    <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" class="form-control" id="email" @bind="_user.Email" />
+    </div>
+    <div class="form-group">
+        <label for="userName">User Name</label>
+        <input type="text" class="form-control" id="userName" @bind="_user.UserName" />
+    </div>
+    <div class="form-group">
+        <label for="password">New Password</label>
+        <input type="password" class="form-control" id="password" @bind="_user.Password" />
+    </div>
+    <button class="btn btn-primary" @onclick="SaveProfile">Save</button>
+    @* <button class="btn btn-danger" @onclick="DeleteProfile">Delete</button> *@
+}
+
+@code {
+    private UpdateUserDto _user = new();
+    [Inject] private IRestClient RestClient { get; set; } = default!;
+    [Inject] private BaseUrlConfiguration BaseUrlConfig { get; set; } = default!;
+    [Inject] private AuthenticationStateProvider AuthenticationStateProvider { get; set; } = default!;
+    
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+
+        if (user.Identity?.IsAuthenticated == true)
+        {
+            var userId = user.FindFirst(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+
+            if (!string.IsNullOrEmpty(userId))
+            {
+                try
+                {
+                    var request = new RestRequest($"{BaseUrlConfig.ApiBase}/v1/Auth/{userId}");
+                    var response = await RestClient.GetAsync<ApiResponse<UpdateUserDto>>(request);
+                    _user = response?.Data;
+                }
+                catch (Exception ex)
+                {
+                    Snackbar.Add("Error loading user profile: " + ex.Message, Severity.Error);
+                }
+            }
+        }
+    }
+
+    private async Task SaveProfile()
+    {
+        if (_user != null)
+        {
+            var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+            var user = authState.User;
+            var userId = user.FindFirst(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+            var request = new RestRequest($"{BaseUrlConfig.ApiBase}/v1/Auth/{userId}", Method.Put)
+            {
+                RequestFormat = DataFormat.Json
+            };
+            request.AddJsonBody(_user);
+
+            try
+            {
+                var response = await RestClient.ExecuteAsync<ApiResponse<UpdateUserDto>>(request);
+                if (response.IsSuccessful)
+                {
+                    Snackbar.Add("Profile updated successfully", Severity.Success);
+                }
+                else
+                {
+                    Snackbar.Add("Error updating profile: " + response.ErrorMessage, Severity.Error);
+                }
+            }
+            catch (Exception ex)
+            {
+                Snackbar.Add("Exception updating profile: " + ex.Message, Severity.Error);
+            }
+        }
+    }
+}

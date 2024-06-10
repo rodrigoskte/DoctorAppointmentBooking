@@ -51,6 +51,11 @@ public class DoctorRepository : BaseRepository<Doctor>, IDoctorRepository
         return false;
     }
 
+    public Doctor GetDoctorByUserId(string userId)
+    {
+        return _dbContext.Doctors.FirstOrDefault(e => e.UserId == userId);
+    }
+
     public IList<Doctor> GetAllDoctorsActive()
     {
         return _dbContext.Doctors.Where(e => !e.IsDeleted).ToList();

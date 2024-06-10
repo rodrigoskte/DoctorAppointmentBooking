@@ -1,5 +1,4 @@
-﻿@using Microsoft.AspNetCore.Components.Authorization
-<CascadingAuthenticationState>
+﻿<CascadingAuthenticationState>
     <Router AppAssembly="@typeof(App).Assembly">
         <Found Context="routeData">
             <AuthorizeRouteView RouteData="routeData" DefaultLayout="typeof(MainLayout)">
@@ -19,9 +18,16 @@
 
 @code {
     [Inject] NavigationManager Navigation { get; set; }
-
+    [Inject] private AuthenticationStateProvider AuthenticationStateProvider { get; set; } = default!;
+    
     protected override async Task OnInitializedAsync()
     {
-         Navigation.NavigateTo("/login");
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+
+        if (user.Identity?.IsAuthenticated == true)
+            Navigation.NavigateTo("/home");
+        
+        Navigation.NavigateTo("/login");
     }
 }

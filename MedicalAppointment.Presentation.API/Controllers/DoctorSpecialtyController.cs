@@ -2,10 +2,12 @@
 using DoctorAppointmentBooking.Application.Validators;
 using DoctorAppointmentBooking.Domain.Entities;
 using DoctorAppointmentBooking.Domain.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MedicalAppointment.Presentation.API.Controllers;
 
+[Authorize]
 [ApiController]
 [Route("api/v1/[controller]/")]
 public class DoctorSpecialtyController : BaseController
@@ -21,12 +23,14 @@ public class DoctorSpecialtyController : BaseController
         _doctorSpecialtyService = doctorSpecialtyService;
     }
     
+    [Authorize(Roles = "Admin, Doctor")]
     [HttpGet]
     public IActionResult Get()
     {
         return Execute(() => _doctorSpecialtyService.GetAllWithDetails());
     }
     
+    [Authorize(Roles = "Admin, Doctor")]
     [HttpGet]
     [Route("{id:int}")]
     public IActionResult Get([FromRoute]int id)
@@ -37,6 +41,7 @@ public class DoctorSpecialtyController : BaseController
         return Execute(() => _doctorSpecialtyService.GetAllWithDetailsId(id));
     }
     
+    [Authorize(Roles = "Admin, Doctor")]
     [HttpGet]
     [Route("GetAllDoctorSpecialty")]
     public IActionResult GetAllDoctorSpecialty()
@@ -44,6 +49,7 @@ public class DoctorSpecialtyController : BaseController
         return Execute(() => _baseDoctorSpecialtyService.Get());
     }
     
+    [Authorize(Roles = "Admin, Doctor")]
     [HttpPost]
     public IActionResult Create([FromBody] DoctorSpecialtyDto doctorSpecialtyDto)
     {
@@ -66,6 +72,7 @@ public class DoctorSpecialtyController : BaseController
         });
     }
     
+    [Authorize(Roles = "Admin, Doctor")]
     [HttpPut]
     [Route("{id:int}")]
     public IActionResult Update(
@@ -92,6 +99,7 @@ public class DoctorSpecialtyController : BaseController
         });
     }
     
+    [Authorize(Roles = "Admin, Doctor")]
     [HttpDelete]
     [Route("{id:int}")]
     public IActionResult Delete([FromRoute] int id)

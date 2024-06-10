@@ -30,4 +30,9 @@ public class PatientRepository : BaseRepository<Patient>, IPatientRepository
     {
         return _dbContext.Patients.Where(e => !e.IsDeleted).ToList();
     }
+
+    public Patient GetPatientByUserId(string userId)
+    {
+        return _dbContext.Patients.FirstOrDefault(e => e.UserId == userId);
+    }
 }
