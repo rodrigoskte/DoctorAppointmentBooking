@@ -25,6 +25,8 @@ ConfigureSwagger(builder);
 
 var app = builder.Build();
 
+await ApplyMigrations(app);
+
 // Configure the HTTP request pipeline.
 app.UseSwagger();
 app.UseSwaggerUI();
@@ -67,13 +69,42 @@ static void ConfigureDbContext(WebApplicationBuilder builder1)
 {
     builder1.Services.AddDbContext<SqlDbContext>(options =>
     {
-        options.UseSqlServer(builder1.Configuration.GetConnectionString("DefaultSqlConnection_dev"));
+        options.UseSqlServer(builder1.Configuration.GetConnectionString("DefaultSqlConnection_dev"),
+            sqlServerOptionsAction: sqlOptions =>
+            {
+                sqlOptions.EnableRetryOnFailure(
+                    maxRetryCount: 5,
+                    maxRetryDelay: TimeSpan.FromSeconds(30),
+                    errorNumbersToAdd: null);
+            });
     });
 
     builder1.Services.AddDbContext<AuthDbContext>(options =>
     {
-        options.UseSqlServer(builder1.Configuration.GetConnectionString("DefaultAuthSqlConnection"));
+        options.UseSqlServer(builder1.Configuration.GetConnectionString("DefaultAuthSqlConnection"),
+            sqlServerOptionsAction: sqlOptions =>
+            {
+                sqlOptions.EnableRetryOnFailure(
+                    maxRetryCount: 5,
+                    maxRetryDelay: TimeSpan.FromSeconds(30),
+                    errorNumbersToAdd: null);
+            });
     });
+    
+    builder1.Services.AddControllersWithViews();
+}
+
+static async Task ApplyMigrations(WebApplication app)
+{
+    using (var scope = app.Services.CreateScope())
+    {
+        var services = scope.ServiceProvider;
+        var dbContext = services.GetRequiredService<SqlDbContext>();
+        await dbContext.Database.MigrateAsync();
+        
+        var authDbContext = services.GetRequiredService<AuthDbContext>();
+        await authDbContext.Database.MigrateAsync();
+    }
 }
 
 static void ConfigureCors(WebApplication app)
@@ -133,7 +164,8 @@ static void ConfigureSwagger(WebApplicationBuilder builder)
             Scheme = "Bearer",
             BearerFormat = "JWT",
             In = ParameterLocation.Header,
-            Description = "JWT Authorization header using the Bearer scheme. \r\n\r\n Enter 'Bearer' [space] and then your token in the text input below.\r\n\r\nExample: \"Bearer 1safsfsdfdfd\"",
+            Description =
+                "JWT Authorization header using the Bearer scheme. \r\n\r\n Enter 'Bearer' [space] and then your token in the text input below.\r\n\r\nExample: \"Bearer 1safsfsdfdfd\"",
         });
         c.AddSecurityRequirement(new OpenApiSecurityRequirement
         {
@@ -146,7 +178,7 @@ static void ConfigureSwagger(WebApplicationBuilder builder)
                         Id = "Bearer"
                     }
                 },
-                new string[] {}
+                new string[] { }
             }
         });
     });
