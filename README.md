@@ -67,7 +67,7 @@ De acordo com a Figura 1, a arquitetura do DoctorAppointmentBooking é descrita 
 
 3. Criação do banco e das tabelas 
 
-4. A API realiza login do usuário ou cadastra um novo usuário no BD de usuários *sql-identity*. Caso a requisição for para um método que usa o BD de Consultas *sql-postechchallenge2*, a API usa o Identity para autorizar ou não o usuário.
+4. A API realiza login do usuário ou cadastra um novo usuário no BD de usuários *sql-identity*. Caso a requisição for para um método que usa o BD de Consultas *db-doctorappointment*, a API usa o Identity para autorizar ou não o usuário.
 
 5. O resultado da API é verificado pelo usuário via Swagger ou Postman.
 
