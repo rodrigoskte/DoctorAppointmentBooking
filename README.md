@@ -33,21 +33,21 @@ O SUB DE HACKATON consiste em desenvolver um projeto para seguinte demanda: Sist
 
 **Requisitos:**
 
-Requisitos Funcionais:
-    ● Os(as) pacientes devem ser capazes de criar e gerenciar contas 
+- Requisitos Funcionais:
+    - Os(as) pacientes devem ser capazes de criar e gerenciar contas 
     pessoais.
-    ● Os(as) pacientes devem ser capazes de agendar, reagendar ou cancelar 
+    - Os(as) pacientes devem ser capazes de agendar, reagendar ou cancelar 
     consultas.
-    ● Os(as) médicos(as) devem ser capazes de visualizar e gerenciar suas 
+    - Os(as) médicos(as) devem ser capazes de visualizar e gerenciar suas 
     agendas de consultas.
-    ● Deve haver um sistema de notificação para lembrar pacientes de suas 
+    - Deve haver um sistema de notificação para lembrar pacientes de suas 
     consultas. Estas notificações podem ser via e-mail.
-Requisitos Não Funcionais:
-    ● O sistema deve ser desenvolvido utilizando C# e .NET.
-    ● A interface do usuário fica a critério do(a) estudante.
-    ● O sistema deve ter um fluxo de delete lógico não físico.
+- Requisitos Não Funcionais:
+    - o sistema deve ser desenvolvido utilizando C# e .NET.
+    - A interface do usuário fica a critério do(a) estudante.
+    - O sistema deve ter um fluxo de delete lógico não físico.
 
-# 2. Nossa Solução
+# 2. Solução
 
 Primeiramente, definido que iria usar dois bancos de dados separadamente, o Identity e um banco SQL, assim, 2 endpoints: um para gerenciamento das consultas e outro para login na aplicação.
 Por fim, foi escolhido a abordagem via container, Docker.
