@@ -19,7 +19,7 @@
 
 | Tecnologia                               | Propósito                                                      |  
 | -----------------------------------      | -------------------------------------------------------------- | 
-| .NET 7                                   | API, Class Library, Worker Service                             |
+| .NET 8                                   | API, Class Library, Blazor                                     |
 | Microsoft SQL Server                     | Banco de Dados                                                 |
 | xUnit, Bogus e NSubstitute               | Testes unitários/integrados                                    |
 | Visual Studio e VS Code                  | Desenvolvimento                                                |
