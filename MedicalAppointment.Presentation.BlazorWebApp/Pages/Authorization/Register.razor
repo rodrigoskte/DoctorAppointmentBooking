@@ -16,7 +16,17 @@
     </div>
     <div class="mb-3">
         <label for="role" class="form-label">Role</label>
-        <InputText id="role" type="form-control" class="form-control" @bind-Value="registerModel.Role"/>
+        <InputRadioGroup @bind-Value="registerModel.Role" class="form-control">
+            <div>
+                <InputRadio Value="_admin" /> <label>Admin</label>
+            </div>
+            <div>
+                <InputRadio  Value="_doctor" /> <label>Doctor</label>
+            </div>
+            <div>
+                <InputRadio  Value="_patient" /> <label>Patient</label>
+            </div>
+        </InputRadioGroup>
     </div>
     <button type="submit" class="btn btn-primary">Login</button>
 </EditForm>
@@ -25,6 +35,9 @@
     private RegisterDto registerModel = new RegisterDto();
     [Inject] private IRestClient RestClient { get; set; } = default!;
     [Inject] private BaseUrlConfiguration BaseUrlConfig { get; set; } = default!;
+    private string _admin = "Admin";
+    private string _doctor = "Doctor";
+    private string _patient = "Patient";
 
     private async Task HandleRegister()
     {

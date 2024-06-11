@@ -90,7 +90,7 @@ static void ConfigureDbContext(WebApplicationBuilder builder1)
                     errorNumbersToAdd: null);
             });
     });
-    
+
     builder1.Services.AddControllersWithViews();
 }
 
@@ -101,7 +101,7 @@ static async Task ApplyMigrations(WebApplication app)
         var services = scope.ServiceProvider;
         var dbContext = services.GetRequiredService<SqlDbContext>();
         await dbContext.Database.MigrateAsync();
-        
+
         var authDbContext = services.GetRequiredService<AuthDbContext>();
         await authDbContext.Database.MigrateAsync();
     }
@@ -119,7 +119,15 @@ static void ConfigureCors(WebApplication app)
 
 static void ConfigureIdentity(WebApplicationBuilder builder)
 {
-    builder.Services.AddIdentity<IdentityUser, IdentityRole>()
+    builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
+        {
+            options.Password.RequireDigit = false;
+            options.Password.RequireLowercase = false;
+            options.Password.RequireNonAlphanumeric = false;
+            options.Password.RequireUppercase = false;
+            options.Password.RequiredLength = 3;
+            options.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+        })
         .AddRoles<IdentityRole>()
         .AddEntityFrameworkStores<AuthDbContext>()
         .AddDefaultTokenProviders();
