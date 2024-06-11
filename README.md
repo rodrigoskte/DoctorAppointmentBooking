@@ -93,13 +93,17 @@ Para elucidar o código desenvolvido, fornecemos as informações a seguir, de c
 
 Observação: na raiz deste repositório temos os Dockerfiles e a Solution, contendo: um projeto de API, Application, Domain, Infrastructure e BlazorWASM.
 
-**Projeto DoctorAppointmentBooking (DoctorAppointmentBooking.Presentation.API):**
+**Projeto API (DoctorAppointmentBooking.Presentation.API):**
 
 - Contém os Controllers.
 
 - Os endpoints fornecem as funcionalidades para CRUD da aplicação.
 
 - A API é documentada com o Swagger.
+
+**Projeto BlazorWebApp (DoctorAppointmentBooking.Presentation.BlazorWebApp):**
+
+- Contém as telas de interface com usuário.
 
 **Pasta Infraestrutura: (DoctorAppointmentBooking.Infrastructure)**
 
