@@ -59,7 +59,7 @@ public class AuthController : BaseController
         if (!ModelState.IsValid) return BadRequest();
 
         var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, false, true);
-
+        
         if (result.Succeeded)
         {
             var token = await _authService.GenerateJwtToken(model.Email);

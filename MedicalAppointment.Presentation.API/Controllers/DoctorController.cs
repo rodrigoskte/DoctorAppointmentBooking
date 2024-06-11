@@ -80,7 +80,7 @@ public class DoctorController: BaseController
             
             var user = new IdentityUser
             {
-                UserName = doctorDto.Code,
+                UserName = $"{doctorDto.Code}@doctor.com",
                 Email = $"{doctorDto.Code}@doctor.com"
             };
 
