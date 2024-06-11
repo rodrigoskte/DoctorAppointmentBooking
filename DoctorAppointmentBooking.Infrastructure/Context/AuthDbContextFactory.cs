@@ -9,7 +9,7 @@ namespace DoctorAppointmentBooking.Infrastructure.Context
     {
         public AuthDbContext CreateDbContext(string[] args)
         {
-            var basePath = Path.GetFullPath(Path.Combine(Directory.GetCurrentDirectory(), "../MedicalAppointment.Presentation.API"));
+            var basePath = Path.GetFullPath(Path.Combine(Directory.GetCurrentDirectory(), "../DoctorAppointmentBooking.Presentation.API"));
 
             var configuration = new ConfigurationBuilder()
                 .SetBasePath(basePath)

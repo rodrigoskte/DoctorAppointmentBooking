@@ -10,7 +10,7 @@ namespace DoctorAppointmentBooking.Infrastructure.Context
         public SqlDbContext CreateDbContext(string[] args)
         {
             // Caminho para a pasta do projeto API onde está o appsettings.json
-            var basePath = Path.GetFullPath(Path.Combine(Directory.GetCurrentDirectory(), "../MedicalAppointment.Presentation.API"));
+            var basePath = Path.GetFullPath(Path.Combine(Directory.GetCurrentDirectory(), "../DoctorAppointmentBooking.Presentation.API"));
 
             var configuration = new ConfigurationBuilder()
                 .SetBasePath(basePath)

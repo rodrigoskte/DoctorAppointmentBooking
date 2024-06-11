@@ -27,9 +27,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DoctorAppointmentBooking.Ap
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DoctorAppointmentBooking.Infrastructure", "DoctorAppointmentBooking.Infrastructure\DoctorAppointmentBooking.Infrastructure.csproj", "{5A7DDE0E-6B86-4636-8C60-7C56F3BD5E2E}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MedicalAppointment.Presentation.API", "MedicalAppointment.Presentation.API\MedicalAppointment.Presentation.API.csproj", "{86CE2543-F21D-47E6-9382-7AA739BA7653}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DoctorAppointmentBooking.Presentation.API", "DoctorAppointmentBooking.Presentation.API\DoctorAppointmentBooking.Presentation.API.csproj", "{86CE2543-F21D-47E6-9382-7AA739BA7653}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MedicalAppointment.Presentation.BlazorWebApp", "MedicalAppointment.Presentation.BlazorWebApp\MedicalAppointment.Presentation.BlazorWebApp.csproj", "{CE475ABE-D5DE-4BEA-96CD-0E34DEB87ADC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DoctorAppointmentBooking.Presentation.BlazorWebApp", "DoctorAppointmentBooking.Presentation.BlazorWebApp\DoctorAppointmentBooking.Presentation.BlazorWebApp.csproj", "{CE475ABE-D5DE-4BEA-96CD-0E34DEB87ADC}"
 	ProjectSection(ProjectDependencies) = postProject
 		{5A7DDE0E-6B86-4636-8C60-7C56F3BD5E2E} = {5A7DDE0E-6B86-4636-8C60-7C56F3BD5E2E}
 	EndProjectSection

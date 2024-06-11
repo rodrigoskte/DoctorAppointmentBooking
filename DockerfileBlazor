@@ -3,19 +3,19 @@ FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
 
 # Copy the csproj files and restore as distinct layers
-COPY ["MedicalAppointment.Presentation.BlazorWebApp/MedicalAppointment.Presentation.BlazorWebApp.csproj", "MedicalAppointment.Presentation.BlazorWebApp/"]
+COPY ["DoctorAppointmentBooking.Presentation.BlazorWebApp/DoctorAppointmentBooking.Presentation.BlazorWebApp.csproj", "DoctorAppointmentBooking.Presentation.BlazorWebApp/"]
 COPY ["DoctorAppointmentBooking.Application/DoctorAppointmentBooking.Application.csproj", "DoctorAppointmentBooking.Application/"]
 COPY ["DoctorAppointmentBooking.Domain/DoctorAppointmentBooking.Domain.csproj", "DoctorAppointmentBooking.Domain/"]
 COPY ["DoctorAppointmentBooking.Infrastructure/DoctorAppointmentBooking.Infrastructure.csproj", "DoctorAppointmentBooking.Infrastructure/"]
-RUN dotnet restore "MedicalAppointment.Presentation.BlazorWebApp/MedicalAppointment.Presentation.BlazorWebApp.csproj"
+RUN dotnet restore "DoctorAppointmentBooking.Presentation.BlazorWebApp/DoctorAppointmentBooking.Presentation.BlazorWebApp.csproj"
 
 # Copy everything else and build
 COPY . .
-WORKDIR "/src/MedicalAppointment.Presentation.BlazorWebApp"
-RUN dotnet build "MedicalAppointment.Presentation.BlazorWebApp.csproj" -c Release -o /app/build
+WORKDIR "/src/DoctorAppointmentBooking.Presentation.BlazorWebApp"
+RUN dotnet build "DoctorAppointmentBooking.Presentation.BlazorWebApp.csproj" -c Release -o /app/build
 
 # Publish the application
-RUN dotnet publish "MedicalAppointment.Presentation.BlazorWebApp.csproj" -c Release -o /app/publish
+RUN dotnet publish "DoctorAppointmentBooking.Presentation.BlazorWebApp.csproj" -c Release -o /app/publish
 
 # Stage 2: Create the runtime image with Nginx
 FROM nginx:alpine
