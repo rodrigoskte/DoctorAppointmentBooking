@@ -75,7 +75,7 @@ De acordo com a Figura 1, a arquitetura do DoctorAppointmentBooking é descrita 
 
 Por fim, apresentamos as entidades criadas, a partir do Migrations e Entity, para persistir as informações de consultas e de usuários. 
 
-![](./res/Entidades.jpeg "As entidades de DoctorAppointmentBooking")
+![](./res/Entidades.png "As entidades de DoctorAppointmentBooking")
 
 **Figura 2:** As entidades criadas
 
