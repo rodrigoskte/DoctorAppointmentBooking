@@ -2,7 +2,7 @@
 using DoctorAppointmentBooking.Application.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 
-namespace MedicalAppointment.Presentation.API.Controllers;
+namespace DoctorAppointmentBooking.Presentation.API.Controllers;
 
 public abstract class BaseController : ControllerBase
 {

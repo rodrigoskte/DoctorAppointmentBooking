@@ -5,7 +5,7 @@ using Blazored.LocalStorage;
 using Microsoft.AspNetCore.Components.Authorization;
 using RestSharp;
 
-namespace MedicalAppointment.Presentation.BlazorWebApp.Provider;
+namespace DoctorAppointmentBooking.Presentation.BlazorWebApp.Provider;
 
 public class CustomAuthStateProvider : AuthenticationStateProvider
 {

@@ -8,7 +8,6 @@
     <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
 	<UseBlazorWebAssembly>true</UseBlazorWebAssembly>
 	<DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
-	<RootNamespace>MedicalAppointment.Presentation.BlazorWebApp</RootNamespace>
     <!-- Remove qualquer linha com RuntimeIdentifier -->
   </PropertyGroup>
 

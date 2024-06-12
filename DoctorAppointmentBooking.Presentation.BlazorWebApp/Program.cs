@@ -1,9 +1,9 @@
 using Blazored.LocalStorage;
 using DoctorAppointmentBooking.Application.Services;
 using DoctorAppointmentBooking.Domain.Interfaces;
-using MedicalAppointment.Presentation.BlazorWebApp;
-using MedicalAppointment.Presentation.BlazorWebApp.Configuration;
-using MedicalAppointment.Presentation.BlazorWebApp.Provider;
+using DoctorAppointmentBooking.Presentation.BlazorWebApp;
+using DoctorAppointmentBooking.Presentation.BlazorWebApp.Configuration;
+using DoctorAppointmentBooking.Presentation.BlazorWebApp.Provider;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;

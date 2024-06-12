@@ -1,4 +1,4 @@
-﻿namespace MedicalAppointment.Presentation.BlazorWebApp.Configuration;
+﻿namespace DoctorAppointmentBooking.Presentation.BlazorWebApp.Configuration;
 
 public class BaseUrlConfiguration
 {

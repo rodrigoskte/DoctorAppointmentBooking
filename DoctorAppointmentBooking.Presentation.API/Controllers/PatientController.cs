@@ -5,7 +5,7 @@ using DoctorAppointmentBooking.Domain.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace MedicalAppointment.Presentation.API.Controllers
+namespace DoctorAppointmentBooking.Presentation.API.Controllers
 {
     [Authorize]
     [ApiController]

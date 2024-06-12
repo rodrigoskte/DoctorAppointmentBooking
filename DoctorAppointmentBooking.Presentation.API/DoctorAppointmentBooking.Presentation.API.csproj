@@ -6,7 +6,6 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <UserSecretsId>c0b3f1e4-adf2-4ca0-8380-a3498307ea04</UserSecretsId>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
-    <RootNamespace>MedicalAppointment.Presentation.API</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
