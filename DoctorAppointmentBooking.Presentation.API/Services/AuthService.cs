@@ -2,12 +2,12 @@
 using System.Security.Claims;
 using System.Text;
 using DoctorAppointmentBooking.Application.DTOs;
-using MedicalAppointment.Presentation.API.Interface;
+using DoctorAppointmentBooking.Presentation.API.Interface;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 
-namespace MedicalAppointment.Presentation.API.Services;
+namespace DoctorAppointmentBooking.Presentation.API.Services;
 
 public class AuthService : IAuthService
 {

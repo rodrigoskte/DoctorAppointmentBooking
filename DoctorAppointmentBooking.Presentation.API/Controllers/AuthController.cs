@@ -1,7 +1,7 @@
 ﻿using DoctorAppointmentBooking.Application.DTOs;
 using DoctorAppointmentBooking.Application.ViewModels;
 using DoctorAppointmentBooking.Infrastructure.Context;
-using MedicalAppointment.Presentation.API.Interface;
+using DoctorAppointmentBooking.Presentation.API.Interface;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;

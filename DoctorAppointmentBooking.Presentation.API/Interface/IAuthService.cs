@@ -1,4 +1,4 @@
-﻿namespace MedicalAppointment.Presentation.API.Interface;
+﻿namespace DoctorAppointmentBooking.Presentation.API.Interface;
 
 public interface IAuthService
 {

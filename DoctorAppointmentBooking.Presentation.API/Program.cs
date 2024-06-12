@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
-using MedicalAppointment.Presentation.API.Interface;
-using MedicalAppointment.Presentation.API.Services;
+using DoctorAppointmentBooking.Presentation.API.Interface;
+using DoctorAppointmentBooking.Presentation.API.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
