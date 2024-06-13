@@ -62,7 +62,8 @@ static void ConfigureInjection(WebApplicationBuilder webApplicationBuilder)
     webApplicationBuilder.Services.AddScoped<IPatientService, PatientService>();
     webApplicationBuilder.Services.AddScoped<IPasswordHasher<IdentityUser>, PasswordHasher<IdentityUser>>();
     webApplicationBuilder.Services.AddScoped<IAuthService, AuthService>();
-    webApplicationBuilder.Services.AddScoped<IUserManagerService, UserManagerService>();    
+    webApplicationBuilder.Services.AddScoped<IUserManagerService, UserManagerService>();
+    webApplicationBuilder.Services.AddScoped<IEmailService, EmailService>();    
 }
 
 static void ConfigureDbContext(WebApplicationBuilder builder1)
@@ -134,6 +135,9 @@ static void ConfigureIdentity(WebApplicationBuilder builder)
 
 static void ConfigureJwtSettings(WebApplicationBuilder builder)
 {
+    var emailSettingsSection = builder.Configuration.GetSection("EmailSettings");
+    builder.Services.Configure<EmailSettings>(emailSettingsSection);
+
     var jwtSettingsSection = builder.Configuration.GetSection("JwtSettings");
     builder.Services.Configure<JwtSettings>(jwtSettingsSection);
 
