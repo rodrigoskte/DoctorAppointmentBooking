@@ -67,6 +67,7 @@ namespace DoctorAppointmentBooking.Application.Services
         {
             var user = new IdentityUser
             {
+                UserName = email,
                 Email = email
             };
 
@@ -74,6 +75,8 @@ namespace DoctorAppointmentBooking.Application.Services
 
             if (result.Result.Succeeded)
             {
+                _userManagerService.AddToRoleAsync(user, "Doctor");
+                
                 doctor.UserId = user.Id;
                 _baseDoctorService.Update<DoctorValidator>(doctor);
             }
@@ -87,6 +90,7 @@ namespace DoctorAppointmentBooking.Application.Services
         {
             var user = new IdentityUser
             {
+                UserName = email,
                 Email = email
             };
 
@@ -94,6 +98,8 @@ namespace DoctorAppointmentBooking.Application.Services
 
             if (result.Result.Succeeded)
             {
+                _userManagerService.AddToRoleAsync(user, "Patient");
+                
                 patient.UserId = user.Id;
                 _basePatientService.Update<PatientValidator>(patient);
             }

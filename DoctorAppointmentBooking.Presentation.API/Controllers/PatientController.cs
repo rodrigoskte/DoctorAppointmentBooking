@@ -71,10 +71,18 @@ namespace DoctorAppointmentBooking.Presentation.API.Controllers
                     IsDeleted = patientDto.IsDeleted,
                     UserId = ""
                 };
-                
-                _patientService.Validations(patient);                
-                _basePatientService.Add<PatientValidator>(patient);
-                _authService.CreatePatientUser(patient, patientDto.Email);
+
+                try
+                {
+                    _patientService.Validations(patient);
+                    _basePatientService.Add<PatientValidator>(patient);
+                    _authService.CreatePatientUser(patient, patientDto.Email);
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception(ex.Message);
+                }
+
                 return patientDto;
             });
         }

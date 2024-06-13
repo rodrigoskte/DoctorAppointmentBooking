@@ -63,7 +63,7 @@ public class CustomAuthStateProvider : AuthenticationStateProvider
         }
         catch (Exception ex)
         {
-            throw new Exception($"Authentication error: {ex.Message}");
+            NotifyUserLogout();
         }
 
         NotifyUserLogout();
@@ -77,13 +77,20 @@ public class CustomAuthStateProvider : AuthenticationStateProvider
             var tokenHandler = new JwtSecurityTokenHandler();
             var securityToken = tokenHandler.ReadJwtToken(token);
 
+            var nameClaim = securityToken.Claims.FirstOrDefault(c => c.Type == "unique_name");
+            var uniqueName = nameClaim?.Value; 
+                    
             var roleClaim = securityToken.Claims.FirstOrDefault(c => c.Type == "role");
-            var role = roleClaim?.Value;
+            var role = roleClaim?.Value; 
+                    
+            var idUserClaim = securityToken.Claims.FirstOrDefault(c => c.Type == "nameid");
+            var idUser = idUserClaim?.Value; 
 
             var identity = new ClaimsIdentity(new[]
             {
-                new Claim(ClaimTypes.Name, "User"),
-                new Claim(ClaimTypes.Role, role)
+                new Claim(ClaimTypes.Name, uniqueName),
+                new Claim(ClaimTypes.Role, role),
+                new Claim(ClaimTypes.NameIdentifier, idUser)
             }, "apiauth");
 
             var user = new ClaimsPrincipal(identity);

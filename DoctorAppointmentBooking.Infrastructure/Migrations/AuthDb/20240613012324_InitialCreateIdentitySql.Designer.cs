@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DoctorAppointmentBooking.Infrastructure.Migrations.AuthDb
 {
     [DbContext(typeof(AuthDbContext))]
-    [Migration("20240613010717_InitialCreateIdentitySql")]
+    [Migration("20240613012324_InitialCreateIdentitySql")]
     partial class InitialCreateIdentitySql
     {
         /// <inheritdoc />

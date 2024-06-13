@@ -3,8 +3,6 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
-
 namespace DoctorAppointmentBooking.Infrastructure.Migrations
 {
     /// <inheritdoc />
@@ -110,48 +108,6 @@ namespace DoctorAppointmentBooking.Infrastructure.Migrations
                         principalTable: "Specialty",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.InsertData(
-                table: "Patient",
-                columns: new[] { "Id", "Email", "IsDeleted", "Name", "UserId" },
-                values: new object[,]
-                {
-                    { 1, "r@rrr.com.br", false, "Rodrigo Carvalhomaru", "" },
-                    { 2, "shutzing@enzo.com.br", false, "Enzo Shutzing", "" },
-                    { 3, "cleber@bluedragon.com.br", false, "Cléber Bluedragon", "" },
-                    { 4, "neville@bernard.com.br", false, "Neville Bernard", "" },
-                    { 5, "wendell@kessner.com.br", false, "Wendell Kessner", "" },
-                    { 6, "adare@gerbitz.com.br", false, "Adare Gerbitz", "" },
-                    { 7, "sanders@cameron.com.br", false, "Sanders Cameron", "" },
-                    { 8, "agata@wanner.com.br", false, "Agata Wanner", "" },
-                    { 9, "senalda@ramirez.com.br", false, "Senalda Ramírez", "" }
-                });
-
-            migrationBuilder.InsertData(
-                table: "Specialty",
-                columns: new[] { "Id", "Description", "IsDeleted" },
-                values: new object[,]
-                {
-                    { 1, "Nefrologista", false },
-                    { 2, "Neurologista", false },
-                    { 3, "Nutricionista", false },
-                    { 4, "Gastro", false },
-                    { 5, "Oftalmologista", false },
-                    { 6, "Oncologista", false },
-                    { 7, "Clinico Geral", false }
-                });
-
-            migrationBuilder.InsertData(
-                table: "DoctorSpecialty",
-                columns: new[] { "Id", "DoctorId", "IsDeleted", "SpecialtyId" },
-                values: new object[,]
-                {
-                    { 1, 1, false, 1 },
-                    { 2, 2, false, 2 },
-                    { 3, 3, false, 3 },
-                    { 4, 4, false, 4 },
-                    { 5, 5, false, 5 }
                 });
 
             migrationBuilder.CreateIndex(

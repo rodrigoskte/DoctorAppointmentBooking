@@ -10,7 +10,7 @@ namespace DoctorAppointmentBooking.Presentation.API.Controllers;
 [Authorize]
 [ApiController]
 [Route("api/v1/[controller]/")]
-public class DoctorController: BaseController
+public class DoctorController : BaseController
 {
     private readonly IBaseService<Doctor> _baseDoctorService;
     private readonly IDoctorService _doctorService;
@@ -18,7 +18,7 @@ public class DoctorController: BaseController
     private readonly IAuthService _authService;
 
     public DoctorController(
-        IBaseService<Doctor> baseDoctorService, 
+        IBaseService<Doctor> baseDoctorService,
         IDoctorService doctorService,
         IScheduleService scheduleService,
         IAuthService authService)
@@ -35,11 +35,11 @@ public class DoctorController: BaseController
     {
         return Execute(() => _doctorService.GetAllDoctorsActive());
     }
-    
+
     [Authorize(Roles = "Admin, Doctor, Patient")]
     [HttpGet]
     [Route("{id:int}")]
-    public IActionResult Get([FromRoute]int id)
+    public IActionResult Get([FromRoute] int id)
     {
         if (id <= 0)
             return NotFound();
@@ -54,7 +54,7 @@ public class DoctorController: BaseController
     {
         return Execute(() => _baseDoctorService.Get());
     }
-    
+
     [Authorize(Roles = "Admin, Doctor, Patient")]
     [HttpPost]
     public IActionResult Create([FromBody] DoctorDto doctorDto)
@@ -73,23 +73,31 @@ public class DoctorController: BaseController
                 UserId = ""
             };
 
-            _doctorService.Validations(doctor);            
-            _baseDoctorService.Add<DoctorValidator>(doctor);
-            _authService.CreateDoctorUser(doctor, doctorDto.Email);
+            try
+            {
+                _doctorService.Validations(doctor);
+                _baseDoctorService.Add<DoctorValidator>(doctor);
+                _authService.CreateDoctorUser(doctor, doctorDto.Email);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+
             return doctorDto;
         });
     }
-    
+
     [Authorize(Roles = "Admin, Doctor")]
     [HttpPut]
     [Route("{id:int}")]
     public IActionResult Update(
-        [FromRoute]int id,
+        [FromRoute] int id,
         [FromBody] DoctorDto doctorDto)
     {
         if (id <= 0 || doctorDto == null)
             return NotFound();
-        
+
         return Execute(() =>
         {
             var doctor = new Doctor
@@ -99,7 +107,7 @@ public class DoctorController: BaseController
                 Email = doctorDto.Email,
                 IsDeleted = doctorDto.IsDeleted,
                 UserId = ""
-            };            
+            };
             _baseDoctorService.Update<DoctorValidator>(doctor);
             return doctorDto;
         });
@@ -116,7 +124,7 @@ public class DoctorController: BaseController
         return Execute(() =>
         {
             _scheduleService.IsDoctorActiveSchedule(id);
-            
+
             _baseDoctorService.Delete(id);
             return true;
         });

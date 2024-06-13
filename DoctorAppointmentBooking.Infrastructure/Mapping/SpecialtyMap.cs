@@ -28,15 +28,15 @@ namespace DoctorAppointmentBooking.Infrastructure.Mapping
                 .WithOne(x => x.Specialty)
                 .HasForeignKey(x => x.SpecialtyId);
 
-            builder.HasData(
-                new Specialty{Id = 1, Description = "Nefrologista", IsDeleted = false},
-                new Specialty{Id = 2, Description = "Neurologista", IsDeleted = false},
-                new Specialty{Id = 3, Description = "Nutricionista", IsDeleted = false},
-                new Specialty{Id = 4, Description = "Gastro", IsDeleted = false},
-                new Specialty{Id = 5, Description = "Oftalmologista", IsDeleted = false},
-                new Specialty{Id = 6, Description = "Oncologista", IsDeleted = false},
-                new Specialty{Id = 7, Description = "Clinico Geral", IsDeleted = false}
-                );
+            // builder.HasData(
+            //     new Specialty{Id = 1, Description = "Nefrologista", IsDeleted = false},
+            //     new Specialty{Id = 2, Description = "Neurologista", IsDeleted = false},
+            //     new Specialty{Id = 3, Description = "Nutricionista", IsDeleted = false},
+            //     new Specialty{Id = 4, Description = "Gastro", IsDeleted = false},
+            //     new Specialty{Id = 5, Description = "Oftalmologista", IsDeleted = false},
+            //     new Specialty{Id = 6, Description = "Oncologista", IsDeleted = false},
+            //     new Specialty{Id = 7, Description = "Clinico Geral", IsDeleted = false}
+            //     );
         }
     }
 }

@@ -34,17 +34,17 @@ namespace DoctorAppointmentBooking.Infrastructure.Mapping
                 .HasColumnName("UserId")
                 .HasColumnType("varchar(100)");
 
-            builder.HasData(
-                new Patient{ Id = 1, Name = "Rodrigo Carvalhomaru",Email = "r@rrr.com.br", IsDeleted = false, UserId = string.Empty},
-                new Patient{ Id = 2, Name = "Enzo Shutzing",Email = "shutzing@enzo.com.br", IsDeleted = false, UserId = string.Empty},
-                new Patient{ Id = 3, Name = "Cléber Bluedragon",Email = "cleber@bluedragon.com.br", IsDeleted = false, UserId = string.Empty},
-                new Patient{ Id = 4, Name = "Neville Bernard",Email = "neville@bernard.com.br", IsDeleted = false, UserId = string.Empty},
-                new Patient{ Id = 5, Name = "Wendell Kessner",Email = "wendell@kessner.com.br", IsDeleted = false, UserId = string.Empty},
-                new Patient{ Id = 6, Name = "Adare Gerbitz",Email = "adare@gerbitz.com.br", IsDeleted = false, UserId = string.Empty},
-                new Patient{ Id = 7, Name = "Sanders Cameron",Email = "sanders@cameron.com.br", IsDeleted = false, UserId = string.Empty},
-                new Patient{ Id = 8, Name = "Agata Wanner",Email = "agata@wanner.com.br", IsDeleted = false, UserId = string.Empty},
-                new Patient{ Id = 9, Name = "Senalda Ramírez",Email = "senalda@ramirez.com.br", IsDeleted = false, UserId = string.Empty}
-                );
+            // builder.HasData(
+            //     new Patient{ Id = 1, Name = "Rodrigo Carvalhomaru",Email = "r@rrr.com.br", IsDeleted = false, UserId = string.Empty},
+            //     new Patient{ Id = 2, Name = "Enzo Shutzing",Email = "shutzing@enzo.com.br", IsDeleted = false, UserId = string.Empty},
+            //     new Patient{ Id = 3, Name = "Cléber Bluedragon",Email = "cleber@bluedragon.com.br", IsDeleted = false, UserId = string.Empty},
+            //     new Patient{ Id = 4, Name = "Neville Bernard",Email = "neville@bernard.com.br", IsDeleted = false, UserId = string.Empty},
+            //     new Patient{ Id = 5, Name = "Wendell Kessner",Email = "wendell@kessner.com.br", IsDeleted = false, UserId = string.Empty},
+            //     new Patient{ Id = 6, Name = "Adare Gerbitz",Email = "adare@gerbitz.com.br", IsDeleted = false, UserId = string.Empty},
+            //     new Patient{ Id = 7, Name = "Sanders Cameron",Email = "sanders@cameron.com.br", IsDeleted = false, UserId = string.Empty},
+            //     new Patient{ Id = 8, Name = "Agata Wanner",Email = "agata@wanner.com.br", IsDeleted = false, UserId = string.Empty},
+            //     new Patient{ Id = 9, Name = "Senalda Ramírez",Email = "senalda@ramirez.com.br", IsDeleted = false, UserId = string.Empty}
+            //     );
         }
     }
 }

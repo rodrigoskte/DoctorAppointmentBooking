@@ -34,6 +34,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
 await CreateDefaultRoles(app);
+await CreateDefaultAdminUser(app);
 
 app.Run();
 
@@ -124,7 +125,6 @@ static void ConfigureIdentity(WebApplicationBuilder builder)
             options.Password.RequireLowercase = false;
             options.Password.RequireNonAlphanumeric = false;
             options.Password.RequireUppercase = false;
-            options.Password.RequiredLength = 3;
             options.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+";
         })
         .AddRoles<IdentityRole>()
@@ -203,6 +203,33 @@ static async Task CreateDefaultRoles(WebApplication app)
             if (!await roleManager.RoleExistsAsync(role))
             {
                 await roleManager.CreateAsync(new IdentityRole(role));
+            }
+        }
+    }
+}
+
+static async Task CreateDefaultAdminUser(WebApplication app)
+{
+    using (var scope = app.Services.CreateScope())
+    {
+        var userManager = scope.ServiceProvider.GetRequiredService<UserManager<IdentityUser>>();
+        var adminUser = new IdentityUser
+        {
+            UserName = "admin@admin.com.br",
+            Email = "admin@admin.com.br",
+            EmailConfirmed = true
+        };
+
+        var user = await userManager.FindByEmailAsync(adminUser.Email);
+        if (user == null)
+        {
+            var result = await userManager.CreateAsync(
+                adminUser, 
+                "@senha01");
+            
+            if (result.Succeeded)
+            {
+                await userManager.AddToRoleAsync(adminUser, "Admin");
             }
         }
     }
