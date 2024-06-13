@@ -10,8 +10,8 @@ namespace DoctorAppointmentBooking.Domain.Entities
         [Description("Doctor's name")]        
         public string Name { get; set; }
 
-        [Description("Doctor's CRM code")]
-        public string Code { get; set; }
+        [Description("Doctor's email")]
+        public string Email { get; set; }
 
         [JsonIgnore]
         [Description("Doctor's specialty")]

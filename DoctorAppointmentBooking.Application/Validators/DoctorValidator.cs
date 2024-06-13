@@ -11,9 +11,9 @@ namespace DoctorAppointmentBooking.Application.Validators
                 .NotEmpty().WithMessage("Please enter the name.")
                 .NotNull().WithMessage("Please enter the name.");
 
-            RuleFor(c => c.Code)
-                .NotEmpty().WithMessage("Please enter the CRM.")
-                .NotNull().WithMessage("Please enter the CRM.");
+            RuleFor(c => c.Email)
+                .NotEmpty().WithMessage("Please enter the Email.")
+                .NotNull().WithMessage("Please enter the Email.");
         }
     }
 }

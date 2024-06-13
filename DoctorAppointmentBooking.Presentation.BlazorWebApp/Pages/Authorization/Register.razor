@@ -49,7 +49,7 @@
 
         try
         {
-            var response = await RestClient.ExecuteAsync<ApiResponse<string>>(request);
+            var response = await RestClient.ExecuteAsync<ResultViewModel<string>>(request);
             if (response.IsSuccessful)
             {
                 Snackbar.Add("Profile created successfully", Severity.Success);

@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DoctorAppointmentBooking.Infrastructure.Migrations
 {
     [DbContext(typeof(SqlDbContext))]
-    [Migration("20240610215512_InitialCreateDBSql")]
+    [Migration("20240613010709_InitialCreateDBSql")]
     partial class InitialCreateDBSql
     {
         /// <inheritdoc />
@@ -33,10 +33,10 @@ namespace DoctorAppointmentBooking.Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Code")
+                    b.Property<string>("Email")
                         .IsRequired()
-                        .HasColumnType("varchar(10)")
-                        .HasColumnName("Code");
+                        .HasColumnType("varchar(100)")
+                        .HasColumnName("Email");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit")
@@ -55,56 +55,6 @@ namespace DoctorAppointmentBooking.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Doctor", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Code = "123",
-                            IsDeleted = false,
-                            Name = "Christiano Coccuza",
-                            UserId = ""
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Code = "456",
-                            IsDeleted = false,
-                            Name = "Ida Fortini",
-                            UserId = ""
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Code = "789",
-                            IsDeleted = false,
-                            Name = "Bárbara Martins",
-                            UserId = ""
-                        },
-                        new
-                        {
-                            Id = 4,
-                            Code = "001",
-                            IsDeleted = false,
-                            Name = "Ronu Muole",
-                            UserId = ""
-                        },
-                        new
-                        {
-                            Id = 5,
-                            Code = "002",
-                            IsDeleted = false,
-                            Name = "Mayfe Puesl",
-                            UserId = ""
-                        },
-                        new
-                        {
-                            Id = 6,
-                            Code = "003",
-                            IsDeleted = true,
-                            Name = "Deko Gapuobri",
-                            UserId = ""
-                        });
                 });
 
             modelBuilder.Entity("DoctorAppointmentBooking.Domain.Entities.DoctorSpecialty", b =>

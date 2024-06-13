@@ -1,7 +1,7 @@
 ﻿using DoctorAppointmentBooking.Application.DTOs;
 using DoctorAppointmentBooking.Application.ViewModels;
+using DoctorAppointmentBooking.Domain.Interfaces;
 using DoctorAppointmentBooking.Infrastructure.Context;
-using DoctorAppointmentBooking.Presentation.API.Interface;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -13,21 +13,18 @@ namespace DoctorAppointmentBooking.Presentation.API.Controllers;
 [Route("api/v1/[controller]/")]
 public class AuthController : BaseController
 {
-    private readonly SignInManager<IdentityUser> _signInManager;
-    private readonly UserManager<IdentityUser> _userManager;
+    private readonly IUserManagerService _userManagerService;
     private readonly SqlDbContext _sqlDbContext;
     private readonly IAuthService _authService;
     private readonly IPasswordHasher<IdentityUser> _passwordHasher;
 
     public AuthController(
-        SignInManager<IdentityUser> signInManager,
-        UserManager<IdentityUser> userManager,
+        IUserManagerService userManagerService,
         SqlDbContext sqlDbContext,
         IAuthService authService,
         IPasswordHasher<IdentityUser> passwordHasher)
     {
-        _signInManager = signInManager;
-        _userManager = userManager;
+        _userManagerService = userManagerService;
         _sqlDbContext = sqlDbContext;
         _authService = authService;
         _passwordHasher = passwordHasher;
@@ -36,15 +33,21 @@ public class AuthController : BaseController
     [HttpPost("Register")]
     public async Task<IActionResult> Register([FromBody] RegisterDto model)
     {
-        if (!ModelState.IsValid) return BadRequest();
+        if (!ModelState.IsValid) 
+            return BadRequest();
 
-        var user = new IdentityUser { UserName = model.Email, Email = model.Email, EmailConfirmed = true };
-        var result = await _userManager.CreateAsync(user, model.Password);
+        var user = new IdentityUser 
+        { 
+            UserName = model.Email, 
+            Email = model.Email, 
+            EmailConfirmed = true 
+        };
+        var result = await _userManagerService.CreateAsync(user, model.Password);
 
         if (result.Succeeded)
         {
-            await _signInManager.SignInAsync(user, false);
-            await _userManager.AddToRoleAsync(user, model.Role);
+            await _userManagerService.SignInAsync(user, false);
+            await _userManagerService.AddToRoleAsync(user, model.Role);
             var token = await _authService.GenerateJwtToken(model.Email);
             return Ok(new ResultViewModel<object>(token, StatusCodes.Status200OK));
         }
@@ -56,14 +59,14 @@ public class AuthController : BaseController
     [HttpPost("Login")]
     public async Task<IActionResult> Login([FromBody] LoginDto model)
     {
-        if (!ModelState.IsValid) return BadRequest();
+        if (!ModelState.IsValid) 
+            return BadRequest();
 
-        var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, false, true);
+        var result = await _userManagerService.PasswordSignInAsync(model.Email, model.Password, false, true);
         
         if (result.Succeeded)
         {
-            var token = await _authService.GenerateJwtToken(model.Email);
-            return Ok(new ResultViewModel<TokenResponseDto>(new TokenResponseDto { Token = token.ToString() },
+            return Ok(new ResultViewModel<TokenResponseDto>(new TokenResponseDto { Token = await _authService.GenerateJwtToken(model.Email) },
                 StatusCodes.Status200OK));
         }
 
@@ -73,11 +76,9 @@ public class AuthController : BaseController
     [HttpPost("Link-Doctor")]
     public async Task<IActionResult> LinkUserToDoctor([FromBody] LinkUserToDoctorDto dto)
     {
-        var user = await _userManager.FindByIdAsync(dto.UserId);
+        var user = await _userManagerService.FindByIdAsync(dto.UserId);
         if (user == null)
-        {
             return NotFound(new ResultViewModel<string>("User not found", StatusCodes.Status404NotFound));
-        }
 
         var doctor = _sqlDbContext.Doctors.FirstOrDefault(d => d.Id == dto.DoctorId);
         if (doctor == null)
@@ -95,13 +96,12 @@ public class AuthController : BaseController
     [HttpPost("Link-Patient")]
     public async Task<IActionResult> LinkUserToPatient([FromBody] LinkUserToPatientDto dto)
     {
-        var user = await _userManager.FindByIdAsync(dto.UserId);
+        var user = await _userManagerService.FindByIdAsync(dto.UserId);
         if (user == null)
-        {
             return NotFound(new ResultViewModel<string>("User not found", StatusCodes.Status404NotFound));
-        }
 
         var patient = _sqlDbContext.Patients.FirstOrDefault(d => d.Id == dto.PatientId);
+
         if (patient == null)
         {
             return NotFound(new ResultViewModel<string>("Patient not found", StatusCodes.Status404NotFound));
@@ -122,11 +122,10 @@ public class AuthController : BaseController
         if(string.IsNullOrEmpty(id))
             return BadRequest(new ResultViewModel<string>("ID is not valid", StatusCodes.Status400BadRequest));
 
-        var user = await _userManager.FindByIdAsync(id);
+        var user = await _userManagerService.FindByIdAsync(id);
         if (user != null)
-        {
             return Ok(new ResultViewModel<IdentityUser>(user, StatusCodes.Status200OK));
-        }
+
         return NotFound(new ResultViewModel<string>("User not found", StatusCodes.Status404NotFound));
     }
 
@@ -137,9 +136,10 @@ public class AuthController : BaseController
         [FromRoute]string id,
         [FromBody] UpdateUserDto model)
     {
-        if (!ModelState.IsValid) return BadRequest(new ResultViewModel<string>("Model is not valid", StatusCodes.Status400BadRequest));
+        if (!ModelState.IsValid) 
+            return BadRequest(new ResultViewModel<string>("Model is not valid", StatusCodes.Status400BadRequest));
 
-        var user = await _userManager.FindByIdAsync(id);
+        var user = await _userManagerService.FindByIdAsync(id);
         if (user == null)
             return NotFound(new ResultViewModel<string>("User not found", StatusCodes.Status404NotFound));
 
@@ -148,11 +148,9 @@ public class AuthController : BaseController
         
         user.UserName = model.UserName;
 
-        var result = await _userManager.UpdateAsync(user);
+        var result = await _userManagerService.UpdateAsync(user);
         if (result.Succeeded)
-        {
             return Ok(new ResultViewModel<string>("User updated successfully", StatusCodes.Status200OK));
-        }
 
         return BadRequest(new ResultViewModel<IEnumerable<IdentityError>>(result.Errors, StatusCodes.Status400BadRequest));
     }

@@ -10,8 +10,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
-using DoctorAppointmentBooking.Presentation.API.Interface;
-using DoctorAppointmentBooking.Presentation.API.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
@@ -63,6 +61,7 @@ static void ConfigureInjection(WebApplicationBuilder webApplicationBuilder)
     webApplicationBuilder.Services.AddScoped<IPatientService, PatientService>();
     webApplicationBuilder.Services.AddScoped<IPasswordHasher<IdentityUser>, PasswordHasher<IdentityUser>>();
     webApplicationBuilder.Services.AddScoped<IAuthService, AuthService>();
+    webApplicationBuilder.Services.AddScoped<IUserManagerService, UserManagerService>();    
 }
 
 static void ConfigureDbContext(WebApplicationBuilder builder1)

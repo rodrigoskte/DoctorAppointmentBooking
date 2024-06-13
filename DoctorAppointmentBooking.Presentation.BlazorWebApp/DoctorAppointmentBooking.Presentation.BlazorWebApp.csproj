@@ -26,10 +26,6 @@
     <PackageReference Include="MudBlazor" Version="6.20.0" />
     <PackageReference Include="RestSharp" Version="111.2.0" />
   </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\DoctorAppointmentBooking.Application\DoctorAppointmentBooking.Application.csproj" />
-  </ItemGroup>
   
   <ItemGroup>
 	<None Update="wwwroot/config/appsettings.json">
@@ -40,6 +36,55 @@
   <ItemGroup>
     <Content Remove="Pages\Weather.razor" />
     <Content Remove="Pages\Counter.razor" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <Compile Include="..\DoctorAppointmentBooking.Application\DTOs\DoctorDto.cs">
+      <Link>Dtos\DoctorDto.cs</Link>
+    </Compile>
+    <Compile Include="..\DoctorAppointmentBooking.Application\DTOs\DoctorSpecialtyDto.cs">
+      <Link>Dtos\DoctorSpecialtyDto.cs</Link>
+    </Compile>
+    <Compile Include="..\DoctorAppointmentBooking.Application\DTOs\ErrorDetails.cs">
+      <Link>Dtos\ErrorDetails.cs</Link>
+    </Compile>
+    <Compile Include="..\DoctorAppointmentBooking.Application\DTOs\JwtSettings.cs">
+      <Link>Dtos\JwtSettings.cs</Link>
+    </Compile>
+    <Compile Include="..\DoctorAppointmentBooking.Application\DTOs\LinkUserToDoctorDto.cs">
+      <Link>Dtos\LinkUserToDoctorDto.cs</Link>
+    </Compile>
+    <Compile Include="..\DoctorAppointmentBooking.Application\DTOs\LinkUserToPatientDto.cs">
+      <Link>Dtos\LinkUserToPatientDto.cs</Link>
+    </Compile>
+    <Compile Include="..\DoctorAppointmentBooking.Application\DTOs\LoginDto.cs">
+      <Link>Dtos\LoginDto.cs</Link>
+    </Compile>
+    <Compile Include="..\DoctorAppointmentBooking.Application\DTOs\PatientDto.cs">
+      <Link>Dtos\PatientDto.cs</Link>
+    </Compile>
+    <Compile Include="..\DoctorAppointmentBooking.Application\DTOs\RegisterDto.cs">
+      <Link>Dtos\RegisterDto.cs</Link>
+    </Compile>
+    <Compile Include="..\DoctorAppointmentBooking.Application\DTOs\ScheduleDto.cs">
+      <Link>Dtos\ScheduleDto.cs</Link>
+    </Compile>
+    <Compile Include="..\DoctorAppointmentBooking.Application\DTOs\SpecialtyDto.cs">
+      <Link>Dtos\SpecialtyDto.cs</Link>
+    </Compile>
+    <Compile Include="..\DoctorAppointmentBooking.Application\DTOs\TokenResponseDto.cs">
+      <Link>Dtos\TokenResponseDto.cs</Link>
+    </Compile>
+    <Compile Include="..\DoctorAppointmentBooking.Application\DTOs\UpdateUserDto.cs">
+      <Link>Dtos\UpdateUserDto.cs</Link>
+    </Compile>
+    <Compile Include="..\DoctorAppointmentBooking.Application\ViewModels\ResultViewModel.cs">
+      <Link>ViewModels\ResultViewModel.cs</Link>
+    </Compile>
+  </ItemGroup>
+  
+  <ItemGroup>
+    <ProjectReference Include="..\DoctorAppointmentBooking.Domain\DoctorAppointmentBooking.Domain.csproj" />
   </ItemGroup>
 
 </Project>

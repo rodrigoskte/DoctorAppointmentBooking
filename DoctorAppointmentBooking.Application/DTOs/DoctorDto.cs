@@ -12,9 +12,9 @@ public class DoctorDto
     [Required]
     [Description("Doctor's name")]   
     public string Name { get; set; }
-    
-    [Description("Doctor's CRM code")]
-    public string Code { get; set; }
+
+    [Description("Doctor's email")]
+    public string Email { get; set; }
 
     [Description("Status")] 
     [JsonIgnore]

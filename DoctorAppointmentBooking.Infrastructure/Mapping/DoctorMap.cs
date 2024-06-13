@@ -18,11 +18,11 @@ namespace DoctorAppointmentBooking.Infrastructure.Mapping
                  .HasColumnName("Name")
                  .HasColumnType("varchar(100)");
 
-            builder.Property(prop => prop.Code)
+            builder.Property(prop => prop.Email)
                  .HasConversion(prop => prop.ToString(), prop => prop)
                  .IsRequired()
-                 .HasColumnName("Code")
-                 .HasColumnType("varchar(10)");
+                 .HasColumnName("Email")
+                 .HasColumnType("varchar(100)");
 
 
             builder.Property(prop => prop.IsDeleted)
@@ -40,14 +40,14 @@ namespace DoctorAppointmentBooking.Infrastructure.Mapping
                 .HasColumnName("UserId")
                 .HasColumnType("varchar(100)");
 
-            builder.HasData(
-                new Doctor { Id = 1, Name = "Christiano Coccuza", IsDeleted = false, Code = "123", UserId = ""},
-                new Doctor { Id = 2, Name = "Ida Fortini", IsDeleted = false, Code = "456", UserId = ""},
-                new Doctor { Id = 3, Name = "Bárbara Martins", IsDeleted = false, Code = "789", UserId = ""},
-                new Doctor { Id = 4, Name = "Ronu Muole", IsDeleted = false, Code = "001", UserId = ""},
-                new Doctor { Id = 5, Name = "Mayfe Puesl", IsDeleted = false, Code = "002", UserId = ""},
-                new Doctor { Id = 6, Name = "Deko Gapuobri", IsDeleted = true, Code = "003", UserId = ""}
-                );
+            //builder.HasData(
+            //    new Doctor { Id = 1, Name = "Christiano Coccuza", IsDeleted = false, Email = "123", UserId = ""},
+            //    new Doctor { Id = 2, Name = "Ida Fortini", IsDeleted = false, Email = "456", UserId = ""},
+            //    new Doctor { Id = 3, Name = "Bárbara Martins", IsDeleted = false, Email = "789", UserId = ""},
+            //    new Doctor { Id = 4, Name = "Ronu Muole", IsDeleted = false, Email = "001", UserId = ""},
+            //    new Doctor { Id = 5, Name = "Mayfe Puesl", IsDeleted = false, Email = "002", UserId = ""},
+            //    new Doctor { Id = 6, Name = "Deko Gapuobri", IsDeleted = true, Email = "003", UserId = ""}
+            //    );
         }
     }
 }

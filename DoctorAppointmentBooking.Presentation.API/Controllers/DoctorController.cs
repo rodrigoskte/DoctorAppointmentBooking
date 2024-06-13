@@ -3,7 +3,6 @@ using DoctorAppointmentBooking.Application.Validators;
 using DoctorAppointmentBooking.Domain.Entities;
 using DoctorAppointmentBooking.Domain.Interfaces;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DoctorAppointmentBooking.Presentation.API.Controllers;
@@ -16,18 +15,18 @@ public class DoctorController: BaseController
     private readonly IBaseService<Doctor> _baseDoctorService;
     private readonly IDoctorService _doctorService;
     private readonly IScheduleService _scheduleService;
-    private readonly UserManager<IdentityUser> _userManager;
-    
+    private readonly IAuthService _authService;
+
     public DoctorController(
         IBaseService<Doctor> baseDoctorService, 
         IDoctorService doctorService,
         IScheduleService scheduleService,
-        UserManager<IdentityUser> userManager)
+        IAuthService authService)
     {
         _baseDoctorService = baseDoctorService;
         _doctorService = doctorService;
         _scheduleService = scheduleService;
-        _userManager = userManager;
+        _authService = authService;
     }
 
     [Authorize(Roles = "Admin, Doctor, Patient")]
@@ -69,33 +68,14 @@ public class DoctorController: BaseController
             {
                 Id = doctorDto.Id,
                 Name = doctorDto.Name,
-                Code = doctorDto.Code,
+                Email = doctorDto.Email,
                 IsDeleted = doctorDto.IsDeleted,
                 UserId = ""
             };
 
-            _doctorService.Validations(doctor);
-            
+            _doctorService.Validations(doctor);            
             _baseDoctorService.Add<DoctorValidator>(doctor);
-            
-            var user = new IdentityUser
-            {
-                UserName = $"{doctorDto.Code}@doctor.com",
-                Email = $"{doctorDto.Code}@doctor.com"
-            };
-
-            var result = _userManager.CreateAsync(user, "1234");
-
-            if (result.Result.Succeeded)
-            {
-                doctor.UserId = user.Id;
-                _baseDoctorService.Update<DoctorValidator>(doctor);
-            }
-            else
-            {
-                throw new Exception("Failed to create user");
-            }
-            
+            _authService.CreateDoctorUser(doctor, doctorDto.Email);
             return doctorDto;
         });
     }
@@ -116,11 +96,10 @@ public class DoctorController: BaseController
             {
                 Id = id,
                 Name = doctorDto.Name,
-                Code = doctorDto.Code,
+                Email = doctorDto.Email,
                 IsDeleted = doctorDto.IsDeleted,
                 UserId = ""
-            };
-            
+            };            
             _baseDoctorService.Update<DoctorValidator>(doctor);
             return doctorDto;
         });

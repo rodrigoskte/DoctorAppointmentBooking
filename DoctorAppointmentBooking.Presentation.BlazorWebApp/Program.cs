@@ -1,6 +1,4 @@
 using Blazored.LocalStorage;
-using DoctorAppointmentBooking.Application.Services;
-using DoctorAppointmentBooking.Domain.Interfaces;
 using DoctorAppointmentBooking.Presentation.BlazorWebApp;
 using DoctorAppointmentBooking.Presentation.BlazorWebApp.Configuration;
 using DoctorAppointmentBooking.Presentation.BlazorWebApp.Provider;
@@ -24,7 +22,6 @@ void ConfigureInjections(WebAssemblyHostBuilder webAssemblyHostBuilder)
     builder.Configuration.GetSection(BaseUrlConfiguration.CONFIG_NAME).Bind(baseUrlConfig);
     webAssemblyHostBuilder.Services.AddSingleton(baseUrlConfig);
     webAssemblyHostBuilder.Services.AddSingleton<IRestClient>(sp => new RestClient(baseUrlConfig.ApiBase));
-    webAssemblyHostBuilder.Services.AddScoped<ISpecialtyService, SpecialtyService>();
 
     webAssemblyHostBuilder.Services.AddBlazoredLocalStorage();
     

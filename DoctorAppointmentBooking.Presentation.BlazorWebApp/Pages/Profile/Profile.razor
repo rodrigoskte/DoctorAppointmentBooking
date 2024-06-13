@@ -44,7 +44,7 @@
                 try
                 {
                     var request = new RestRequest($"{BaseUrlConfig.ApiBase}/v1/Auth/{userId}");
-                    var response = await RestClient.GetAsync<ApiResponse<UpdateUserDto>>(request);
+                    var response = await RestClient.GetAsync<ResultViewModel<UpdateUserDto>>(request);
                     _user = response?.Data;
                 }
                 catch (Exception ex)
@@ -70,7 +70,7 @@
 
             try
             {
-                var response = await RestClient.ExecuteAsync<ApiResponse<UpdateUserDto>>(request);
+                var response = await RestClient.ExecuteAsync<ResultViewModel<UpdateUserDto>>(request);
                 if (response.IsSuccessful)
                 {
                     Snackbar.Add("Profile updated successfully", Severity.Success);

@@ -20,7 +20,7 @@ namespace DoctorAppointmentBooking.Infrastructure.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "varchar(100)", nullable: false),
-                    Code = table.Column<string>(type: "varchar(10)", nullable: false),
+                    Email = table.Column<string>(type: "varchar(100)", nullable: false),
                     UserId = table.Column<string>(type: "varchar(100)", nullable: false),
                     IsDeleted = table.Column<bool>(type: "bit", nullable: false)
                 },
@@ -110,19 +110,6 @@ namespace DoctorAppointmentBooking.Infrastructure.Migrations
                         principalTable: "Specialty",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.InsertData(
-                table: "Doctor",
-                columns: new[] { "Id", "Code", "IsDeleted", "Name", "UserId" },
-                values: new object[,]
-                {
-                    { 1, "123", false, "Christiano Coccuza", "" },
-                    { 2, "456", false, "Ida Fortini", "" },
-                    { 3, "789", false, "Bárbara Martins", "" },
-                    { 4, "001", false, "Ronu Muole", "" },
-                    { 5, "002", false, "Mayfe Puesl", "" },
-                    { 6, "003", true, "Deko Gapuobri", "" }
                 });
 
             migrationBuilder.InsertData(
