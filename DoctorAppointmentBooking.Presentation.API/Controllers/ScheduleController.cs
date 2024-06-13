@@ -75,10 +75,11 @@ public class ScheduleController : BaseController
 
             _scheduleService.Validations(schedule);
 
-            _baseScheduleService.Add<ScheduleValidator>(schedule);
+            var scheduleReturn =_baseScheduleService.Add<ScheduleValidator>(schedule);
+            var scheduleEntity = _scheduleService.GetScheduleById(scheduleReturn.Id);
 
             _emailService.SendEmail(
-                ((schedule.Doctor.Email) + "," + schedule.Patient.Email),
+                ((scheduleEntity.Doctor.Email) + "," + scheduleEntity.Patient.Email),
                 EmailConstants.SUBJECT_SCHEDULE_SUCESS,
                 EmailConstants.SUBJECT_SCHEDULE_SUCESS_BODY);
 

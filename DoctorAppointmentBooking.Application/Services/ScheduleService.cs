@@ -24,6 +24,11 @@ public class ScheduleService : IScheduleService
         return _scheduleRepository.GetAllWithDetailsId(id);
     }
 
+    public Schedule GetScheduleById(int id)
+    {
+        return _scheduleRepository.GetScheduleById(id);
+    }
+
     public bool Validations(Schedule schedule)
     {
         if (IsScheduleExistsWithDocPatDat(schedule))
