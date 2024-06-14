@@ -1,4 +1,37 @@
 ﻿@page "/home"
+@inject AuthenticationStateProvider AuthenticationStateProvider
+
 <PageTitle>Home</PageTitle>
-<h1>Hello, world!</h1>
-Welcome to your new app.
+
+<MudContainer MaxWidth="MaxWidth.Medium" Class="mt-4">
+    <MudPaper Elevation="4" Class="pa-4">
+        <MudText Typo="Typo.h4" Align="Align.Center">Bem-vindo ao Sistema de Agendamento de Consultas!</MudText>
+        <MudText Typo="Typo.subtitle1" Align="Align.Center">This is your home page, styled with MudBlazor.</MudText>
+        <MudDivider Class="my-4"/>
+        <AuthorizeView>
+            <Authorized>
+                <MudText Typo="Typo.h5">Olá, @context.User.Identity?.Name!</MudText>
+                @if (context.User.IsInRole("Paciente"))
+                {
+                    <MudText>Você está logado como paciente.</MudText>
+                    <MudButton Variant="Variant.Filled" Color="Color.Primary" Href="/patientschedule">Agendar Consulta</MudButton>
+                }
+                else if (context.User.IsInRole("Doctor"))
+                {
+                    <MudText>Você está logado como médico.</MudText>
+                    <MudButton Variant="Variant.Filled" Color="Color.Secondary" Href="/doctorschedule">Ver Minha Agenda</MudButton>
+                }
+                else if (context.User.IsInRole("Admin"))
+                {
+                    <MudText>Você está logado como administrador.</MudText>
+                    <MudButton Variant="Variant.Filled" Color="Color.Tertiary" Href="/admin/dashboard">Painel Administrativo</MudButton>
+                }
+            </Authorized>
+            <NotAuthorized>
+                <MudText>Faça login ou cadastre-se para agendar sua consulta.</MudText>
+                <MudButton Variant="Variant.Filled" Color="Color.Primary" Href="/login">Login</MudButton>
+                <MudButton Variant="Variant.Outlined" Color="Color.Secondary" Href="/register">Cadastrar</MudButton>
+            </NotAuthorized>
+        </AuthorizeView>
+    </MudPaper>
+</MudContainer>

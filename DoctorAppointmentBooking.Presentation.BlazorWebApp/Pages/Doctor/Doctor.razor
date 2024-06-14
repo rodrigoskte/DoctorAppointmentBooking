@@ -1,67 +1,53 @@
 ﻿@page "/doctor"
 @attribute [Authorize(Roles = "Doctor, Admin")]
 @inject ISnackbar Snackbar
-@inject ILocalStorageService LocalStorage   
+@inject ILocalStorageService LocalStorage
 
 <PageTitle>Doctor</PageTitle>
+
 <h3>Doctor</h3>
 
 @if (_doctors is null || _doctors.Count <= 0)
 {
-    @* <p> *@
-    @*     <em>Loading...</em> *@
-    @* </p> *@
+    <MudText Typo="Typo.subtitle1" Color="Color.Secondary">Loading...</MudText>
 }
 else
 {
-    <table class="table">
-        <thead>
-        <tr>
-            <th>Id</th>
-            <th>Name</th>
-            <th>Email</th>
-            <th>Deleted</th>
-            <th>Actions</th>
-        </tr>
-        </thead>
-        <tbody>
-        @foreach (var doctor in _doctors)
-        {
-            <tr>
-                <td>@doctor.Id</td>
-                <td>
-                    <InputText class="form-control" @bind-Value="doctor.Name"/>
-                </td>
-                <td>
-                    <InputText class="form-control" @bind-Value="doctor.Email"/>
-                </td>
-                <td>
-                    <InputCheckbox @bind-Value="doctor.IsDeleted"/>
-                </td>
-                <td>
-                    <button class="btn btn-info" @onclick="() => EditDoctor(doctor)">EDIT</button>
-                    <button class="btn btn-danger" @onclick="() => DeleteDoctor(doctor.Id)">DELETE</button>
-                </td>
-            </tr>
-        }
-        </tbody>
-    </table>
+    <MudTable Items="_doctors" Striped="true" Hover="true">
+        <HeaderContent>
+            <MudTh>Id</MudTh>
+            <MudTh>Name</MudTh>
+            <MudTh>Email</MudTh>
+            <MudTh>Deleted</MudTh>
+            <MudTh>Actions</MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="Id">@context.Id</MudTd>
+            <MudTd DataLabel="Name">
+                <MudTextField T="string" @bind-Value="context.Name" Variant="Variant.Outlined" />
+            </MudTd>
+            <MudTd DataLabel="Email">
+                <MudTextField T="string" @bind-Value="context.Email" Variant="Variant.Outlined" />
+            </MudTd>
+            <MudTd DataLabel="Deleted">
+                <MudSwitch @bind-Checked="context.IsDeleted" Color="Color.Error" />
+            </MudTd>
+            <MudTd DataLabel="Actions">
+                <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="() => EditDoctor(context)">EDIT</MudButton>
+                <MudButton Variant="Variant.Filled" Color="Color.Error" OnClick="() => DeleteDoctor(context.Id)">DELETE</MudButton>
+            </MudTd>
+        </RowTemplate>
+    </MudTable>
 }
 
-<hr>
-<div class="mb-3">
-    <label class="form-label">Name</label>
-    <InputText class="form-control" @bind-Value="_doctor.Name"/>
-</div>
-<div class="mb-3">
-    <label class="form-label">E-mail</label>
-    <InputText class="form-control" @bind-Value="_doctor.Email"/>
-</div>
-<div class="mb-3">
-    <label class="form-label">IsDeleted</label>
-    <InputCheckbox @bind-Value="_doctor.IsDeleted"/>
-</div>
-<button class="btn btn-primary" @onclick="AddOrUpdate">Save</button>
+<MudDivider Class="my-4" />
+
+<MudPaper Elevation="4" Class="pa-4">
+    <MudTextField T="string" Label="Name" @bind-Value="_doctor.Name" Variant="Variant.Outlined" Class="mb-3" />
+    <MudTextField T="string" Label="E-mail" @bind-Value="_doctor.Email" Variant="Variant.Outlined" Class="mb-3" />
+    <MudSwitch @bind-Checked="_doctor.IsDeleted" Color="Color.Error" Label="Is Deleted" />
+    <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="AddOrUpdate" Class="mt-3">Save</MudButton>
+</MudPaper>
 
 @code {
     private IList<DoctorAppointmentBooking.Domain.Entities.Doctor>? _doctors;
@@ -71,12 +57,12 @@ else
     RestRequest request;
     RestResponse<ResultViewModel<DoctorAppointmentBooking.Domain.Entities.Doctor>> response;
     [Inject] private AuthenticationStateProvider AuthenticationStateProvider { get; set; } = default!;
-    
+
     protected override async Task OnInitializedAsync()
     {
         await LoadDoctors();
     }
-    
+
     private async Task LoadDoctors()
     {
         try
@@ -84,7 +70,7 @@ else
             var request = new RestRequest($"{BaseUrlConfig.ApiBase}/v1/Doctor/GetAllDoctor");
             var token = await GetToken();
             request.AddHeader("Authorization", $"Bearer {token}");
-            
+
             var response = await RestClient.ExecuteAsync<ResultViewModel<IList<DoctorAppointmentBooking.Domain.Entities.Doctor>>>(request);
             if (response.StatusCode == HttpStatusCode.OK)
             {
@@ -131,7 +117,7 @@ else
             {
                 request = new RestRequest($"{BaseUrlConfig.ApiBase}/v1/Doctor/{_doctor.Id}", Method.Put);
             }
-            
+
             request.AddJsonBody(_doctor);
             var token = await GetToken();
             request.AddHeader("Authorization", $"Bearer {token}");
@@ -139,7 +125,7 @@ else
 
             if (response.StatusCode == HttpStatusCode.OK)
             {
-                Snackbar.Add("Specialty saved successfully", Severity.Success);
+                Snackbar.Add("Doctor saved successfully", Severity.Success);
                 await LoadDoctors();
                 _doctor = new DoctorAppointmentBooking.Domain.Entities.Doctor();
             }
@@ -154,16 +140,16 @@ else
                 }
                 else
                 {
-                    Snackbar.Add($"Error saving specialty: {response.StatusDescription}", Severity.Error);
+                    Snackbar.Add($"Error saving Doctor: {response.StatusDescription}", Severity.Error);
                 }
             }
         }
         catch (Exception ex)
         {
-            Snackbar.Add("Exception saving specialty: " + ex.Message, Severity.Error);
+            Snackbar.Add("Exception saving Doctor: " + ex.Message, Severity.Error);
         }
     }
-    
+
     private async Task EditDoctor(DoctorAppointmentBooking.Domain.Entities.Doctor doctor)
     {
         _doctor = doctor;
@@ -200,7 +186,7 @@ else
         }
         catch (Exception ex)
         {
-            Snackbar.Add("Exception deleting specialty: " + ex.Message, Severity.Error);
+            Snackbar.Add("Exception deleting Doctor: " + ex.Message, Severity.Error);
         }
     }
 }
