@@ -20,6 +20,16 @@ namespace DoctorAppointmentBooking.Application.Services
         {
             return await _userManager.CreateAsync(user, password);
         }
+        
+        public async Task<IdentityResult> CreateAddRoleAsync(
+            IdentityUser user,
+            string password,
+            string role)
+        {
+            var userCreated = await _userManager.CreateAsync(user, password);
+            var userRole = await _userManager.AddToRoleAsync(user, role);
+            return userCreated;
+        }
 
         public async Task SignInAsync(IdentityUser user, bool isPersistent)
         {

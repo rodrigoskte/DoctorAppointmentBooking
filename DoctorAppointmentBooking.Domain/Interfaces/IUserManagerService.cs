@@ -17,5 +17,10 @@ namespace DoctorAppointmentBooking.Domain.Interfaces
         Task<IdentityUser?> FindByIdAsync(string userId);
 
         Task<IdentityResult> UpdateAsync(IdentityUser user);
+
+        Task<IdentityResult> CreateAddRoleAsync(
+            IdentityUser user,
+            string password,
+            string role);
     }
 }

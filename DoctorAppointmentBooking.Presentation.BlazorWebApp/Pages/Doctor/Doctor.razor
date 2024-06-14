@@ -1,16 +1,16 @@
 ﻿@page "/doctor"
 @attribute [Authorize(Roles = "Doctor, Admin")]
 @inject ISnackbar Snackbar
-@inject ILocalStorageService LocalStorage
+@inject ILocalStorageService LocalStorage   
 
 <PageTitle>Doctor</PageTitle>
 <h3>Doctor</h3>
 
-@if (_doctors is null)
+@if (_doctors is null || _doctors.Count <= 0)
 {
-    <p>
-        <em>Loading...</em>
-    </p>
+    @* <p> *@
+    @*     <em>Loading...</em> *@
+    @* </p> *@
 }
 else
 {
@@ -50,7 +50,7 @@ else
 
 <hr>
 <div class="mb-3">
-    <label class="form-label">Description</label>
+    <label class="form-label">Name</label>
     <InputText class="form-control" @bind-Value="_doctor.Name"/>
 </div>
 <div class="mb-3">

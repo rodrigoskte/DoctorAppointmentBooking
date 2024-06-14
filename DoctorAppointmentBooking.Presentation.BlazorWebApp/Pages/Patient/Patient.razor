@@ -6,11 +6,11 @@
 <PageTitle>Patient</PageTitle>
 <h3>Patient</h3>
 
-@if (_patients is null)
+@if (_patients is null || _patients.Count <= 0)
 {
-    <p>
-        <em>Loading...</em>
-    </p>
+    @* <p> *@
+    @*     <em>Loading...</em> *@
+    @* </p> *@
 }
 else
 {

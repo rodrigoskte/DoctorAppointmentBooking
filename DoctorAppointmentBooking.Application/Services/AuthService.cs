@@ -71,12 +71,9 @@ namespace DoctorAppointmentBooking.Application.Services
                 Email = email
             };
 
-            var result = _userManagerService.CreateAsync(user, email);
-
+            var result = _userManagerService.CreateAddRoleAsync(user, email, "Doctor");
             if (result.Result.Succeeded)
             {
-                _userManagerService.AddToRoleAsync(user, "Doctor");
-                
                 doctor.UserId = user.Id;
                 _baseDoctorService.Update<DoctorValidator>(doctor);
             }
@@ -94,12 +91,9 @@ namespace DoctorAppointmentBooking.Application.Services
                 Email = email
             };
 
-            var result = _userManagerService.CreateAsync(user, email);
-
+            var result = _userManagerService.CreateAddRoleAsync(user, email, "Patient");
             if (result.Result.Succeeded)
             {
-                _userManagerService.AddToRoleAsync(user, "Patient");
-                
                 patient.UserId = user.Id;
                 _basePatientService.Update<PatientValidator>(patient);
             }
