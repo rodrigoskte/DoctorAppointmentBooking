@@ -1,11 +1,8 @@
-﻿using Xunit;
-using Moq;
-using System;
-using System.Collections.Generic;
+﻿using DoctorAppointmentBooking.Application.Services;
 using DoctorAppointmentBooking.Domain.Entities;
 using DoctorAppointmentBooking.Domain.Exceptions;
 using DoctorAppointmentBooking.Domain.Interfaces;
-using DoctorAppointmentBooking.Application.Services;
+using Moq;
 
 public class ScheduleServiceTest
 {

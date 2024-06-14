@@ -67,9 +67,9 @@ public class ScheduleController : BaseController
         {
             var schedule = new Schedule
             {
-                DoctorId = scheduleDto.DoctorId,
-                PatientId = scheduleDto.PatientId,
-                DateTimeSchedule = scheduleDto.DateTimeSchedule,
+                DoctorId = scheduleDto.DoctorId <= 0 ? _doctorService.GetDoctorByUserId(scheduleDto.DoctorUserId).Id : scheduleDto.DoctorId,
+                PatientId = scheduleDto.PatientId <= 0 ? _patientService.GetPatientByUserId(scheduleDto.PatientUserId).Id : scheduleDto.PatientId,
+                DateTimeSchedule = scheduleDto.DateTimeSchedule.Value,
                 IsDeleted = scheduleDto.IsDeleted
             };
 
@@ -102,13 +102,14 @@ public class ScheduleController : BaseController
                 Id = id,
                 DoctorId = scheduleDto.DoctorId,
                 PatientId = scheduleDto.PatientId,
-                DateTimeSchedule = scheduleDto.DateTimeSchedule,
+                DateTimeSchedule = scheduleDto.DateTimeSchedule.Value,
                 IsDeleted = scheduleDto.IsDeleted
             };
 
             _scheduleService.Validations(schedule);
-            _baseScheduleService.Update<ScheduleValidator>(schedule);
-
+            var scheduleUdpdated = _baseScheduleService.Update<ScheduleValidator>(schedule);
+            schedule = _scheduleService.GetScheduleById(scheduleUdpdated.Id);
+            
             _emailService.SendEmail(
                 ((schedule.Doctor.Email) + "," + schedule.Patient.Email),
                 EmailConstants.SUBJECT_SCHEDULE_CHANGED,
@@ -127,7 +128,7 @@ public class ScheduleController : BaseController
 
         return Execute(() =>
         {
-            var schedule = _baseScheduleService.GetById(id);
+            var schedule = _scheduleService.GetScheduleById(id);
             _baseScheduleService.Delete(id);
 
             _emailService.SendEmail(
