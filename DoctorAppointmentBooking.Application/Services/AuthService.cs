@@ -102,5 +102,40 @@ namespace DoctorAppointmentBooking.Application.Services
                 throw new Exception($"Failed to create patient: {result.Result.Errors}");
             }
         }
+        
+        public async Task<string> CreateDoctorPatient(
+            IdentityUser user,
+            string email,
+            string role)
+        {
+            if (role == "Doctor")
+            {
+                var doctor = new Doctor
+                {
+                    Name = email,
+                    Email = email,
+                    IsDeleted = false,
+                    UserId = user.Id
+                };
+                
+                _baseDoctorService.Add<DoctorValidator>(doctor);
+                CreateDoctorUser(doctor, email);
+            }
+            else if(role == "Patient")
+            {
+                var patient = new Patient
+                {
+                    Name = email,
+                    Email = email,
+                    IsDeleted = false,
+                    UserId = user.Id
+                };
+                
+                _basePatientService.Add<PatientValidator>(patient);
+                CreatePatientUser(patient, email);
+            }
+
+            return "Sucess";
+        }
     }
 }

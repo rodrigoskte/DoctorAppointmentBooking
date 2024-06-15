@@ -16,18 +16,15 @@ public class AuthController : BaseController
     private readonly IUserManagerService _userManagerService;
     private readonly SqlDbContext _sqlDbContext;
     private readonly IAuthService _authService;
-    private readonly IPasswordHasher<IdentityUser> _passwordHasher;
 
     public AuthController(
         IUserManagerService userManagerService,
         SqlDbContext sqlDbContext,
-        IAuthService authService,
-        IPasswordHasher<IdentityUser> passwordHasher)
+        IAuthService authService)
     {
         _userManagerService = userManagerService;
         _sqlDbContext = sqlDbContext;
         _authService = authService;
-        _passwordHasher = passwordHasher;
     }
 
     [HttpPost("Register")]
@@ -42,18 +39,16 @@ public class AuthController : BaseController
             Email = model.Email, 
             EmailConfirmed = true 
         };
-        var result = await _userManagerService.CreateAsync(user, model.Password);
-
-        if (result.Succeeded)
+        
+        await _authService.CreateDoctorPatient(user, model.Email, model.Role);
+        var token = await _authService.GenerateJwtToken(model.Email);
+        if (!string.IsNullOrEmpty(token))
         {
-            await _userManagerService.SignInAsync(user, false);
-            await _userManagerService.AddToRoleAsync(user, model.Role);
-            var token = await _authService.GenerateJwtToken(model.Email);
-            return Ok(new ResultViewModel<object>(token, StatusCodes.Status200OK));
+            return Ok(new ResultViewModel<object>(token, StatusCodes.Status200OK));    
         }
 
         return BadRequest(
-            new ResultViewModel<IEnumerable<IdentityError>>(result.Errors, StatusCodes.Status400BadRequest));
+            new ResultViewModel<IEnumerable<IdentityError>>("Error, see the details", StatusCodes.Status400BadRequest));
     }
 
     [HttpPost("Login")]

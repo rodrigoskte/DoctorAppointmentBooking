@@ -27,6 +27,5 @@ namespace DoctorAppointmentBooking.Domain.Interfaces
             IdentityUser user,
             string oldPassword,
             string newPassword);
-       
     }
 }

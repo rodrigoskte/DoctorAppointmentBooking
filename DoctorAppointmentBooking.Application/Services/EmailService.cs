@@ -23,17 +23,15 @@ namespace DoctorAppointmentBooking.Application.Services
             string smtpUser = _emailSettings.Usuario ?? string.Empty;
             string smtpPass = _emailSettings.Senha ?? string.Empty;
 
-            var smtpClient = new SmtpClient(smtpServer)
+            var client = new SmtpClient(smtpServer, smtpPort)
             {
-                Port = smtpPort,
-                UseDefaultCredentials = false,
                 Credentials = new NetworkCredential(smtpUser, smtpPass),
-                EnableSsl = true,
+                EnableSsl = true
             };
-
+             
             var mailMessage = new MailMessage
             {
-                From = new MailAddress(smtpUser),
+                From = new MailAddress("mail@doctorbooking.com"),
                 Subject = emailSubject,
                 Body = emailBody,
                 IsBodyHtml = false
@@ -42,7 +40,7 @@ namespace DoctorAppointmentBooking.Application.Services
 
             try
             {
-                await smtpClient.SendMailAsync(mailMessage);
+                await client.SendMailAsync(mailMessage);
             }
             catch (Exception ex)
             {
