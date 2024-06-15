@@ -60,5 +60,13 @@ namespace DoctorAppointmentBooking.Application.Services
         {
             return await _userManager.UpdateAsync(user);
         }
+
+        public async Task<IdentityResult> UpdatePasswordAsync(
+            IdentityUser user,
+            string oldPassword,
+            string newPassword)
+        {
+            return await _userManager.ChangePasswordAsync(user, oldPassword, newPassword);
+        }
     }
 }

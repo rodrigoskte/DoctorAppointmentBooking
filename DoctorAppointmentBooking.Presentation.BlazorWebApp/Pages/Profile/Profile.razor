@@ -11,7 +11,8 @@
     <MudPaper Elevation="4" Class="pa-4">
         <MudTextField T="string" Label="Email" @bind-Value="_user.Email" Variant="Variant.Outlined" />
         <MudTextField T="string" Label="User Name" @bind-Value="_user.UserName" Variant="Variant.Outlined" />
-        <MudTextField Label="New Password" @bind-Value="_user.Password" For="@(() => _user.Password)" InputType="InputType.Password" Variant="Variant.Outlined" Margin="Margin.Dense" />
+        <MudTextField Label="Old Password" @bind-Value="_user.OldPassword" For="@(() => _user.OldPassword)" InputType="InputType.Password" Variant="Variant.Outlined" Margin="Margin.Dense" />
+        <MudTextField Label="New Password" @bind-Value="_user.NewPassword" For="@(() => _user.NewPassword)" InputType="InputType.Password" Variant="Variant.Outlined" Margin="Margin.Dense" />
         <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="SaveProfile">Save</MudButton>
     </MudPaper>
 }

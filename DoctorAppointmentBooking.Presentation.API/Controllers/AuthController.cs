@@ -143,11 +143,20 @@ public class AuthController : BaseController
         if (user == null)
             return NotFound(new ResultViewModel<string>("User not found", StatusCodes.Status404NotFound));
 
-        if (!string.IsNullOrEmpty(model.Password))
-            user.PasswordHash = _passwordHasher.HashPassword(user, model.Password);
-        
+        if (!string.IsNullOrEmpty(model.NewPassword))
+        {
+            if(string.IsNullOrEmpty(model.OldPassword))
+                return BadRequest(new ResultViewModel<string>("Password is invalid", StatusCodes.Status400BadRequest));
+        } 
+
+        user.Email = model.Email;
         user.UserName = model.UserName;
 
+        var changePassword = await _userManagerService.UpdatePasswordAsync(
+            user,
+            model.OldPassword,
+            model.NewPassword);
+        
         var result = await _userManagerService.UpdateAsync(user);
         if (result.Succeeded)
             return Ok(new ResultViewModel<string>("User updated successfully", StatusCodes.Status200OK));

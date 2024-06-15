@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 
 namespace DoctorAppointmentBooking.Application.DTOs;
 
@@ -8,5 +9,9 @@ public class UpdateUserDto
     
     public string UserName { get; set; }
     
-    public string Password { get; set; }
+    [DataType(DataType.Password)]
+    public string OldPassword { get; set; }
+    
+    [DataType(DataType.Password)]
+    public string NewPassword { get; set; }
 }

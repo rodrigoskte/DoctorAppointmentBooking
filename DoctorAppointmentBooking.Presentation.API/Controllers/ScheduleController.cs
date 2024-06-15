@@ -100,8 +100,8 @@ public class ScheduleController : BaseController
             var schedule = new Schedule
             {
                 Id = id,
-                DoctorId = scheduleDto.DoctorId,
-                PatientId = scheduleDto.PatientId,
+                DoctorId = scheduleDto.DoctorId <= 0 ? _doctorService.GetDoctorByUserId(scheduleDto.DoctorUserId).Id : scheduleDto.DoctorId,
+                PatientId = scheduleDto.PatientId <= 0 ? _patientService.GetPatientByUserId(scheduleDto.PatientUserId).Id : scheduleDto.PatientId,
                 DateTimeSchedule = scheduleDto.DateTimeSchedule.Value,
                 IsDeleted = scheduleDto.IsDeleted
             };

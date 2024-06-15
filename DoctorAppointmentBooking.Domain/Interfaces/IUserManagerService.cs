@@ -22,5 +22,11 @@ namespace DoctorAppointmentBooking.Domain.Interfaces
             IdentityUser user,
             string password,
             string role);
+
+        Task<IdentityResult> UpdatePasswordAsync(
+            IdentityUser user,
+            string oldPassword,
+            string newPassword);
+       
     }
 }
