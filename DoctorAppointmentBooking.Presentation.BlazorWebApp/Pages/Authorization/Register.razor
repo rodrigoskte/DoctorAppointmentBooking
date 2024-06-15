@@ -54,7 +54,17 @@
             }
             else
             {
-                Snackbar.Add("Error creating profile: " + response.ErrorMessage, Severity.Error);
+                if (response.Data?.Errors != null && response.Data.Errors.Any())
+                {
+                    foreach (var error in response.Data?.Errors)
+                    {
+                        Snackbar.Add(error, Severity.Error);
+                    }
+                }
+                else
+                {
+                    Snackbar.Add($"Error creating profile: {response.StatusDescription} : {response.Content}", Severity.Error);
+                }
             }
         }
         catch (Exception ex)

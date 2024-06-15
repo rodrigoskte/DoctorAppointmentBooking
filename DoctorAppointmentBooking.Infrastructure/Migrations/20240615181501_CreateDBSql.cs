@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace DoctorAppointmentBooking.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreateDBSql : Migration
+    public partial class CreateDBSql : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

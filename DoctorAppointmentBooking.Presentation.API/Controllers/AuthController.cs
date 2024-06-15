@@ -132,7 +132,7 @@ public class AuthController : BaseController
         [FromBody] UpdateUserDto model)
     {
         if (!ModelState.IsValid) 
-            return BadRequest(new ResultViewModel<string>("Model is not valid", StatusCodes.Status400BadRequest));
+            return BadRequest(new ResultViewModel<string>("Model is not valid", StatusCodes.Status406NotAcceptable));
 
         var user = await _userManagerService.FindByIdAsync(id);
         if (user == null)
@@ -142,15 +142,15 @@ public class AuthController : BaseController
         {
             if(string.IsNullOrEmpty(model.OldPassword))
                 return BadRequest(new ResultViewModel<string>("Password is invalid", StatusCodes.Status400BadRequest));
+            
+            var changePassword = await _userManagerService.UpdatePasswordAsync(
+                user,
+                model.OldPassword,
+                model.NewPassword);
         } 
 
         user.Email = model.Email;
         user.UserName = model.UserName;
-
-        var changePassword = await _userManagerService.UpdatePasswordAsync(
-            user,
-            model.OldPassword,
-            model.NewPassword);
         
         var result = await _userManagerService.UpdateAsync(user);
         if (result.Succeeded)

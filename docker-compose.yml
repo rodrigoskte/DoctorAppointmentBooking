@@ -1,15 +1,8 @@
 ﻿version: '3.8'
 
 services:
-  blazorwasm:
-    image: doctorappointmentbookingblazor
-    ports:
-      - "5000:80"
-    depends_on:
-      - api
-  
   api:
-    image: doctorappointmentbookingapi
+    image: doctorappointmentbookingapiv1
     ports:
       - "5001:8080"
     environment:
@@ -19,6 +12,16 @@ services:
     depends_on:
       - sqlserver
       - sqlserver_identity
+      
+  blazorwasm:
+    image: doctorappointmentbookingblazorv1
+    ports:
+      - "5000:80"
+    depends_on:
+      - api
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - baseUrls__apiBase=http://api:5002/api      
 
   sqlserver:
     image: mcr.microsoft.com/mssql/server:2019-latest

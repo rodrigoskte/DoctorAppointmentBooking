@@ -29,7 +29,7 @@ await ApplyMigrations(app);
 app.UseSwagger();
 app.UseSwaggerUI();
 ConfigureCors(app);
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();

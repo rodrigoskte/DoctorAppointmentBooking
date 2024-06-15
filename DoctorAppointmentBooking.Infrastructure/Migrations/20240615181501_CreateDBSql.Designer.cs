@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DoctorAppointmentBooking.Infrastructure.Migrations
 {
     [DbContext(typeof(SqlDbContext))]
-    [Migration("20240613012312_InitialCreateDBSql")]
-    partial class InitialCreateDBSql
+    [Migration("20240615181501_CreateDBSql")]
+    partial class CreateDBSql
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
