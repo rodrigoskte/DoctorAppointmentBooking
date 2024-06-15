@@ -5,11 +5,18 @@
 
 <PageTitle>My Schedule</PageTitle>
 
-@if (_schedules == null || _doctors == null)
+@if (_isLoading)
 {
     <p>
         <em>Loading...</em>
     </p>
+}
+else if (_schedules == null || !_schedules.Any())
+{
+    <div>
+        <p>No schedules found. Please create a new schedule.</p>
+        <MudButton Variant="Variant.Filled" Color="Color.Success" OnClick="CreateNew">NEW</MudButton>
+    </div>
 }
 else
 {
@@ -87,6 +94,7 @@ else
     private ScheduleDto _schedule = new ScheduleDto { DateTimeSchedule = DateTime.Now }; // Ensure DateTimeSchedule is initialized
     private IList<DoctorAppointmentBooking.Domain.Entities.Doctor>? _doctors;
     private bool _isEditing = false;
+    private bool _isLoading = true;
 
     [Inject] private IRestClient RestClient { get; set; } = default!;
     [Inject] private BaseUrlConfiguration BaseUrlConfig { get; set; } = default!;
@@ -98,6 +106,7 @@ else
     {
         await LoadSchedule();
         await LoadDoctors();
+        _isLoading = false;
     }
 
     private async Task LoadSchedule()
@@ -119,6 +128,10 @@ else
                 {
                     _schedules = response?.Data?.Data;
                     _schedule.PatientId = _schedules.First().PatientId;
+                }
+                else
+                {
+                    _schedules = new List<DoctorAppointmentBooking.Domain.Entities.Schedule>();
                 }
             }
             else
@@ -207,10 +220,10 @@ else
 
             if (response.StatusCode == HttpStatusCode.OK)
             {
-                Snackbar.Add("Specialty saved successfully", Severity.Success);
+                Snackbar.Add("Schedule saved successfully", Severity.Success);
                 await LoadSchedule();
                 _schedule = new ScheduleDto { DateTimeSchedule = DateTime.Now };
-                _isEditing = false; // Reset editing state
+                _isEditing = false; 
             }
             else
             {
@@ -223,13 +236,13 @@ else
                 }
                 else
                 {
-                    Snackbar.Add($"Error saving Patient: {response.StatusDescription}", Severity.Error);
+                    Snackbar.Add($"Error saving Schedule: {response.StatusDescription}", Severity.Error);
                 }
             }
         }
         catch (Exception ex)
         {
-            Snackbar.Add("Exception saving Patient: " + ex.Message, Severity.Error);
+            Snackbar.Add("Exception saving Schedule: " + ex.Message, Severity.Error);
         }
     }
 
@@ -238,7 +251,7 @@ else
         _schedule.Id = schedule.Id;
         _schedule.DoctorId = schedule.DoctorId;
         _schedule.DateTimeSchedule = schedule.DateTimeSchedule;
-        _isEditing = true; // Set editing state
+        _isEditing = true;
     }
 
     private async Task CreateNew()

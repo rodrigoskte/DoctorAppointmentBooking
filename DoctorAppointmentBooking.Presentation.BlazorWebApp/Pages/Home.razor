@@ -5,13 +5,13 @@
 
 <MudContainer MaxWidth="MaxWidth.Medium" Class="mt-4">
     <MudPaper Elevation="4" Class="pa-4">
-        <MudText Typo="Typo.h4" Align="Align.Center">Bem-vindo ao Sistema de Agendamento de Consultas!</MudText>
-        <MudText Typo="Typo.subtitle1" Align="Align.Center">This is your home page, styled with MudBlazor.</MudText>
+        <MudText Typo="Typo.h4" Align="Align.Center">Welcome to Doctor Appointment Booking!</MudText>
+        <MudText Typo="Typo.subtitle1" Align="Align.Center">This is your home page.</MudText>
         <MudDivider Class="my-4"/>
         <AuthorizeView>
             <Authorized>
                 <MudText Typo="Typo.h5">Olá, @context.User.Identity?.Name!</MudText>
-                @if (context.User.IsInRole("Paciente"))
+                @if (context.User.IsInRole("Patient"))
                 {
                     <MudText>Você está logado como paciente.</MudText>
                     <MudButton Variant="Variant.Filled" Color="Color.Primary" Href="/patientschedule">Agendar Consulta</MudButton>
