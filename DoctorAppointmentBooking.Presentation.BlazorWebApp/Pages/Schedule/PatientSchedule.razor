@@ -4,81 +4,98 @@
 @inject ILocalStorageService LocalStorage
 
 <PageTitle>My Schedule</PageTitle>
-<h3>My Schedule</h3>
 
-@if (_schedules == null || _doctors == null)
+@if (_isLoading)
 {
     <p>
         <em>Loading...</em>
     </p>
 }
+else if (_schedules == null || !_schedules.Any())
+{
+    <div>
+        <p>No schedules found. Please create a new schedule.</p>
+        <MudButton Variant="Variant.Filled" Color="Color.Success" OnClick="CreateNew">NEW</MudButton>
+    </div>
+}
 else
 {
-    <table class="table">
-        <thead>
-        <tr>
-            <th>Id</th>
-            <th>Doctor</th>
-            <th>Patient</th>
-            <th>Date</th>
-            <th>Deleted</th>
-            <th>Actions</th>
-        </tr>
-        </thead>
-        <tbody>
-        @foreach (var schedule in _schedules)
-        {
-            <tr>
-                <td>@schedule.Id</td>
-                <td>
-                    <InputText class="form-control" @bind-Value="schedule.Doctor.Name" readonly />
-                </td>
-                <td>
-                    <InputText class="form-control" @bind-Value="schedule.Patient.Name" readonly />
-                </td>
-                <td>
-                    <input class="form-control" value="@schedule.DateTimeSchedule.ToString("dd-MM-yyyy HH:mm")" readonly />
-                </td>
-                <td>
-                    <InputCheckbox @bind-Value="schedule.IsDeleted" disabled />
-                </td>
-                <td>
-                    <button class="btn btn-info" @onclick="() => Edit(schedule)">EDIT</button>
-                    <button class="btn btn-danger" @onclick="() => Delete(schedule.Id)">DELETE</button>
-                </td>
-            </tr>
-        }
-        </tbody>
-    </table>
+    <MudTable Items="_schedules" Hover="true" Bordered="true" Striped="true" Breakpoint="Breakpoint.Sm">
+        <ToolBarContent>
+            <MudText Typo="Typo.h6">My Schedule</MudText>
+            <MudSpacer />
+            <MudButton Variant="Variant.Filled" Color="Color.Success" OnClick="CreateNew">NEW</MudButton>
+        </ToolBarContent>
+        <HeaderContent>
+            <MudTh>Id</MudTh>
+            <MudTh>Doctor</MudTh>
+            <MudTh>Patient</MudTh>
+            <MudTh>Date</MudTh>
+            <MudTh>Deleted</MudTh>
+            <MudTh>Actions</MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="Id">@context.Id</MudTd>
+            <MudTd DataLabel="Doctor">
+                <MudTextField T="string" @bind-Value="context.Doctor.Name" ReadOnly="true" Variant="Variant.Outlined" Disabled="true"/>
+            </MudTd>
+            <MudTd DataLabel="Patient">
+                <MudTextField T="string" @bind-Value="context.Patient.Name" ReadOnly="true" Variant="Variant.Outlined" Disabled="true"/>
+            </MudTd>
+            <MudTd DataLabel="Date">
+                <MudTextField T="string" Value="@context.DateTimeSchedule.ToString("dd-MM-yyyy HH:mm")" ReadOnly="true" Variant="Variant.Outlined" Disabled="true"/>
+            </MudTd>
+            <MudTd DataLabel="Deleted">
+                <MudSwitch @bind-Checked="context.IsDeleted" Color="Color.Error" Disabled="true"/>
+            </MudTd>
+            <MudTd DataLabel="Actions">
+                <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="() => Edit(context)">EDIT</MudButton>
+                <MudButton Variant="Variant.Filled" Color="Color.Error" OnClick="() => Delete(context.Id)">DELETE</MudButton>
+            </MudTd>
+        </RowTemplate>
+    </MudTable>
 }
 
-<hr>
-<div class="mb-3">
-    <label class="form-label">Doctor</label>
-    @if (_doctors != null)
-    {
-        <InputSelect class="form-control" @bind-Value="_schedule.DoctorId">
-            @foreach (var doctor in _doctors)
-            {
-                <option value="@doctor.Id">@doctor.Name</option>
-            }
-        </InputSelect>
-    }
-</div>
-<div class="mb-3">
-    <label class="form-label">Date</label>
-    <InputDate class="form-control" @bind-Value="_schedule.DateTimeSchedule" />
-</div>
-<div class="mb-3">
-    <label class="form-label">IsDeleted</label>
-    <InputCheckbox @bind-Value="_schedule.IsDeleted"/>
-</div>
-<button class="btn btn-primary" @onclick="AddOrUpdate">Save</button>
+@if (_isEditing)
+{
+    <hr>
+    <div class="mb-3" style="display:none;">
+        <MudTextField T="int" Label="Id" @bind-Value="_schedule.Id" Variant="Variant.Outlined" Disabled="true"/>
+    </div>
+    <div class="mb-3" style="display:none;">
+        <MudTextField T="int" Label="Patient Id" @bind-Value="_schedule.PatientId" Variant="Variant.Outlined" Disabled="true"/>
+    </div>
+    <MudCardContent>
+        <div class="mb-3">
+            <MudSelect T="int" Label="Doctor" @bind-Value="_schedule.DoctorId" Variant="Variant.Outlined">
+                <MudSelectItem Value="0">Select</MudSelectItem>
+                @if (_doctors != null)
+                {
+                    @foreach (var doctor in _doctors)
+                    {
+                        <MudSelectItem Value="@doctor.Id">@doctor.Name</MudSelectItem>
+                    }
+                }
+            </MudSelect>
+        </div>
+        <div class="mb-3">
+            <MudDatePicker Label="Date" @bind-Date="ScheduleDate" Variant="Variant.Outlined"/>
+            <MudTimePicker Label="Time" @bind-Time="ScheduleTime" Variant="Variant.Outlined"/>
+        </div>
+        <div class="mb-3">
+            <MudSwitch @bind-Checked="_schedule.IsDeleted" Color="Color.Error" Label="Is Deleted"/>
+        </div>
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="AddOrUpdate">SAVE</MudButton>
+    </MudCardContent>
+}
 
 @code {
     private IList<DoctorAppointmentBooking.Domain.Entities.Schedule>? _schedules;
-    private DoctorAppointmentBooking.Domain.Entities.Schedule _schedule = new();
+    private ScheduleDto _schedule = new ScheduleDto { DateTimeSchedule = DateTime.Now }; // Ensure DateTimeSchedule is initialized
     private IList<DoctorAppointmentBooking.Domain.Entities.Doctor>? _doctors;
+    private bool _isEditing = false;
+    private bool _isLoading = true;
+
     [Inject] private IRestClient RestClient { get; set; } = default!;
     [Inject] private BaseUrlConfiguration BaseUrlConfig { get; set; } = default!;
     RestRequest request;
@@ -88,7 +105,8 @@ else
     protected override async Task OnInitializedAsync()
     {
         await LoadSchedule();
-        await LoadDoctors();        
+        await LoadDoctors();
+        _isLoading = false;
     }
 
     private async Task LoadSchedule()
@@ -106,8 +124,15 @@ else
             var response = await RestClient.ExecuteAsync<ResultViewModel<IList<DoctorAppointmentBooking.Domain.Entities.Schedule>>>(request);
             if (response.StatusCode == HttpStatusCode.OK)
             {
-                _schedules = response?.Data?.Data;
-                _schedule.PatientId = _schedules.First().PatientId;
+                if (response?.Data?.Data.Count > 0)
+                {
+                    _schedules = response?.Data?.Data;
+                    _schedule.PatientId = _schedules.First().PatientId;
+                }
+                else
+                {
+                    _schedules = new List<DoctorAppointmentBooking.Domain.Entities.Schedule>();
+                }
             }
             else
             {
@@ -134,6 +159,8 @@ else
     {
         var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
         var user = authState.User;
+        _schedule.PatientUserId = user.Claims.FirstOrDefault(e => e.Type == ClaimTypes.NameIdentifier).Value;
+        _schedule.DoctorUserId = "vazio";
         var token = await LocalStorage.GetItemAsync<string>("authToken");
         return token;
     }
@@ -158,7 +185,7 @@ else
                 {
                     foreach (var error in response.Data?.Errors)
                     {
-                        Snackbar.Add(error, Severity.Error);
+                        Snackbar.Add(error, Severity.Info);
                     }
                 }
                 else
@@ -172,7 +199,7 @@ else
             Snackbar.Add("Exception deleting schedule: " + ex.Message, Severity.Error);
         }
     }
-    
+
     private async Task AddOrUpdate()
     {
         try
@@ -185,7 +212,7 @@ else
             {
                 request = new RestRequest($"{BaseUrlConfig.ApiBase}/v1/Schedule/{_schedule.Id}", Method.Put);
             }
-            
+
             request.AddJsonBody(_schedule);
             var token = await GetToken();
             request.AddHeader("Authorization", $"Bearer {token}");
@@ -193,9 +220,10 @@ else
 
             if (response.StatusCode == HttpStatusCode.OK)
             {
-                Snackbar.Add("Specialty saved successfully", Severity.Success);
+                Snackbar.Add("Schedule saved successfully", Severity.Success);
                 await LoadSchedule();
-                _schedule = new DoctorAppointmentBooking.Domain.Entities.Schedule();
+                _schedule = new ScheduleDto { DateTimeSchedule = DateTime.Now };
+                _isEditing = false; 
             }
             else
             {
@@ -203,26 +231,35 @@ else
                 {
                     foreach (var error in response.Data?.Errors)
                     {
-                        Snackbar.Add(error, Severity.Error);
+                        Snackbar.Add(error, Severity.Warning);
                     }
                 }
                 else
                 {
-                    Snackbar.Add($"Error saving Patient: {response.StatusDescription}", Severity.Error);
+                    Snackbar.Add($"Error saving Schedule: {response.StatusDescription}", Severity.Error);
                 }
             }
         }
         catch (Exception ex)
         {
-            Snackbar.Add("Exception saving Patient: " + ex.Message, Severity.Error);
+            Snackbar.Add("Exception saving Schedule: " + ex.Message, Severity.Error);
         }
     }
-    
+
     private async Task Edit(DoctorAppointmentBooking.Domain.Entities.Schedule schedule)
     {
-        _schedule = schedule;
+        _schedule.Id = schedule.Id;
+        _schedule.DoctorId = schedule.DoctorId;
+        _schedule.DateTimeSchedule = schedule.DateTimeSchedule;
+        _isEditing = true;
     }
-    
+
+    private async Task CreateNew()
+    {
+        _schedule = new ScheduleDto { DateTimeSchedule = DateTime.Now };
+        _isEditing = true; // Set editing state to true to show the form
+    }
+
     private async Task LoadDoctors()
     {
         try
@@ -244,6 +281,26 @@ else
         catch (Exception ex)
         {
             Snackbar.Add("Exception ao carregar médicos: " + ex.Message, Severity.Error);
+        }
+    }
+
+    private DateTime? ScheduleDate
+    {
+        get => _schedule?.DateTimeSchedule?.Date ?? DateTime.Now;
+        set
+        {
+            if (_schedule != null)
+                _schedule.DateTimeSchedule = value + _schedule.DateTimeSchedule?.TimeOfDay;
+        }
+    }
+
+    private TimeSpan? ScheduleTime
+    {
+        get => _schedule?.DateTimeSchedule?.TimeOfDay ?? TimeSpan.Zero;
+        set
+        {
+            if (_schedule != null)
+                _schedule.DateTimeSchedule = _schedule.DateTimeSchedule?.Date + value;
         }
     }
 }

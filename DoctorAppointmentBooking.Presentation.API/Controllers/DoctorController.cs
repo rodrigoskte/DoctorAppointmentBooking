@@ -3,7 +3,6 @@ using DoctorAppointmentBooking.Application.Validators;
 using DoctorAppointmentBooking.Domain.Entities;
 using DoctorAppointmentBooking.Domain.Interfaces;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DoctorAppointmentBooking.Presentation.API.Controllers;
@@ -11,23 +10,23 @@ namespace DoctorAppointmentBooking.Presentation.API.Controllers;
 [Authorize]
 [ApiController]
 [Route("api/v1/[controller]/")]
-public class DoctorController: BaseController
+public class DoctorController : BaseController
 {
     private readonly IBaseService<Doctor> _baseDoctorService;
     private readonly IDoctorService _doctorService;
     private readonly IScheduleService _scheduleService;
-    private readonly UserManager<IdentityUser> _userManager;
-    
+    private readonly IAuthService _authService;
+
     public DoctorController(
-        IBaseService<Doctor> baseDoctorService, 
+        IBaseService<Doctor> baseDoctorService,
         IDoctorService doctorService,
         IScheduleService scheduleService,
-        UserManager<IdentityUser> userManager)
+        IAuthService authService)
     {
         _baseDoctorService = baseDoctorService;
         _doctorService = doctorService;
         _scheduleService = scheduleService;
-        _userManager = userManager;
+        _authService = authService;
     }
 
     [Authorize(Roles = "Admin, Doctor, Patient")]
@@ -36,11 +35,11 @@ public class DoctorController: BaseController
     {
         return Execute(() => _doctorService.GetAllDoctorsActive());
     }
-    
+
     [Authorize(Roles = "Admin, Doctor, Patient")]
     [HttpGet]
     [Route("{id:int}")]
-    public IActionResult Get([FromRoute]int id)
+    public IActionResult Get([FromRoute] int id)
     {
         if (id <= 0)
             return NotFound();
@@ -55,7 +54,7 @@ public class DoctorController: BaseController
     {
         return Execute(() => _baseDoctorService.Get());
     }
-    
+
     [Authorize(Roles = "Admin, Doctor, Patient")]
     [HttpPost]
     public IActionResult Create([FromBody] DoctorDto doctorDto)
@@ -69,58 +68,46 @@ public class DoctorController: BaseController
             {
                 Id = doctorDto.Id,
                 Name = doctorDto.Name,
-                Code = doctorDto.Code,
+                Email = doctorDto.Email,
                 IsDeleted = doctorDto.IsDeleted,
                 UserId = ""
             };
 
-            _doctorService.Validations(doctor);
-            
-            _baseDoctorService.Add<DoctorValidator>(doctor);
-            
-            var user = new IdentityUser
+            try
             {
-                UserName = $"{doctorDto.Code}@doctor.com",
-                Email = $"{doctorDto.Code}@doctor.com"
-            };
-
-            var result = _userManager.CreateAsync(user, "1234");
-
-            if (result.Result.Succeeded)
-            {
-                doctor.UserId = user.Id;
-                _baseDoctorService.Update<DoctorValidator>(doctor);
+                _doctorService.Validations(doctor);
+                _baseDoctorService.Add<DoctorValidator>(doctor);
+                _authService.CreateDoctorUser(doctor, doctorDto.Email);
             }
-            else
+            catch (Exception ex)
             {
-                throw new Exception("Failed to create user");
+                throw new Exception(ex.Message);
             }
-            
+
             return doctorDto;
         });
     }
-    
+
     [Authorize(Roles = "Admin, Doctor")]
     [HttpPut]
     [Route("{id:int}")]
     public IActionResult Update(
-        [FromRoute]int id,
+        [FromRoute] int id,
         [FromBody] DoctorDto doctorDto)
     {
         if (id <= 0 || doctorDto == null)
             return NotFound();
-        
+
         return Execute(() =>
         {
             var doctor = new Doctor
             {
                 Id = id,
                 Name = doctorDto.Name,
-                Code = doctorDto.Code,
+                Email = doctorDto.Email,
                 IsDeleted = doctorDto.IsDeleted,
                 UserId = ""
             };
-            
             _baseDoctorService.Update<DoctorValidator>(doctor);
             return doctorDto;
         });
@@ -137,7 +124,7 @@ public class DoctorController: BaseController
         return Execute(() =>
         {
             _scheduleService.IsDoctorActiveSchedule(id);
-            
+
             _baseDoctorService.Delete(id);
             return true;
         });

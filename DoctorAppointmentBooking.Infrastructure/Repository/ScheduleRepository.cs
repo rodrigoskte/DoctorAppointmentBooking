@@ -35,6 +35,14 @@ public class ScheduleRepository : BaseRepository<Schedule>, IScheduleRepository
             .ToList();
     }
 
+    public Schedule GetScheduleById(int id)
+    {
+        return _dbContext.Schedules
+            .Include(ds => ds.Doctor)
+            .Include(ds => ds.Patient)
+            .FirstOrDefault(e => e.Id == id);
+    }
+
     public bool IsScheduleExistsWithDocPatDat(Schedule schedule)
     {
         return _dbContext.Schedules.Any(e =>

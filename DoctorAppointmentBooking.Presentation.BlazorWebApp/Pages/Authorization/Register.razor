@@ -16,10 +16,7 @@
     </div>
     <div class="mb-3">
         <label for="role" class="form-label">Role</label>
-        <InputRadioGroup @bind-Value="registerModel.Role" class="form-control">
-            <div>
-                <InputRadio Value="_admin" /> <label>Admin</label>
-            </div>
+        <InputRadioGroup @bind-Value="registerModel.Role" class="form-control"> 
             <div>
                 <InputRadio  Value="_doctor" /> <label>Doctor</label>
             </div>
@@ -28,7 +25,7 @@
             </div>
         </InputRadioGroup>
     </div>
-    <button type="submit" class="btn btn-primary">Login</button>
+    <button type="submit" class="btn btn-primary">Register</button>
 </EditForm>
 
 @code {
@@ -49,7 +46,7 @@
 
         try
         {
-            var response = await RestClient.ExecuteAsync<ApiResponse<string>>(request);
+            var response = await RestClient.ExecuteAsync<ResultViewModel<string>>(request);
             if (response.IsSuccessful)
             {
                 Snackbar.Add("Profile created successfully", Severity.Success);
@@ -57,7 +54,17 @@
             }
             else
             {
-                Snackbar.Add("Error creating profile: " + response.ErrorMessage, Severity.Error);
+                if (response.Data?.Errors != null && response.Data.Errors.Any())
+                {
+                    foreach (var error in response.Data?.Errors)
+                    {
+                        Snackbar.Add(error, Severity.Error);
+                    }
+                }
+                else
+                {
+                    Snackbar.Add($"Error creating profile: {response.StatusDescription} : {response.Content}", Severity.Error);
+                }
             }
         }
         catch (Exception ex)

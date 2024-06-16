@@ -45,7 +45,7 @@ public class DoctorRepository : BaseRepository<Doctor>, IDoctorRepository
         if (_dbContext.Doctors.Any(e => e.Name == doctor.Name))
             return true;
         
-        if (_dbContext.Doctors.Any(e => e.Code == doctor.Code))
+        if (_dbContext.Doctors.Any(e => e.Email == doctor.Email))
             return true;
 
         return false;

@@ -22,7 +22,7 @@
 | .NET 8                                   | API, Class Library, Blazor                                     |
 | Microsoft SQL Server                     | Banco de Dados                                                 |
 | xUnit, Bogus e NSubstitute               | Testes unitários/integrados                                    |
-| Visual Studio e VS Code                  | Desenvolvimento                                                |
+| Visual Studio, Rider e VS Code           | Desenvolvimento                                                |
 | GitHub                                   | Versionamento                                                  |
 | Miro                                     | Planejamento das demandas do trabalho e desenhos de diagramas  |
 | Trello                                   | Kanban das demandas                                            |
@@ -146,6 +146,26 @@ Foi criado dois arquivos Dockerfile, necessário para que nossa aplicação rode
 Foi criado um arquivo docker-compose, necessário para que se execute a aplição completa.
 
 [Docker-Compose criado](docker-compose).
+
+## 2.6 Comandos utilizados
+Comandos utilizado para desenvolvimento e publicação
+
+**Criação das imagens**
+- docker build -t doctorappointmentbookingblazor -f DockerfileBlazor .
+- docker build -t doctorappointmentbookingapi -f DockerfileApi .
+
+**Docker Compose**
+- docker-compose down -v
+- docker-compose up --build
+
+**Migrations**
+- dotnet ef migrations add InitialCreateDBSql --project DoctorAppointmentBooking.Infrastructure --context DoctorAppointmentBooking.Infrastructure.Context.SqlDbContext
+- dotnet ef database update --project DoctorAppointmentBooking.Infrastructure --startup-project MedicalAppointment.Presentation.API --context DoctorAppointmentBooking.Infrastructure.Context.SqlDbContext
+- dotnet ef migrations add InitialCreateIdentitySql --project DoctorAppointmentBooking.Infrastructure --context DoctorAppointmentBooking.Infrastructure.Context.AuthDbContext
+- dotnet ef database update --project DoctorAppointmentBooking.Infrastructure --startup-project MedicalAppointment.Presentation.API --context DoctorAppointmentBooking.Infrastructure.Context.AuthDbContext
+
+**Criação da imagem do SQL**
+- docker run -v ~/docker --name sqlserver -e "ACCEPT_EULA=Y" -e SA_PASSWORD="QBk88ka(6>" -p 1433:1433 -d mcr.microsoft.com/mssql/server
 
 # 3. Conclusão
 

@@ -16,4 +16,5 @@ public interface IScheduleService
     void CancelSchedulePatient(int patientId);
 
     void CancelScheduleDoctor(int doctorId);
+    Schedule GetScheduleById(int id);
 }

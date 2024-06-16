@@ -8,20 +8,13 @@
 
 @if (_user is not null)
 {
-    <div class="form-group">
-        <label for="email">Email</label>
-        <input type="email" class="form-control" id="email" @bind="_user.Email" />
-    </div>
-    <div class="form-group">
-        <label for="userName">User Name</label>
-        <input type="text" class="form-control" id="userName" @bind="_user.UserName" />
-    </div>
-    <div class="form-group">
-        <label for="password">New Password</label>
-        <input type="password" class="form-control" id="password" @bind="_user.Password" />
-    </div>
-    <button class="btn btn-primary" @onclick="SaveProfile">Save</button>
-    @* <button class="btn btn-danger" @onclick="DeleteProfile">Delete</button> *@
+    <MudPaper Elevation="4" Class="pa-4">
+        <MudTextField T="string" Label="Email" @bind-Value="_user.Email" Variant="Variant.Outlined" />
+        <MudTextField T="string" Label="User Name" @bind-Value="_user.UserName" Variant="Variant.Outlined" />
+        <MudTextField Label="Old Password" @bind-Value="_user.OldPassword" For="@(() => _user.OldPassword)" InputType="InputType.Password" Variant="Variant.Outlined" Margin="Margin.Dense" />
+        <MudTextField Label="New Password" @bind-Value="_user.NewPassword" For="@(() => _user.NewPassword)" InputType="InputType.Password" Variant="Variant.Outlined" Margin="Margin.Dense" />
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="SaveProfile">Save</MudButton>
+    </MudPaper>
 }
 
 @code {
@@ -29,7 +22,7 @@
     [Inject] private IRestClient RestClient { get; set; } = default!;
     [Inject] private BaseUrlConfiguration BaseUrlConfig { get; set; } = default!;
     [Inject] private AuthenticationStateProvider AuthenticationStateProvider { get; set; } = default!;
-    
+
     protected override async Task OnInitializedAsync()
     {
         var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
@@ -44,7 +37,7 @@
                 try
                 {
                     var request = new RestRequest($"{BaseUrlConfig.ApiBase}/v1/Auth/{userId}");
-                    var response = await RestClient.GetAsync<ApiResponse<UpdateUserDto>>(request);
+                    var response = await RestClient.GetAsync<ResultViewModel<UpdateUserDto>>(request);
                     _user = response?.Data;
                 }
                 catch (Exception ex)
@@ -63,21 +56,31 @@
             var user = authState.User;
             var userId = user.FindFirst(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
             var request = new RestRequest($"{BaseUrlConfig.ApiBase}/v1/Auth/{userId}", Method.Put)
-            {
-                RequestFormat = DataFormat.Json
-            };
+                {
+                    RequestFormat = DataFormat.Json
+                };
             request.AddJsonBody(_user);
 
             try
             {
-                var response = await RestClient.ExecuteAsync<ApiResponse<UpdateUserDto>>(request);
+                var response = await RestClient.ExecuteAsync<ResultViewModel<UpdateUserDto>>(request);
                 if (response.IsSuccessful)
                 {
                     Snackbar.Add("Profile updated successfully", Severity.Success);
                 }
                 else
                 {
-                    Snackbar.Add("Error updating profile: " + response.ErrorMessage, Severity.Error);
+                    if (response.Data?.Errors != null && response.Data.Errors.Any())
+                    {
+                        foreach (var error in response.Data?.Errors)
+                        {
+                            Snackbar.Add(error, Severity.Error);
+                        }
+                    }
+                    else
+                    {
+                        Snackbar.Add($"Error updating profile: {response.StatusDescription} : {response.Content}", Severity.Error);
+                    }
                 }
             }
             catch (Exception ex)

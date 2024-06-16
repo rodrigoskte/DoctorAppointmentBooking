@@ -46,7 +46,7 @@
                 }
                 else
                 {
-                    Snackbar.Add("Erro ao processar o login.", Severity.Error);
+                    Snackbar.Add($"Erro ao processar o login: {BaseUrlConfig.ApiBase}", Severity.Error);
                 }
             }
             else
@@ -60,7 +60,7 @@
                 }
                 else
                 {
-                    Snackbar.Add($"Erro ao processar o login: {response.StatusDescription}", Severity.Error);
+                    Snackbar.Add($"Erro ao processar o logins: {response.StatusDescription} :: {BaseUrlConfig.ApiBase}", Severity.Error);
                 }
             }
         }

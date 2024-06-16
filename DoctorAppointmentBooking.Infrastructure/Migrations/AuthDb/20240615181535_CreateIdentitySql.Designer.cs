@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DoctorAppointmentBooking.Infrastructure.Migrations.AuthDb
 {
     [DbContext(typeof(AuthDbContext))]
-    [Migration("20240610215522_InitialCreateIdentitySql")]
-    partial class InitialCreateIdentitySql
+    [Migration("20240615181535_CreateIdentitySql")]
+    partial class CreateIdentitySql
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

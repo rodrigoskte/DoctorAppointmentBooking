@@ -16,7 +16,7 @@ public class DoctorValidatorTest
     public void Name_IsEmpty_ShouldHaveValidationError()
     {
         // Arrange
-        var doctor = new Doctor { Name = "", Code = "123456" };
+        var doctor = new Doctor { Name = "", Email = "123456" };
 
         // Act & Assert
         var result = _validator.TestValidate(doctor);
@@ -28,7 +28,7 @@ public class DoctorValidatorTest
     public void Name_IsNotEmpty_ShouldNotHaveValidationError()
     {
         // Arrange
-        var doctor = new Doctor { Name = "Dr. John Doe", Code = "123456" };
+        var doctor = new Doctor { Name = "Dr. John Doe", Email = "123456" };
 
         // Act & Assert
         var result = _validator.TestValidate(doctor);
@@ -39,11 +39,11 @@ public class DoctorValidatorTest
     public void Code_IsEmpty_ShouldHaveValidationError()
     {
         // Arrange
-        var doctor = new Doctor { Name = "Dr. John Doe", Code = "" };
+        var doctor = new Doctor { Name = "Dr. John Doe", Email = "" };
 
         // Act & Assert
         var result = _validator.TestValidate(doctor);
-        result.ShouldHaveValidationErrorFor(d => d.Code)
+        result.ShouldHaveValidationErrorFor(d => d.Email)
             .WithErrorMessage("Please enter the CRM.");
     }
 
@@ -51,10 +51,10 @@ public class DoctorValidatorTest
     public void Code_IsNotEmpty_ShouldNotHaveValidationError()
     {
         // Arrange
-        var doctor = new Doctor { Name = "Dr. John Doe", Code = "123456" };
+        var doctor = new Doctor { Name = "Dr. John Doe", Email = "123456" };
 
         // Act & Assert
         var result = _validator.TestValidate(doctor);
-        result.ShouldNotHaveValidationErrorFor(d => d.Code);
+        result.ShouldNotHaveValidationErrorFor(d => d.Email);
     }
 }

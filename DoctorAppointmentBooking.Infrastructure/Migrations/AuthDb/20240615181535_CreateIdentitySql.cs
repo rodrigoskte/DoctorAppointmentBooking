@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace DoctorAppointmentBooking.Infrastructure.Migrations.AuthDb
 {
     /// <inheritdoc />
-    public partial class InitialCreateIdentitySql : Migration
+    public partial class CreateIdentitySql : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

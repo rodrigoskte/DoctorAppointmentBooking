@@ -5,7 +5,7 @@ namespace DoctorAppointmentBooking.Domain.Exceptions;
 public class DoctorException : Exception
 {
     public DoctorException(Doctor doctor)
-        : base($"The doctor: {doctor.Name} or code(CRM): {doctor.Code} is already exists.")
+        : base($"The doctor: {doctor.Name} or Email: {doctor.Email} is already exists.")
     {
     }
 }

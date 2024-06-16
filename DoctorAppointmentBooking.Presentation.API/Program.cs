@@ -10,8 +10,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
-using DoctorAppointmentBooking.Presentation.API.Interface;
-using DoctorAppointmentBooking.Presentation.API.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
@@ -31,11 +29,12 @@ await ApplyMigrations(app);
 app.UseSwagger();
 app.UseSwaggerUI();
 ConfigureCors(app);
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
 await CreateDefaultRoles(app);
+await CreateDefaultAdminUser(app);
 
 app.Run();
 
@@ -63,6 +62,8 @@ static void ConfigureInjection(WebApplicationBuilder webApplicationBuilder)
     webApplicationBuilder.Services.AddScoped<IPatientService, PatientService>();
     webApplicationBuilder.Services.AddScoped<IPasswordHasher<IdentityUser>, PasswordHasher<IdentityUser>>();
     webApplicationBuilder.Services.AddScoped<IAuthService, AuthService>();
+    webApplicationBuilder.Services.AddScoped<IUserManagerService, UserManagerService>();
+    webApplicationBuilder.Services.AddScoped<IEmailService, EmailService>();    
 }
 
 static void ConfigureDbContext(WebApplicationBuilder builder1)
@@ -125,7 +126,6 @@ static void ConfigureIdentity(WebApplicationBuilder builder)
             options.Password.RequireLowercase = false;
             options.Password.RequireNonAlphanumeric = false;
             options.Password.RequireUppercase = false;
-            options.Password.RequiredLength = 3;
             options.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+";
         })
         .AddRoles<IdentityRole>()
@@ -135,6 +135,9 @@ static void ConfigureIdentity(WebApplicationBuilder builder)
 
 static void ConfigureJwtSettings(WebApplicationBuilder builder)
 {
+    var emailSettingsSection = builder.Configuration.GetSection("EmailSettings");
+    builder.Services.Configure<EmailSettings>(emailSettingsSection);
+
     var jwtSettingsSection = builder.Configuration.GetSection("JwtSettings");
     builder.Services.Configure<JwtSettings>(jwtSettingsSection);
 
@@ -204,6 +207,33 @@ static async Task CreateDefaultRoles(WebApplication app)
             if (!await roleManager.RoleExistsAsync(role))
             {
                 await roleManager.CreateAsync(new IdentityRole(role));
+            }
+        }
+    }
+}
+
+static async Task CreateDefaultAdminUser(WebApplication app)
+{
+    using (var scope = app.Services.CreateScope())
+    {
+        var userManager = scope.ServiceProvider.GetRequiredService<UserManager<IdentityUser>>();
+        var adminUser = new IdentityUser
+        {
+            UserName = "admin@admin.com.br",
+            Email = "admin@admin.com.br",
+            EmailConfirmed = true
+        };
+
+        var user = await userManager.FindByEmailAsync(adminUser.Email);
+        if (user == null)
+        {
+            var result = await userManager.CreateAsync(
+                adminUser, 
+                "@senha01");
+            
+            if (result.Succeeded)
+            {
+                await userManager.AddToRoleAsync(adminUser, "Admin");
             }
         }
     }

@@ -15,15 +15,18 @@ namespace DoctorAppointmentBooking.Presentation.API.Controllers
         private readonly IBaseService<Patient> _basePatientService;
         private readonly IPatientService _patientService;
         private readonly IScheduleService _scheduleService;
+        private readonly IAuthService _authService;
 
         public PatientController(
             IBaseService<Patient> baseUserService,
             IPatientService patientService,
-            IScheduleService scheduleService)
+            IScheduleService scheduleService,
+            IAuthService authService)
         {
             _basePatientService = baseUserService;
             _patientService = patientService;
             _scheduleService = scheduleService;
+            _authService = authService;
         }
 
         [Authorize(Roles = "Admin, Patient")]
@@ -68,10 +71,18 @@ namespace DoctorAppointmentBooking.Presentation.API.Controllers
                     IsDeleted = patientDto.IsDeleted,
                     UserId = ""
                 };
-                
-                _patientService.Validations(patient);
-                
-                _basePatientService.Add<PatientValidator>(patient);
+
+                try
+                {
+                    _patientService.Validations(patient);
+                    _basePatientService.Add<PatientValidator>(patient);
+                    _authService.CreatePatientUser(patient, patientDto.Email);
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception(ex.Message);
+                }
+
                 return patientDto;
             });
         }

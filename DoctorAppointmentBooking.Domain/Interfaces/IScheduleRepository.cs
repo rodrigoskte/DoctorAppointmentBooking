@@ -19,6 +19,7 @@ public interface IScheduleRepository: IBaseRepository<Schedule>
     Schedule GetScheduleWithDocPatDat(Schedule schedule);
     Schedule GetScheduleWithPatient(int patientId);
     void CancelSchedulePatient(int patientId);
+    Schedule GetScheduleById(int id);
 
     void CancelScheduleDoctor(int doctorId);
 }
